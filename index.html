@@ -577,6 +577,59 @@
       box-shadow:0 0 15px var(--ice-glow);
     }
 
+    /* contenitore interno: flex normale quando la barra è la capsula CSS */
+    .nav-inner{
+      display:flex; align-items:center; justify-content:space-between;
+      width:100%; gap:24px;
+    }
+
+    /* ════════════════════════════════════════════════
+       SCOCCA A IMMAGINE — si attiva con class="has-hull" sulla <nav>
+       La forma 3D la dà navbar-hull.png; i link reali si appoggiano
+       dentro la scanalatura centrale, lontano dalle orecchie LED.
+       CALIBRAZIONE: agisci solo su queste variabili guardando il live.
+       ════════════════════════════════════════════════ */
+    .nav-container-fixed.has-hull{
+      /* ── CALIBRATO sui pixel reali di navbar-hull.png (2688×829, ratio 3.24) ──
+         Scanalatura centrata a y≈59%; corpo utile x 20%→80% (oltre c'è la pinna). */
+      --hull-ar: 2688 / 829;    /* ratio reale del crop */
+      --groove-cy: 60.5%;       /* centro verticale della scanalatura */
+      --groove-left: 25%;       /* inizio zona utile (dopo lo stelo affilato sx) */
+      --groove-right: 19%;      /* fine zona utile (prima della pinna dx) */
+      --led-line-y: 72%;        /* linea inferiore scanalatura per i trattini hover */
+
+      width:min(94%, 1320px);
+      aspect-ratio: var(--hull-ar);   /* l'altezza segue il ratio: ~405px a 1320 di larghezza */
+      height:auto;
+      background:url('navbar-hull.png') no-repeat center center !important;
+      background-size:contain !important;     /* geometria esatta, niente zoom né taglio */
+      border:none !important; border-radius:0 !important;
+      padding:0 !important;
+      box-shadow:none !important;             /* l'ombra è già nel render; niente box esterno */
+      overflow:visible;
+    }
+    /* niente orecchie neon CSS: i LED sono dipinti nella scocca */
+    .nav-container-fixed.has-hull::before,
+    .nav-container-fixed.has-hull::after{ display:none !important; }
+
+    /* area cliccabile ristretta dentro la scanalatura reale (asimmetrica) */
+    .nav-container-fixed.has-hull .nav-inner{
+      position:absolute;
+      left:var(--groove-left); right:var(--groove-right);
+      top:var(--groove-cy); transform:translateY(-50%);
+      width:auto; box-sizing:border-box;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:0;
+    }
+    /* dentro la scocca i testi restano compatti e leggibili sulla fascia scura */
+    .nav-container-fixed.has-hull .nav-brand-logo{ font-size:1.25rem; }
+    .nav-container-fixed.has-hull .nav-menu-links{ gap:32px; }
+    .nav-container-fixed.has-hull .nav-link-item a{ font-size:.8rem; }
+    /* trattini LED dei link allineati alla linea inferiore della scanalatura */
+    .nav-container-fixed.has-hull .nav-link-item a::after{
+      bottom:auto; top:var(--led-line-y);
+    }
+
     /* hamburger — nascosto su desktop, vive nella nav blindata */
     .sh-menu-toggle{ display:none; width:40px; height:40px; flex-shrink:0;
       background:none; border:0; cursor:pointer; position:relative;
@@ -611,6 +664,20 @@
       .nav-container-fixed{
         top:14px; width:92%; height:56px; padding:0 16px; border-radius:14px;
       }
+      /* su mobile la scocca-immagine non regge: ripristino la capsula CSS */
+      .nav-container-fixed.has-hull{
+        aspect-ratio:auto; height:56px; width:92%;
+        background:linear-gradient(180deg,#161b22 0%,#0d1117 100%) !important;
+        background-size:auto !important;
+        border:1px solid rgba(255,255,255,0.08) !important;
+        border-radius:14px !important; padding:0 16px !important;
+        box-shadow:inset 0 2px 4px rgba(255,255,255,0.05), inset 0 -2px 6px rgba(0,0,0,0.8), 0 10px 30px rgba(0,0,0,0.5) !important;
+      }
+      .nav-container-fixed.has-hull .nav-inner{
+        position:static; transform:none; left:auto; right:auto; width:100%; padding:0;
+      }
+      /* trattini LED tornano in basso (capsula) */
+      .nav-container-fixed.has-hull .nav-link-item a::after{ top:auto; bottom:0; }
       .site-header.is-scrolled .nav-container-fixed{ transform:translateX(-50%) scale(.98); }
       .nav-menu-links{ display:none }        /* i link vanno nell'overlay */
       .nav-btn-prenota{ display:none }       /* la CTA vive nell'overlay mobile */
@@ -1074,20 +1141,22 @@
 
   <!-- HEADER — Navbar blindata centrata -->
   <header class="site-header" id="site-header">
-    <nav class="nav-container-fixed" aria-label="Navigazione principale">
-      <a href="#" class="nav-brand-logo" aria-label="Aura Rent Home">Aura<span style="color:var(--ice);">.</span>rent</a>
+    <nav class="nav-container-fixed has-hull" aria-label="Navigazione principale">
+      <div class="nav-inner">
+        <a href="#" class="nav-brand-logo" aria-label="Aura Rent Home">Aura<span style="color:var(--ice);">.</span>rent</a>
 
-      <ul class="nav-menu-links">
-        <li class="nav-link-item active"><a href="#flotta">Flotta</a></li>
-        <li class="nav-link-item"><a href="#vantaggi">Vantaggi</a></li>
-        <li class="nav-link-item"><a href="#contatti">Contatti</a></li>
-      </ul>
+        <ul class="nav-menu-links">
+          <li class="nav-link-item active"><a href="#flotta">Flotta</a></li>
+          <li class="nav-link-item"><a href="#vantaggi">Vantaggi</a></li>
+          <li class="nav-link-item"><a href="#contatti">Contatti</a></li>
+        </ul>
 
-      <a href="#" class="nav-btn-prenota">Prenota</a>
-      <button class="sh-menu-toggle" aria-label="Apri menu" aria-expanded="false">
-        <span class="hamburger-line"></span>
-        <span class="hamburger-line"></span>
-      </button>
+        <a href="#" class="nav-btn-prenota">Prenota</a>
+        <button class="sh-menu-toggle" aria-label="Apri menu" aria-expanded="false">
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </button>
+      </div>
     </nav>
   </header>
 
