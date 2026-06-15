@@ -277,26 +277,9 @@
     }
 
     /* ════ CATEGORIE — bento ════ */
-    /* ==========================================
-       SFONDO HI-TECH: nero brand + dot-matrix CSS + glow "faro"
-       (nessuna immagine caricata: tutto via gradient → zero peso)
-       ========================================== */
-    .cats-section{
-      padding:7rem 2.5rem; position:relative; overflow:hidden;
-      background:var(--onyx-deep);                 /* nero profondo brand, non più grigio piatto */
-      background-image:
-        radial-gradient(rgba(227,236,239,0.12) 1px, transparent 1px);  /* matrice micro-punti */
-      background-size:24px 24px;
-      background-position:center;
-    }
-    /* faro: alone radiale morbido che dà profondità dietro la griglia */
-    .cats-section::before{
-      content:''; position:absolute; inset:0; z-index:0; pointer-events:none;
-      background:radial-gradient(120% 80% at 50% 38%,
-        rgba(227,236,239,0.10) 0%, rgba(227,236,239,0.03) 32%, transparent 64%);
-    }
+    .cats-section{ padding:7rem 2.5rem; background:var(--onyx-2); position:relative; overflow:hidden }
     @media(max-width:680px){ .cats-section{padding:5rem 1.5rem} }
-    .cats-inner{ max-width:1280px; margin:0 auto; position:relative; z-index:1 }
+    .cats-inner{ max-width:1280px; margin:0 auto }
     .cat-grid{ display:grid; grid-template-columns:repeat(12,1fr); gap:1.25rem; margin-top:3.5rem }
     /* ==========================================
        NUOVA GRIGLIA CATEGORIE LUXURY MONOLITO
@@ -317,18 +300,8 @@
     .cat-card:hover {
       transform: translateY(-6px);
       border-color: var(--ice);
-      /* ombra + alone neon hi-tech coerente con la griglia */
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5),
-                  0 0 0 1px rgba(227,236,239,0.18),
-                  0 0 28px rgba(227,236,239,0.14);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
     }
-    /* il badge si accende di neon quando la card è attiva */
-    .cat-card:hover .cat-badge{
-      box-shadow:0 0 14px rgba(227,236,239,0.35);
-      border-color:var(--ice);
-    }
-    .cat-card:hover .badge-avail{ box-shadow:0 0 14px rgba(94,221,180,0.4); border-color:#5eddb4; }
-    .cat-card:hover .badge-new{ box-shadow:0 0 14px rgba(240,168,112,0.4); border-color:#f0a870; }
     .c-xl{grid-column:1/7} .c-lg{grid-column:7/13} .c-md{grid-column:1/5} .c-md2{grid-column:5/9} .c-sm{grid-column:9/13}
     @media(max-width:900px){ .c-xl,.c-lg,.c-md,.c-md2,.c-sm{grid-column:1/13} }
     /* Contenitore Immagine 16:9 nativo — full-bleed in alto (card senza padding) */
@@ -351,13 +324,10 @@
       width: 100%;
       height: 100%;
       object-fit: cover; /* le PNG 16:9 sono paddate al ratio card: cover riempie senza tagliare le ruote */
-      /* zoom inquadratura: l'auto occupa +18% dell'area ritagliando i bordi vuoti, ratio invariato */
-      transform: scale(1.18);
-      transform-origin: center 56%;  /* baricentro leggermente basso: centra la massa del veicolo */
-      transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .cat-card:hover .cat-img-file {
-      transform: scale(1.18) scale(1.05); /* base 1.18 × micro-zoom hover 1.05 */
+      transform: scale(1.05);
     }
     .cat-img:has(.cat-img-file){ color:transparent; }
     /* BODY: prende tutto lo spazio sotto l'immagine e distribuisce header in alto / footer in basso */
@@ -483,154 +453,66 @@
     footer span{ font-size:.58rem; font-weight:300; letter-spacing:.18em; color:rgba(227,236,239,.2) }
 
     /* ════ HEADER — GLASSMORPHIC FLOATING DOCK ════ */
-    /* ════════════════════════════════════════════════
-       NAVBAR — architettura blindata, centrata e 3D
-       Capsula solida con orecchie neon laterali (ice).
-       #site-header resta il wrapper-hook per il JS (scroll + menu mobile).
-       ════════════════════════════════════════════════ */
     .site-header{
-      position:fixed; top:0; left:0; right:0; z-index:9999;
-      pointer-events:none;                  /* solo la nav è interattiva */
+      position:fixed; top:24px; left:0; right:0; z-index:1100;
+      display:flex; justify-content:center; padding:0 24px;
+      pointer-events:none;                 /* solo la capsula è interattiva */
+      opacity:0; transform:translateY(-120%);
+      transition:opacity .6s var(--ease), transform .6s var(--ease);
     }
-    /* l'entrata vive sulla nav, non sul wrapper: un transform sul wrapper
-       romperebbe il position:fixed della nav (si ancorerebbe al wrapper) */
-    .nav-container-fixed{
+    .site-header.show{ opacity:1; transform:none }
+    .sh-container{
       pointer-events:auto;
-      position:fixed; top:24px; left:50%;
-      transform:translateX(-50%) translateY(-160%);
-      width:90%; max-width:1200px; height:64px;
-      background:linear-gradient(180deg,#161b22 0%,#0d1117 100%) !important;
-      border:1px solid rgba(255,255,255,0.08);
-      border-radius:16px;
-      box-shadow:
-        inset 0 2px 4px rgba(255,255,255,0.05),
-        inset 0 -2px 6px rgba(0,0,0,0.8),
-        0 10px 30px rgba(0,0,0,0.5);
-      display:flex; align-items:center; justify-content:space-between;
-      padding:0 32px; z-index:9999;
-      opacity:0;
-      transition:transform .6s var(--ease), opacity .6s var(--ease);
+      display:flex; align-items:center; justify-content:space-between; gap:2.5rem;
+      width:min(960px,100%); height:60px; padding:0 .55rem 0 1.4rem;
+      background:rgba(7,9,12,0.65);
+      backdrop-filter:blur(20px) saturate(1.5); -webkit-backdrop-filter:blur(20px) saturate(1.5);
+      border:1px solid rgba(227,236,239,0.08);
+      border-radius:100px;
+      box-shadow:0 8px 32px rgba(0,0,0,0.45), inset 0 1px 0 rgba(227,236,239,0.06);
+      transition:transform .45s var(--ease), background .45s var(--ease),
+                 box-shadow .45s var(--ease), border-color .45s var(--ease),
+                 backdrop-filter .45s var(--ease);
     }
-    .site-header.show .nav-container-fixed{
-      transform:translateX(-50%) translateY(0); opacity:1;
-    }
-    /* contrazione su scroll: leggermente più piccola, resta centrata */
-    .site-header.is-scrolled .nav-container-fixed{
-      transform:translateX(-50%) scale(.98);
+    /* stato scrolled: capsula più stretta, vetro più scuro e più sfocato */
+    .site-header.is-scrolled .sh-container{
+      transform:scale(.98);
+      background:rgba(7,9,12,0.82);
+      backdrop-filter:blur(28px) saturate(1.6); -webkit-backdrop-filter:blur(28px) saturate(1.6);
+      border-color:rgba(227,236,239,0.12);
+      box-shadow:0 10px 40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(227,236,239,0.08);
     }
 
-    /* ORECCHIE NEON LATERALI (ispirate alla plancia hypercar) */
-    .nav-container-fixed::before,
-    .nav-container-fixed::after{
-      content:''; position:absolute; top:50%; transform:translateY(-50%);
-      width:4px; height:70%;
-      background:var(--ice);
-      box-shadow:0 0 15px var(--ice), 0 0 5px var(--ice);
-      border-radius:4px;
-      opacity:.85; transition:opacity .3s ease;
-      animation:navLedPulse 3.2s ease-in-out infinite;
-    }
-    .nav-container-fixed::before{ left:-2px; }
-    .nav-container-fixed::after{ right:-2px; }
-    @keyframes navLedPulse{ 0%,100%{ opacity:.7 } 50%{ opacity:1 } }
-    .nav-container-fixed:hover::before,
-    .nav-container-fixed:hover::after{ opacity:1; }
+    .sh-logo{ font-weight:800; font-size:1.15rem; letter-spacing:.01em; color:var(--ice);
+      text-decoration:none; white-space:nowrap; flex-shrink:0 }
+    .sh-logo span{ color:var(--ice-dim); font-weight:600 }
 
-    /* BRAND */
-    .nav-brand-logo{
-      font-family:var(--font-display); font-size:1.5rem; line-height:1;
-      color:#ffffff; letter-spacing:.05em; text-decoration:none; flex-shrink:0;
-    }
+    .sh-nav{ display:flex; align-items:center; gap:2rem; margin:0 auto }
+    .sh-link{ position:relative; font-weight:500; font-size:.74rem; letter-spacing:.04em;
+      color:rgba(227,236,239,.58); text-decoration:none;
+      transition:color .3s var(--ease), text-shadow .3s var(--ease) }
+    /* glow magnetico al hover */
+    .sh-link:hover{ color:var(--ice); text-shadow:0 0 12px var(--ice-glow) }
+    .sh-link::after{ content:''; position:absolute; left:50%; bottom:-6px; width:0; height:1px;
+      background:var(--ice); box-shadow:0 0 8px var(--ice-glow);
+      transform:translateX(-50%); transition:width .3s var(--ease) }
+    .sh-link:hover::after{ width:18px }
 
-    /* MENU CENTRALE */
-    .nav-menu-links{
-      display:flex; gap:40px; list-style:none; margin:0 auto; padding:0;
-    }
-    .nav-link-item{ position:relative; }
-    .nav-link-item a{
-      color:#8b949e; text-decoration:none; font-size:.85rem; font-weight:600;
-      text-transform:uppercase; letter-spacing:.15em;
-      position:relative; padding:10px 0; display:inline-block;
-      transition:color .3s ease, text-shadow .3s ease;
-    }
-    .nav-link-item a:hover,
-    .nav-link-item.active a{ color:#ffffff; text-shadow:0 0 12px var(--ice-glow); }
-    /* indicatore LED inferiore (come il tasto HOME) */
-    .nav-link-item a::after{
-      content:''; position:absolute; bottom:0; left:50%; transform:translateX(-50%);
-      width:0; height:2px; background:var(--ice); box-shadow:0 0 8px var(--ice);
-      transition:width .3s cubic-bezier(0.16,1,0.3,1);
-    }
-    .nav-link-item:hover a::after,
-    .nav-link-item.active a::after{ width:24px; }
+    .sh-actions{ display:flex; align-items:center; gap:.6rem; flex-shrink:0 }
+    /* CTA solido tagliato al laser, con riflesso asimmetrico in hover */
+    .sh-cta{ position:relative; overflow:hidden;
+      font-weight:700; font-size:.64rem; letter-spacing:.14em; text-transform:uppercase;
+      color:var(--onyx); background:var(--ice); padding:.7rem 1.5rem; border-radius:100px;
+      text-decoration:none; white-space:nowrap;
+      transition:background .25s, transform .25s, box-shadow .25s }
+    .sh-cta::before{ content:''; position:absolute; top:0; left:-120%; width:60%; height:100%;
+      background:linear-gradient(115deg, transparent 0%, rgba(255,255,255,.65) 50%, transparent 100%);
+      transform:skewX(-18deg); transition:left .55s var(--ease); pointer-events:none }
+    .sh-cta:hover{ background:var(--ice-light); transform:translateY(-1px);
+      box-shadow:0 8px 24px rgba(227,236,239,.28) }
+    .sh-cta:hover::before{ left:140% }
 
-    /* CTA PRENOTA */
-    .nav-btn-prenota{
-      background:transparent; border:1px solid var(--ice); color:var(--ice);
-      padding:10px 24px; border-radius:8px;
-      font-size:.8rem; font-weight:700; text-transform:uppercase; letter-spacing:.1em;
-      cursor:pointer; text-decoration:none; white-space:nowrap; flex-shrink:0;
-      transition:all .3s cubic-bezier(0.16,1,0.3,1);
-    }
-    .nav-btn-prenota:hover{
-      background:var(--ice); color:#0d1117;
-      box-shadow:0 0 15px var(--ice-glow);
-    }
-
-    /* contenitore interno: flex normale quando la barra è la capsula CSS */
-    .nav-inner{
-      display:flex; align-items:center; justify-content:space-between;
-      width:100%; gap:24px;
-    }
-
-    /* ════════════════════════════════════════════════
-       SCOCCA A IMMAGINE — si attiva con class="has-hull" sulla <nav>
-       La forma 3D la dà navbar-hull.png; i link reali si appoggiano
-       dentro la scanalatura centrale, lontano dalle orecchie LED.
-       CALIBRAZIONE: agisci solo su queste variabili guardando il live.
-       ════════════════════════════════════════════════ */
-    .nav-container-fixed.has-hull{
-      /* ── CALIBRATO sui pixel reali di navbar-hull.png (2688×829, ratio 3.24) ──
-         Scanalatura centrata a y≈59%; corpo utile x 20%→80% (oltre c'è la pinna). */
-      --hull-ar: 2688 / 829;    /* ratio reale del crop */
-      --groove-cy: 60.5%;       /* centro verticale della scanalatura */
-      --groove-left: 25%;       /* inizio zona utile (dopo lo stelo affilato sx) */
-      --groove-right: 19%;      /* fine zona utile (prima della pinna dx) */
-      --led-line-y: 72%;        /* linea inferiore scanalatura per i trattini hover */
-
-      width:min(94%, 1320px);
-      aspect-ratio: var(--hull-ar);   /* l'altezza segue il ratio: ~405px a 1320 di larghezza */
-      height:auto;
-      background:url('navbar-hull.png') no-repeat center center !important;
-      background-size:contain !important;     /* geometria esatta, niente zoom né taglio */
-      border:none !important; border-radius:0 !important;
-      padding:0 !important;
-      box-shadow:none !important;             /* l'ombra è già nel render; niente box esterno */
-      overflow:visible;
-    }
-    /* niente orecchie neon CSS: i LED sono dipinti nella scocca */
-    .nav-container-fixed.has-hull::before,
-    .nav-container-fixed.has-hull::after{ display:none !important; }
-
-    /* area cliccabile ristretta dentro la scanalatura reale (asimmetrica) */
-    .nav-container-fixed.has-hull .nav-inner{
-      position:absolute;
-      left:var(--groove-left); right:var(--groove-right);
-      top:var(--groove-cy); transform:translateY(-50%);
-      width:auto; box-sizing:border-box;
-      display:flex; align-items:center; justify-content:space-between;
-      padding:0;
-    }
-    /* dentro la scocca i testi restano compatti e leggibili sulla fascia scura */
-    .nav-container-fixed.has-hull .nav-brand-logo{ font-size:1.25rem; }
-    .nav-container-fixed.has-hull .nav-menu-links{ gap:32px; }
-    .nav-container-fixed.has-hull .nav-link-item a{ font-size:.8rem; }
-    /* trattini LED dei link allineati alla linea inferiore della scanalatura */
-    .nav-container-fixed.has-hull .nav-link-item a::after{
-      bottom:auto; top:var(--led-line-y);
-    }
-
-    /* hamburger — nascosto su desktop, vive nella nav blindata */
+    /* hamburger — nascosto su desktop */
     .sh-menu-toggle{ display:none; width:40px; height:40px; flex-shrink:0;
       background:none; border:0; cursor:pointer; position:relative;
       flex-direction:column; align-items:center; justify-content:center; gap:5px }
@@ -661,28 +543,11 @@
       padding:.85rem 2.4rem; border-radius:100px }
 
     @media(max-width:780px){
-      .nav-container-fixed{
-        top:14px; width:92%; height:56px; padding:0 16px; border-radius:14px;
-      }
-      /* su mobile la scocca-immagine non regge: ripristino la capsula CSS */
-      .nav-container-fixed.has-hull{
-        aspect-ratio:auto; height:56px; width:92%;
-        background:linear-gradient(180deg,#161b22 0%,#0d1117 100%) !important;
-        background-size:auto !important;
-        border:1px solid rgba(255,255,255,0.08) !important;
-        border-radius:14px !important; padding:0 16px !important;
-        box-shadow:inset 0 2px 4px rgba(255,255,255,0.05), inset 0 -2px 6px rgba(0,0,0,0.8), 0 10px 30px rgba(0,0,0,0.5) !important;
-      }
-      .nav-container-fixed.has-hull .nav-inner{
-        position:static; transform:none; left:auto; right:auto; width:100%; padding:0;
-      }
-      /* trattini LED tornano in basso (capsula) */
-      .nav-container-fixed.has-hull .nav-link-item a::after{ top:auto; bottom:0; }
-      .site-header.is-scrolled .nav-container-fixed{ transform:translateX(-50%) scale(.98); }
-      .nav-menu-links{ display:none }        /* i link vanno nell'overlay */
-      .nav-btn-prenota{ display:none }       /* la CTA vive nell'overlay mobile */
+      .site-header{ top:14px; padding:0 14px }
+      .sh-container{ height:56px; gap:1rem; padding:0 .5rem 0 1.1rem }
+      .sh-nav{ display:none }                 /* i link vanno nell'overlay */
+      .sh-cta{ display:none }                 /* la CTA vive nell'overlay mobile */
       .sh-menu-toggle{ display:flex }
-      .nav-brand-logo{ font-size:1.3rem }
       /* hamburger → X magnetica quando il menu è aperto */
       body.menu-open .sh-menu-toggle .hamburger-line:nth-child(1){ transform:translateY(3.25px) rotate(45deg) }
       body.menu-open .sh-menu-toggle .hamburger-line:nth-child(2){ transform:translateY(-3.25px) rotate(-45deg) }
@@ -817,11 +682,12 @@
     /* 1. TIPOGRAFIA: line-height stretto + kerning aggressivo */
     .hero h1, .section-title, .final-section h2, .fb-hero-title,
     .sb-title, .stat-num, .benefit-title,
-    .mf-word{ letter-spacing:-0.04em; line-height:0.9 }
+    .mf-word, .sh-logo{ letter-spacing:-0.04em; line-height:0.9 }
     /* .cat-name escluso dalla compressione: il nome modello ha bisogno di respiro (line-height gestito sopra) */
     .cat-name{ letter-spacing:0.01em }
     .hero-tagline, .fb-card-desc, .benefit-desc, .manifesto__text,
     .sb-text, .fb-hero-sub{ font-weight:400; color:rgba(255,255,255,0.85) }
+    .sh-link{ font-weight:400 }
 
     /* 2. ICE MELT chirurgico: accenti + neon freddo */
     :root{ --ice-bright:#C5DCE4 }
@@ -831,7 +697,7 @@
     .hero h1, .final-section h2, .mf-word, .section-title{ text-shadow:0 0 10px rgba(197,220,228,0.2) }
     .hero-cta, .fb-hero-cta, .btn-primary, .ss-submit{ background:var(--ice-bright); color:#0E0E0E }
     .hero-cta:hover, .fb-hero-cta:hover, .btn-primary:hover, .ss-submit:hover{ background:#D4E6ED }
-    .cat-cta:hover, .fb-card:hover .fb-card-cta{ color:var(--ice-bright) }
+    .sh-link:hover, .cat-cta:hover, .fb-card:hover .fb-card-cta{ color:var(--ice-bright) }
 
     /* 3. HERO: respiro, immagine imponente, spazio premium */
     .hero:not(.hero--layered){ gap:4rem; padding:8rem 2.5rem; min-height:auto; align-items:center }
@@ -941,7 +807,8 @@
       font-size:1rem; line-height:1.6; letter-spacing:0.02em; color:rgba(255,255,255,0.85);
     }
     .ss-label, .field-label{ font-size:.6rem; letter-spacing:0.18em }
-    /* navigazione più leggibile (plancia: label uppercase spaziati) */
+    /* navigazione più leggibile */
+    .sh-link{ letter-spacing:0.02em; color:rgba(255,255,255,0.72) }
     @media(max-width:680px){
       .hero-tagline, .manifesto__text, .sb-text{ font-size:1.1rem }
       .benefit-desc, .fb-card-desc, .fb-hero-sub{ font-size:1rem }
@@ -1051,7 +918,7 @@
       transition:opacity .5s ease, transform .5s cubic-bezier(.25,1,.5,1);
     }
     .aura-showcase__subject.is-loaded{ opacity:.85; transform:scale(1); }
-    .aura-showcase__subject-wrap.is-swapping .aura-showcase__subject{ opacity:0; transform:scale(.94); transition:opacity .4s ease-in-out, transform .4s ease; }
+    .aura-showcase__subject-wrap.is-swapping .aura-showcase__subject{ opacity:0; transform:scale(.94); }
     /* quando il soggetto è caricato, attenuo il numero ghost dietro */
     .aura-showcase.has-subject .aura-showcase__ghost{ opacity:.02; }
     .aura-pane{
@@ -1087,32 +954,24 @@
       .aura-showcase__menu::-webkit-scrollbar{ display:none; }
       .aura-svc{
         flex:0 0 auto; flex-direction:column; gap:4px; width:auto;
-        border-bottom:0; padding:14px 22px; min-height:48px; justify-content:center; /* touch target ≥48px */
+        border-bottom:0; padding:14px 20px;
         border:1px solid rgba(227,236,239,.08); border-radius:12px;
         scroll-snap-align:start; background:rgba(227,236,239,.02);
       }
-      .aura-svc:hover{ padding-left:22px; }
+      .aura-svc:hover{ padding-left:20px; }
       .aura-svc.is-active{ border-color:rgba(227,236,239,.3); background:rgba(227,236,239,.06); }
       .aura-svc.is-active .aura-svc__label{ transform:none; }
       .aura-svc__label{ font-size:1.1rem; white-space:nowrap; color:rgba(227,236,239,.5); }
       .aura-svc__num{ min-width:auto; font-size:.7rem; }
-      .aura-showcase__panel{ min-height:auto; padding-left:0; display:block; }
-      .aura-pane{ position:relative; inset:auto; width:100%; }
+      .aura-showcase__panel{ min-height:240px; padding-left:0; display:flex; align-items:flex-start; }
+      .aura-pane{ position:absolute; inset:0; width:100%; }
       .aura-pane:not(.is-active){ display:none; }
-      .aura-showcase__ghost{ display:none; }
-      /* il soggetto torna visibile su mobile: centrato sopra la descrizione, blend+maschera invariati */
-      .aura-showcase__subject-wrap{
-        display:block; position:relative; inset:auto; top:auto; right:auto;
-        width:min(360px,72vw); height:min(360px,72vw);
-        margin:0 auto 24px; transform:none;
-      }
-      .aura-showcase__subject.is-loaded{ opacity:.9; }
+      .aura-showcase__ghost{ font-size:11rem; opacity:.03; right:-2vw; top:60%; }
+      .aura-showcase__subject-wrap{ display:none; }
     }
     @media (prefers-reduced-motion:reduce){
       .aura-showcase__bg, .aura-pane, .aura-svc, .aura-showcase__ghost, .aura-showcase__subject-wrap, .aura-showcase__subject{ transition:none !important; }
       .aura-showcase__bg{ transform:scale(1.05) !important; }
-    }
-    @media (prefers-reduced-motion:reduce) and (min-width:861px){
       .aura-showcase__subject-wrap{ transform:translateY(-50%) !important; }
     }
   </style>
@@ -1139,25 +998,25 @@
 <!-- ════ LANDING ════ -->
 <div id="landing">
 
-  <!-- HEADER — Navbar blindata centrata -->
+  <!-- HEADER -->
   <header class="site-header" id="site-header">
-    <nav class="nav-container-fixed" aria-label="Navigazione principale">
-      <div class="nav-inner">
-        <a href="#" class="nav-brand-logo" aria-label="Aura Rent Home">Aura<span style="color:var(--ice);">.</span>rent</a>
+    <div class="sh-container">
+      <a href="#" class="sh-logo" aria-label="Aura Rent Home">Aura<span>.rent</span></a>
 
-        <ul class="nav-menu-links">
-          <li class="nav-link-item active"><a href="#flotta">Flotta</a></li>
-          <li class="nav-link-item"><a href="#vantaggi">Vantaggi</a></li>
-          <li class="nav-link-item"><a href="#contatti">Contatti</a></li>
-        </ul>
+      <nav class="sh-nav" aria-label="Navigazione principale">
+        <a href="#flotta" class="sh-link">Flotta</a>
+        <a href="#vantaggi" class="sh-link">Vantaggi</a>
+        <a href="#contatti" class="sh-link">Contatti</a>
+      </nav>
 
-        <a href="#" class="nav-btn-prenota">Prenota</a>
+      <div class="sh-actions">
+        <a href="#" class="sh-cta">Prenota</a>
         <button class="sh-menu-toggle" aria-label="Apri menu" aria-expanded="false">
           <span class="hamburger-line"></span>
           <span class="hamburger-line"></span>
         </button>
       </div>
-    </nav>
+    </div>
   </header>
 
   <!-- Overlay menu mobile (fuori dalla capsula, a tutto schermo) -->
