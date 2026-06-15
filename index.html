@@ -4,6 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Aura.rent — Noleggio Auto di Lusso</title>
+  <link rel="icon" type="image/png" href="favicon.png"/>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -479,7 +480,13 @@
     /* ════ FOOTER ════ */
     footer{ padding:2.5rem; border-top:1px solid var(--bdr); display:flex; justify-content:space-between;
       align-items:center; flex-wrap:wrap; gap:1rem }
-    .footer-logo{ font-weight:800; font-size:1.1rem; letter-spacing:.04em; color:var(--ice) }
+    .footer-logo{ display:inline-flex; align-items:center }
+    .footer-logo-img{
+      height:36px; width:auto; object-fit:contain; display:block;
+      opacity:.6;                          /* integrato col tono dark dei crediti */
+      transition:opacity .3s ease;
+    }
+    .footer-logo-img:hover{ opacity:1 }
     footer span{ font-size:.58rem; font-weight:300; letter-spacing:.18em; color:rgba(227,236,239,.2) }
 
     /* ════ HEADER — GLASSMORPHIC FLOATING DOCK ════ */
@@ -530,12 +537,13 @@
 
     /* BRAND LOGO */
     .nav-brand-logo{
-      font-family:var(--font-display);
-      font-size:1.3rem; font-weight:700;
-      color:#ffffff; letter-spacing:.05em; text-decoration:none;
-      flex-shrink:0;
+      display:flex; align-items:center;
+      text-decoration:none; flex-shrink:0;
     }
-    .nav-brand-logo span{ color:var(--ice); }   /* il punto ghiaccio */
+    .nav-logo-img{
+      height:28px;            /* sottile ed elegante */
+      width:auto; object-fit:contain; display:block;
+    }
 
     /* MENU LINKS */
     .nav-menu-links{
@@ -616,7 +624,7 @@
       .nav-menu-links{ display:none }        /* i link vanno nell'overlay */
       .nav-btn-prenota{ display:none }       /* la CTA vive nell'overlay mobile */
       .sh-menu-toggle{ display:flex }
-      .nav-brand-logo{ font-size:1.2rem }
+      .nav-logo-img{ height:24px }
       /* hamburger → X magnetica quando il menu è aperto */
       body.menu-open .sh-menu-toggle .hamburger-line:nth-child(1){ transform:translateY(3.25px) rotate(45deg) }
       body.menu-open .sh-menu-toggle .hamburger-line:nth-child(2){ transform:translateY(-3.25px) rotate(-45deg) }
@@ -1182,7 +1190,7 @@
   <header class="site-header" id="site-header">
     <nav class="nav-container-fixed" aria-label="Navigazione principale">
       <div class="nav-inner">
-        <a href="#" class="nav-brand-logo" aria-label="Aura Rent Home">Aura<span style="color:var(--ice);">.</span>rent</a>
+        <a href="#" class="nav-brand-logo" aria-label="Aura-rent Home"><img src="logo-aurarent.png" alt="Aura-rent" class="nav-logo-img"></a>
 
         <ul class="nav-menu-links">
           <li class="nav-link-item active"><a href="#flotta">Flotta</a></li>
@@ -1605,7 +1613,7 @@
   </section>
 
   <footer id="contatti">
-    <span class="footer-logo">Aura.rent</span>
+    <span class="footer-logo"><img src="logo-aurarent.png" alt="Aura-rent" class="footer-logo-img"></span>
     <span>© 2026 Aura.rent — Tutti i diritti riservati</span>
     <span>Privacy · Cookie · Termini</span>
   </footer>
