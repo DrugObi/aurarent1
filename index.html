@@ -842,6 +842,38 @@
       .hero-watermark{ font-size:38vw }
     }
 
+    /* ════════ MOBILE ≤780px — HERO IMMERSIVA + SEARCH RIPOSIZIONATA ════════ */
+    @media(max-width:780px){
+      /* #landing diventa flex-column così posso riordinare hero e search */
+      #landing{ display:flex; flex-direction:column; }
+      .site-header{ order:-2; }            /* navbar sempre in cima */
+      .hero.hero--layered{ order:-1; }     /* hero subito sotto la navbar */
+      /* la search non è più appiccicata in cima: scende dopo la hero, statica */
+      .sticky-search{
+        order:0; position:static !important; top:auto !important;
+        margin:0; width:100%;
+      }
+
+      /* HERO a tutto schermo, testo gigante centrato sopra l'immagine */
+      .hero--layered{
+        height:100svh !important; min-height:100svh !important;
+        padding:0 1.4rem !important;
+        justify-content:center !important;
+        background-position:center center !important;
+      }
+      .hero--layered .hero-inner{ gap:1.1rem; }
+      .hero--layered h1, .hero--layered .hero h1{
+        font-size:3rem !important; line-height:.92 !important;
+        text-shadow:0 4px 30px rgba(0,0,0,0.6) !important;
+      }
+      .hero--layered .hero-eyebrow{ font-size:.7rem !important; }
+      .hero--layered .hero-tagline{ font-size:1.02rem !important; max-width:32ch !important; }
+      .hero--layered .hero-cta-row{ flex-direction:column !important; width:100%; gap:.7rem; margin-top:.4rem; }
+      .hero--layered .hero-cta{ width:100%; min-height:54px; }
+      .hero-watermark{ font-size:54vw }
+      .hero-vtag{ display:none; }          /* via il tag verticale che affolla su mobile */
+    }
+
     /* 4. STICKY BAR: integrata, bordo ghiaccio opaco, ombra morbida */
     .sticky-search{
       background:#1A1A1A;
@@ -1048,6 +1080,79 @@
     }
     @media (prefers-reduced-motion:reduce) and (min-width:861px){
       .aura-showcase__subject-wrap{ transform:translateY(-50%) !important; }
+    }
+
+    /* ════════ SOLUZIONI DI NOLEGGIO — CAROUSEL MOBILE ════════
+       Desktop usa lo stage (menu+pane); ≤780px usa le card monolitiche. */
+    .svc-carousel{ display:none; }
+    .svc-dots{ display:none; }
+
+    @media(max-width:780px){
+      /* via lo stage desktop: niente più "tab sopra, leggi sotto" */
+      .aura-showcase__stage{ display:none !important; }
+      .aura-showcase__head{ margin-bottom:28px; }
+
+      /* track orizzontale a scatti, scrollbar nascosta, swipe nativo */
+      .svc-carousel{
+        display:flex; gap:20px;
+        overflow-x:auto; overflow-y:hidden;
+        scroll-snap-type:x mandatory;
+        -webkit-overflow-scrolling:touch;
+        scrollbar-width:none;
+        padding:4px 0 8px;
+        margin-inline:calc(-1 * ((100vw - 92vw) / 2));  /* sfora i margini dell'inner per full-bleed */
+        padding-inline:calc((100vw - 92vw) / 2);
+        scroll-padding-inline:calc((100vw - 92vw) / 2);
+      }
+      .svc-carousel::-webkit-scrollbar{ display:none; }
+
+      /* card monolitica indipendente */
+      .svc-card{
+        flex:0 0 85vw; min-width:85vw; scroll-snap-align:center;
+        display:flex; flex-direction:column; gap:16px;
+        padding:22px 20px 24px;
+        background:linear-gradient(180deg, rgba(28,33,42,0.55), rgba(13,17,23,0.65));
+        border:1px solid rgba(227,236,239,0.10);
+        border-radius:20px;
+        box-shadow:0 12px 30px rgba(0,0,0,0.45);
+      }
+      /* a. badge numero + titolo */
+      .svc-card__tag{
+        display:flex; align-items:baseline; gap:10px;
+        font-family:var(--font-display); text-transform:uppercase;
+        font-size:1.25rem; line-height:1; letter-spacing:.01em; color:var(--ice);
+      }
+      .svc-card__num{
+        font-family:var(--font); font-weight:700; font-size:.82rem;
+        color:var(--ice); opacity:.7; letter-spacing:.1em;
+      }
+      /* b. immagine/render del servizio */
+      .svc-card__media{
+        width:100%; aspect-ratio:4/3; border-radius:14px; overflow:hidden;
+        background:#000; display:flex; align-items:center; justify-content:center;
+      }
+      .svc-card__media img{
+        width:100%; height:100%; object-fit:contain;
+        mix-blend-mode:screen; filter:brightness(1.4) contrast(1.12);
+      }
+      /* c. testo descrittivo sotto l'immagine */
+      .svc-card__text{
+        margin:0; font-size:1rem; line-height:1.6;
+        color:rgba(255,255,255,0.85);
+      }
+
+      /* dots LED minimali di scorrimento */
+      .svc-dots{
+        display:flex; justify-content:center; gap:9px; margin-top:18px;
+      }
+      .svc-dot{
+        width:7px; height:7px; border-radius:50%;
+        background:rgba(227,236,239,0.25); transition:all .3s var(--ease);
+      }
+      .svc-dot.is-active{
+        background:var(--ice); box-shadow:0 0 8px var(--ice);
+        transform:scale(1.15);
+      }
     }
   </style>
 </head>
@@ -1316,6 +1421,43 @@
         </div>
 
       </div>
+
+      <!-- CAROUSEL MOBILE: card monolitiche autonome (solo ≤780px) -->
+      <div class="svc-carousel" id="svcCarousel" aria-label="Soluzioni di noleggio">
+        <article class="svc-card">
+          <span class="svc-card__tag"><span class="svc-card__num">01</span> Rent to Rent</span>
+          <div class="svc-card__media"><img src="subject-rent.png" alt="Rent to Rent" loading="lazy"></div>
+          <p class="svc-card__text">Noleggio dedicato agli operatori del settore: metti a reddito la nostra flotta con condizioni riservate e contratti su misura dedicati a scalare la tua attività.</p>
+        </article>
+        <article class="svc-card">
+          <span class="svc-card__tag"><span class="svc-card__num">02</span> Noleggio No Scoring</span>
+          <div class="svc-card__media"><img src="subject-noscore.png" alt="Noleggio No Scoring" loading="lazy"></div>
+          <p class="svc-card__text">Accesso al noleggio senza verifica creditizia. Una soluzione semplice, flessibile e rapida, anche senza i classici requisiti bancari tradizionali.</p>
+        </article>
+        <article class="svc-card">
+          <span class="svc-card__tag"><span class="svc-card__num">03</span> Account Business</span>
+          <div class="svc-card__media"><img src="subject-business.png" alt="Account Business" loading="lazy"></div>
+          <p class="svc-card__text">Auto aziendali con account business dedicato: dashboard gestionale completa, fatturazione centralizzata e consulente unico a te riservato.</p>
+        </article>
+        <article class="svc-card">
+          <span class="svc-card__tag"><span class="svc-card__num">04</span> Veicoli Commerciali</span>
+          <div class="svc-card__media"><img src="subject-vehicles.png" alt="Veicoli Commerciali" loading="lazy"></div>
+          <p class="svc-card__text">Furgoni e vetture da lavoro ottimizzate per ogni esigenza aziendale, disponibili per noleggi agili a breve, medio e lungo termine.</p>
+        </article>
+        <article class="svc-card">
+          <span class="svc-card__tag"><span class="svc-card__num">05</span> Produzioni &amp; Eventi</span>
+          <div class="svc-card__media"><img src="subject-events.png" alt="Produzioni e Eventi" loading="lazy"></div>
+          <p class="svc-card__text">Auto esclusive per video musicali, spot pubblicitari e set cinematografici. Fornitura di vetture di scena iconiche e supporto logistico sul set.</p>
+        </article>
+        <article class="svc-card">
+          <span class="svc-card__tag"><span class="svc-card__num">06</span> Partnership</span>
+          <div class="svc-card__media"><img src="subject-partner.png" alt="Partnership" loading="lazy"></div>
+          <p class="svc-card__text">Collaborazioni commerciali ad alto livello con hotel, agenzie e corporate brand. Costruiamo accordi sinergici su misura a vantaggio reciproco.</p>
+        </article>
+      </div>
+      <!-- dots LED di scorrimento (popolati via JS) -->
+      <div class="svc-dots" id="svcDots" aria-hidden="true"></div>
+
     </div>
   </section>
 
@@ -1688,6 +1830,44 @@ function bookNow(){
     });
   }
 })();
+
+/* ════════ CAROUSEL MOBILE — dots LED sincronizzati ════════ */
+(function(){
+  var car = document.getElementById('svcCarousel');
+  var dotsWrap = document.getElementById('svcDots');
+  if(!car || !dotsWrap) return;
+  var cards = car.querySelectorAll('.svc-card');
+  if(!cards.length) return;
+
+  /* crea un dot per card */
+  cards.forEach(function(_, i){
+    var d = document.createElement('span');
+    d.className = 'svc-dot' + (i===0 ? ' is-active' : '');
+    d.addEventListener('click', function(){
+      cards[i].scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'});
+    });
+    dotsWrap.appendChild(d);
+  });
+  var dots = dotsWrap.querySelectorAll('.svc-dot');
+
+  /* aggiorna il dot attivo in base alla card più centrata, throttle rAF */
+  var ticking = false;
+  function update(){
+    var mid = car.scrollLeft + car.clientWidth/2;
+    var best = 0, bestDist = Infinity;
+    cards.forEach(function(c, i){
+      var c0 = c.offsetLeft + c.offsetWidth/2;
+      var dist = Math.abs(c0 - mid);
+      if(dist < bestDist){ bestDist = dist; best = i; }
+    });
+    dots.forEach(function(d, i){ d.classList.toggle('is-active', i===best); });
+    ticking = false;
+  }
+  car.addEventListener('scroll', function(){
+    if(!ticking){ ticking = true; requestAnimationFrame(update); }
+  }, {passive:true});
+})();
+
 </script>
 </body>
 </html>
