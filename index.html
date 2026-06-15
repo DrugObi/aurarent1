@@ -491,55 +491,132 @@
       transition:opacity .6s var(--ease), transform .6s var(--ease);
     }
     .site-header.show{ opacity:1; transform:none }
+    /* ════════════════════════════════════════════════
+       HYPERCAR COCKPIT DOCK
+       Profilo asimmetrico: punta a goccia (sx) → corpo basso → aletta verticale (dx).
+       Sagoma via clip-path; LED neon ice come pseudo-bordi luminosi.
+       ════════════════════════════════════════════════ */
     .sh-container{
-      pointer-events:auto;
-      display:flex; align-items:center; justify-content:space-between; gap:2.5rem;
-      width:min(960px,100%); height:60px; padding:0 .55rem 0 1.4rem;
-      background:rgba(7,9,12,0.65);
-      backdrop-filter:blur(20px) saturate(1.5); -webkit-backdrop-filter:blur(20px) saturate(1.5);
-      border:1px solid rgba(227,236,239,0.08);
+      pointer-events:auto; position:relative;
+      display:flex; align-items:center; gap:1.6rem;
+      width:min(940px,100%); height:74px; padding:0 0 0 4px;
+      /* drop-shadow segue la sagoma reale (il box-shadow verrebbe clippato) */
+      filter:drop-shadow(0 18px 34px rgba(0,0,0,0.55));
+      transition:transform .45s var(--ease);
+    }
+    /* corpo plancia sagomato: vive nello pseudo così i LED possono sporgere dal container */
+    .sh-container::before{
+      content:''; position:absolute; inset:0; z-index:0;
+      /* texture carbonio/alluminio: riflesso superiore marcato che stacca dal nero del sito */
+      background:
+        linear-gradient(180deg, rgba(227,236,239,0.16) 0%, rgba(227,236,239,0.03) 14%, transparent 30%),
+        linear-gradient(180deg,#212834 0%,#141a22 50%,#0b0f15 100%);
+      /* sagoma plancia: spiovente a sx, aletta che sale a dx */
+      clip-path:polygon(
+        0% 64%, 5% 40%, 13% 30%, 22% 27%,           /* punta goccia sinistra */
+        88% 27%, 92% 12%, 100% 8%,                   /* salita verso aletta destra */
+        100% 78%, 97% 92%, 92% 96%, 88% 96%,         /* taglio netto aletta */
+        85% 80%, 18% 80%, 10% 92%, 4% 88%, 0% 78%    /* rientro spiovente inferiore sx */
+      );
+      /* scanalatura interna 3D + micro-bordo perimetrale ice */
+      box-shadow:
+        inset 0 2px 5px rgba(255,255,255,0.10),
+        inset 0 -3px 8px rgba(0,0,0,0.9),
+        inset 0 0 0 1.5px rgba(227,236,239,0.20);
+      /* alone esterno ice morbido che disegna il profilo nel nero */
+      filter:drop-shadow(0 0 6px rgba(227,236,239,0.10));
+      transition:filter .45s var(--ease);
+    }
+    /* stato scrolled: plancia leggermente contratta e più affondata */
+    .site-header.is-scrolled .sh-container{ transform:scale(.97); }
+    .site-header.is-scrolled .sh-container::before{ filter:brightness(.94); }
+
+    /* ── LED di contorno neon (ice) ── */
+    .sh-led{
+      position:absolute; z-index:1; pointer-events:none; border-radius:100px;
+      background:var(--ice);
+      opacity:.72; filter:blur(.3px);
+      box-shadow:0 0 8px var(--ice), 0 0 16px var(--ice-glow), 0 0 26px var(--ice-glow);
+      animation:shLedPulse 3.4s var(--ease) infinite;
+    }
+    /* LED sinistro: segue la curvatura della punta a goccia, sul bordo estremo */
+    .sh-led--left{
+      left:2px; top:46%; width:3.5px; height:30%;
       border-radius:100px;
-      box-shadow:0 8px 32px rgba(0,0,0,0.45), inset 0 1px 0 rgba(227,236,239,0.06);
-      transition:transform .45s var(--ease), background .45s var(--ease),
-                 box-shadow .45s var(--ease), border-color .45s var(--ease),
-                 backdrop-filter .45s var(--ease);
+      transform:rotate(22deg); transform-origin:top center;
+      opacity:.8;
     }
-    /* stato scrolled: capsula più stretta, vetro più scuro e più sfocato */
-    .site-header.is-scrolled .sh-container{
-      transform:scale(.98);
-      background:rgba(7,9,12,0.82);
-      backdrop-filter:blur(28px) saturate(1.6); -webkit-backdrop-filter:blur(28px) saturate(1.6);
-      border-color:rgba(227,236,239,0.12);
-      box-shadow:0 10px 40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(227,236,239,0.08);
+    /* LED destro: sigilla l'aletta verticale */
+    .sh-led--right{
+      right:4px; top:14%; width:3.5px; height:64%;
+      border-radius:100px;
+      transform:rotate(-7deg);
+      opacity:.8;
+    }
+    @keyframes shLedPulse{ 0%,100%{ opacity:.62 } 50%{ opacity:1 } }
+    /* hover magnetico: i LED salgono a piena intensità */
+    .sh-container:hover .sh-led{ opacity:1; animation-duration:1.6s; }
+
+    /* ── Logo "A" nella punta sinistra (illuminato come la R rossa) ── */
+    .sh-logo{ position:relative; z-index:4; flex-shrink:0; text-decoration:none;
+      margin-left:42px; }
+    .sh-logo__mark{
+      font-family:var(--font-display); font-size:1.7rem; line-height:1;
+      color:var(--ice);
+      text-shadow:0 0 10px var(--ice-glow), 0 0 22px var(--ice-glow);
+      transition:text-shadow .3s var(--ease), transform .3s var(--ease);
+    }
+    .sh-logo:hover .sh-logo__mark{
+      text-shadow:0 0 14px var(--ice), 0 0 30px var(--ice-glow);
+      transform:translateY(-1px);
     }
 
-    .sh-logo{ font-weight:800; font-size:1.15rem; letter-spacing:.01em; color:var(--ice);
-      text-decoration:none; white-space:nowrap; flex-shrink:0 }
-    .sh-logo span{ color:var(--ice-dim); font-weight:600 }
-
-    .sh-nav{ display:flex; align-items:center; gap:2rem; margin:0 auto }
-    .sh-link{ position:relative; font-weight:500; font-size:.74rem; letter-spacing:.04em;
-      color:rgba(227,236,239,.58); text-decoration:none;
-      transition:color .3s var(--ease), text-shadow .3s var(--ease) }
-    /* glow magnetico al hover */
+    /* ── Pannello centrale incassato ── */
+    .sh-nav{
+      position:relative; z-index:2;
+      display:flex; align-items:center; gap:.4rem; margin:0 auto;
+      padding:.3rem .5rem; border-radius:16px;
+      background:rgba(0,0,0,0.28);
+      box-shadow:inset 0 1px 2px rgba(0,0,0,0.7), inset 0 0 0 1px rgba(227,236,239,0.05);
+    }
+    .sh-link{
+      position:relative; display:flex; flex-direction:column; align-items:center; gap:3px;
+      padding:.45rem .85rem .55rem; border-radius:12px;
+      font-weight:600; font-size:.6rem; letter-spacing:.12em; text-transform:uppercase;
+      color:rgba(227,236,239,.55); text-decoration:none;
+      transition:all .4s cubic-bezier(0.16,1,0.3,1);
+    }
+    .sh-link__ico{ width:20px; height:20px; transition:filter .4s var(--ease) }
+    /* trattino neon inferiore: scorre fluido, presente sull'attivo */
+    .sh-link::after{
+      content:''; position:absolute; left:50%; bottom:1px;
+      width:0; height:2px; border-radius:2px;
+      background:var(--ice); box-shadow:0 0 8px var(--ice), 0 0 14px var(--ice-glow);
+      transform:translateX(-50%);
+      transition:width .4s cubic-bezier(0.16,1,0.3,1), opacity .4s var(--ease);
+      opacity:0;
+    }
     .sh-link:hover{ color:var(--ice); text-shadow:0 0 12px var(--ice-glow) }
-    .sh-link::after{ content:''; position:absolute; left:50%; bottom:-6px; width:0; height:1px;
-      background:var(--ice); box-shadow:0 0 8px var(--ice-glow);
-      transform:translateX(-50%); transition:width .3s var(--ease) }
-    .sh-link:hover::after{ width:18px }
+    .sh-link:hover .sh-link__ico{ filter:drop-shadow(0 0 6px var(--ice-glow)) }
+    .sh-link:hover::after{ width:14px; opacity:.6 }
+    .sh-link.is-active{ color:var(--ice) }
+    .sh-link.is-active .sh-link__ico{ filter:drop-shadow(0 0 6px var(--ice-glow)) }
+    .sh-link.is-active::after{ width:20px; opacity:1 }
 
-    .sh-actions{ display:flex; align-items:center; gap:.6rem; flex-shrink:0 }
-    /* CTA solido tagliato al laser, con riflesso asimmetrico in hover */
+    /* ── Aletta destra: pulsante d'azione ── */
+    .sh-actions{ display:flex; align-items:center; gap:.6rem; flex-shrink:0;
+      position:relative; z-index:4; margin-right:26px; }
     .sh-cta{ position:relative; overflow:hidden;
-      font-weight:700; font-size:.64rem; letter-spacing:.14em; text-transform:uppercase;
-      color:var(--onyx); background:var(--ice); padding:.7rem 1.5rem; border-radius:100px;
+      font-weight:700; font-size:.6rem; letter-spacing:.14em; text-transform:uppercase;
+      color:var(--onyx); background:var(--ice); padding:.6rem 1.2rem; border-radius:8px;
       text-decoration:none; white-space:nowrap;
+      box-shadow:0 0 14px var(--ice-glow);
       transition:background .25s, transform .25s, box-shadow .25s }
     .sh-cta::before{ content:''; position:absolute; top:0; left:-120%; width:60%; height:100%;
       background:linear-gradient(115deg, transparent 0%, rgba(255,255,255,.65) 50%, transparent 100%);
       transform:skewX(-18deg); transition:left .55s var(--ease); pointer-events:none }
     .sh-cta:hover{ background:var(--ice-light); transform:translateY(-1px);
-      box-shadow:0 8px 24px rgba(227,236,239,.28) }
+      box-shadow:0 0 20px var(--ice), 0 8px 24px rgba(227,236,239,.28) }
     .sh-cta:hover::before{ left:140% }
 
     /* hamburger — nascosto su desktop */
@@ -574,9 +651,21 @@
 
     @media(max-width:780px){
       .site-header{ top:14px; padding:0 14px }
-      .sh-container{ height:56px; gap:1rem; padding:0 .5rem 0 1.1rem }
+      /* sotto 780px la sagoma hypercar non regge: torno a capsula pulita */
+      .sh-container{
+        height:56px; gap:1rem; padding:0 .6rem 0 1rem;
+        clip-path:none; border-radius:100px;
+        background:rgba(7,9,12,0.82);
+        backdrop-filter:blur(22px) saturate(1.5); -webkit-backdrop-filter:blur(22px) saturate(1.5);
+        box-shadow:0 10px 36px rgba(0,0,0,0.55), inset 0 1px 0 rgba(227,236,239,0.06), inset 0 0 0 1px rgba(227,236,239,0.07);
+      }
+      .site-header.is-scrolled .sh-container{ transform:scale(.98); filter:none; }
+      .sh-led{ display:none }                 /* niente LED sagoma su capsula */
+      .sh-logo{ margin-left:0 }
+      .sh-logo__mark{ font-size:1.4rem }
       .sh-nav{ display:none }                 /* i link vanno nell'overlay */
       .sh-cta{ display:none }                 /* la CTA vive nell'overlay mobile */
+      .sh-actions{ margin-right:0 }
       .sh-menu-toggle{ display:flex }
       /* hamburger → X magnetica quando il menu è aperto */
       body.menu-open .sh-menu-toggle .hamburger-line:nth-child(1){ transform:translateY(3.25px) rotate(45deg) }
@@ -837,8 +926,8 @@
       font-size:1rem; line-height:1.6; letter-spacing:0.02em; color:rgba(255,255,255,0.85);
     }
     .ss-label, .field-label{ font-size:.6rem; letter-spacing:0.18em }
-    /* navigazione più leggibile */
-    .sh-link{ letter-spacing:0.02em; color:rgba(255,255,255,0.72) }
+    /* navigazione più leggibile (plancia: label uppercase spaziati) */
+    .sh-link{ letter-spacing:0.12em; color:rgba(227,236,239,0.55) }
     @media(max-width:680px){
       .hero-tagline, .manifesto__text, .sb-text{ font-size:1.1rem }
       .benefit-desc, .fb-card-desc, .fb-hero-sub{ font-size:1rem }
@@ -1036,17 +1125,33 @@
 <!-- ════ LANDING ════ -->
 <div id="landing">
 
-  <!-- HEADER -->
+  <!-- HEADER — Hypercar Cockpit Dock -->
   <header class="site-header" id="site-header">
     <div class="sh-container">
-      <a href="#" class="sh-logo" aria-label="Aura Rent Home">Aura<span>.rent</span></a>
+      <!-- LED di contorno: seguono punta sx e aletta dx -->
+      <span class="sh-led sh-led--left" aria-hidden="true"></span>
+      <span class="sh-led sh-led--right" aria-hidden="true"></span>
 
+      <!-- Estremità a punta sinistra: logo "A" illuminato -->
+      <a href="#" class="sh-logo" aria-label="Aura Rent Home"><span class="sh-logo__mark">A</span></a>
+
+      <!-- Pannello centrale incassato: link icona + label, trattino neon sull'attivo -->
       <nav class="sh-nav" aria-label="Navigazione principale">
-        <a href="#flotta" class="sh-link">Flotta</a>
-        <a href="#vantaggi" class="sh-link">Vantaggi</a>
-        <a href="#contatti" class="sh-link">Contatti</a>
+        <a href="#flotta" class="sh-link is-active" aria-current="true">
+          <svg class="sh-link__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 16l1.5-4.5A2 2 0 0 1 8.4 10h7.2a2 2 0 0 1 1.9 1.5L19 16"/><path d="M3 16h18v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-1H7v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><circle cx="7" cy="16" r="1"/><circle cx="17" cy="16" r="1"/></svg>
+          <span class="sh-link__txt">Flotta</span>
+        </a>
+        <a href="#vantaggi" class="sh-link">
+          <svg class="sh-link__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.6 5.3 5.8.8-4.2 4.1 1 5.8L12 16.9 6.8 19l1-5.8L3.6 9.1l5.8-.8z"/></svg>
+          <span class="sh-link__txt">Vantaggi</span>
+        </a>
+        <a href="#contatti" class="sh-link">
+          <svg class="sh-link__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z"/><path d="M3.5 6.5 12 13l8.5-6.5"/></svg>
+          <span class="sh-link__txt">Contatti</span>
+        </a>
       </nav>
 
+      <!-- Aletta destra: pulsante d'azione sigillato dal LED -->
       <div class="sh-actions">
         <a href="#" class="sh-cta">Prenota</a>
         <button class="sh-menu-toggle" aria-label="Apri menu" aria-expanded="false">
