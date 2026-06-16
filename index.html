@@ -1335,12 +1335,45 @@
     #clouderpro [class*="powered"], #clouderpro a[href*="cloudercar"]{
       opacity:.4 !important; filter:grayscale(1);
     }
+    /* MENU A TENDINA / CALENDARI Vuetify iniettati nel <body> (fuori da #clouderpro):
+       vanno scuriti globalmente, altrimenti restano bianchi accesi */
+    body > .v-overlay-container .v-overlay__content,
+    body > .v-overlay-container .v-menu .v-list,
+    body > .v-overlay-container .v-card,
+    body > .v-overlay-container .v-picker,
+    body > .v-overlay-container .v-date-picker,
+    body > .v-overlay-container .v-date-picker-month,
+    body > .v-overlay-container .v-list{
+      background-color:#161616 !important;
+      color:#ffffff !important;
+      border:1px solid rgba(255,255,255,0.08) !important;
+      border-radius:12px !important;
+      box-shadow:0 20px 50px rgba(0,0,0,0.6) !important;
+    }
+    body > .v-overlay-container .v-list-item,
+    body > .v-overlay-container .v-date-picker-month__day,
+    body > .v-overlay-container .v-btn,
+    body > .v-overlay-container span,
+    body > .v-overlay-container .v-label{
+      color:#ffffff !important; background-color:transparent !important;
+    }
+    body > .v-overlay-container .v-list-item:hover,
+    body > .v-overlay-container .v-date-picker-month__day:hover{
+      background-color:rgba(227,236,239,0.12) !important;
+    }
+    /* giorno selezionato nel calendario → accento ice */
+    body > .v-overlay-container .v-date-picker-month__day--selected .v-btn,
+    body > .v-overlay-container .v-list-item--active{
+      background-color:var(--ice) !important; color:#000 !important;
+    }
+    body > .v-overlay-container .v-overlay__scrim{ background:rgba(0,0,0,0.6) !important; }
 
     /* ════ TOGGLE espandi/comprimi widget prenotazione ════ */
     #clouderpro-wrap{ position:relative; display:flex; flex-direction:column; width:100%; padding:0 15px; }
-    /* contenitore toggle centrato perfettamente */
+    /* contenitore toggle centrato perfettamente — SOLO MOBILE (≤768px) */
     .clouder-toggle{
-      display:flex; justify-content:center; align-items:center; gap:.55rem;
+      display:none;   /* su desktop il toggle vive nel "Prenota" della navbar */
+      justify-content:center; align-items:center; gap:.55rem;
       width:auto; min-width:240px; align-self:center;
       margin:20px 0; padding:.7rem 1.5rem;
       background:rgba(255,255,255,0.08);
@@ -1349,6 +1382,9 @@
       font-family:var(--font); font-weight:700; font-size:.64rem;
       letter-spacing:.16em; text-transform:uppercase;
       transition:background .3s var(--ease), border-color .3s var(--ease), box-shadow .3s var(--ease);
+    }
+    @media(max-width:768px){
+      .clouder-toggle{ display:flex; }   /* capsula visibile solo su mobile */
     }
     .clouder-toggle:hover{
       background:rgba(255,255,255,0.14); border-color:var(--ice);
@@ -1405,7 +1441,7 @@
         <a href="#" class="nav-brand-logo" aria-label="Aura-rent Home"><img src="logo-aurarent.png" alt="Aura-rent" class="nav-logo-img"></a>
 
         <ul class="nav-menu-links">
-          <li class="nav-link-item active"><a href="#flotta">Flotta</a></li>
+          <li class="nav-link-item"><a href="#flotta">Flotta</a></li>
           <li class="nav-link-item"><a href="#vantaggi">Vantaggi</a></li>
           <li class="nav-link-item"><a href="#contatti">Contatti</a></li>
         </ul>
@@ -1453,7 +1489,7 @@
       btn.setAttribute('aria-expanded', String(!collapsed));
       label.textContent = collapsed ? 'Espandi prenotazione' : 'Comprimi';
     }
-    /* apre il widget, aggiorna toggle, scrolla al form */
+    /* apre il widget (se chiuso), aggiorna toggle, scrolla al form */
     function openClouder(){
       var wrap=document.getElementById('clouderpro-wrap');
       var btn=document.getElementById('clouderToggle');
@@ -1464,13 +1500,25 @@
         var label=btn.querySelector('.clouder-toggle__label');
         if(label) label.textContent='Comprimi';
       }
-      // chiude eventuale overlay mobile, poi scrolla al form
       document.body.classList.remove('menu-open');
       var ov=document.getElementById('shMobileOverlay'); if(ov) ov.classList.remove('show');
       wrap.scrollIntoView({behavior:'smooth', block:'center'});
     }
+    /* apre/comprime il widget e scrolla (usato dal "Prenota" della navbar desktop) */
+    function bookToggleClouder(){
+      var wrap=document.getElementById('clouderpro-wrap');
+      if(!wrap) return;
+      var willOpen=wrap.classList.contains('clouder-collapsed');
+      toggleClouder();
+      if(willOpen){
+        document.body.classList.remove('menu-open');
+        var ov=document.getElementById('shMobileOverlay'); if(ov) ov.classList.remove('show');
+        wrap.scrollIntoView({behavior:'smooth', block:'center'});
+      }
+    }
     /* logica globale: qualsiasi elemento il cui testo contiene "Prenota"
-       (e che NON sia il toggle stesso) apre il widget al click */
+       (e che NON sia il toggle stesso) apre il widget al click.
+       Il "Prenota" della navbar desktop fa invece toggle (apri/comprimi). */
     document.addEventListener('click', function(e){
       var el=e.target.closest('a,button');
       if(!el) return;
@@ -1478,9 +1526,41 @@
       var txt=(el.textContent||'').trim().toLowerCase();
       if(txt.indexOf('prenota')!==-1){
         e.preventDefault();
-        openClouder();
+        if(el.classList.contains('nav-btn-prenota')){ bookToggleClouder(); }
+        else { openClouder(); }
       }
     });
+    /* SCROLLSPY: la voce di menu si illumina solo quando la sezione è in vista */
+    (function(){
+      function initSpy(){
+        var ids=['flotta','vantaggi','contatti'];
+        var links={};
+        ids.forEach(function(id){ links[id]=document.querySelector('.nav-menu-links a[href="#'+id+'"]'); });
+        var sections=ids.filter(function(id){ return links[id] && document.getElementById(id); });
+        if(!sections.length) return;
+        function setActive(id){
+          sections.forEach(function(s){ links[s].parentElement.classList.toggle('active', s===id); });
+        }
+        function onScroll(){
+          var line=window.innerHeight*0.35;   // linea di rilevamento nel terzo superiore
+          var current=null;
+          sections.forEach(function(id){
+            var r=document.getElementById(id).getBoundingClientRect();
+            if(r.top<=line && r.bottom>=line){ current=id; }
+          });
+          if(current){ setActive(current); }
+          else {
+            sections.forEach(function(s){ links[s].parentElement.classList.remove('active'); });
+          }
+        }
+        window.addEventListener('scroll', onScroll, {passive:true, capture:true});
+        document.addEventListener('scroll', onScroll, {passive:true, capture:true});
+        window.addEventListener('resize', onScroll);
+        onScroll();
+      }
+      if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', initSpy); }
+      else { initSpy(); }
+    })();
   </script>
 
   <!-- HERO a livelli: watermark 4X4 (z1) / auto frontale (z2) / testo (z3) -->
