@@ -163,52 +163,51 @@
     .section-title{ font-weight:800; font-size:clamp(2rem,4vw,3.2rem); line-height:1.05; letter-spacing:-.03em }
     .section-title em{ font-style:normal; font-weight:300; color:var(--ice) }
 
-    /* ════ BRAND MANIFESTO — video istituzionale immersivo ════ */
+    /* ════ BRAND MANIFESTO — editoriale asimmetrico, video incassato ════ */
     .fb-section{
-      position:relative; overflow:hidden; min-height:80vh;
-      display:flex; align-items:center; justify-content:center;
-      padding:0; background:var(--onyx);
+      position:relative; overflow:hidden;
+      background:#000000;
+      padding:clamp(72px,10vh,128px) clamp(20px,5vw,80px);
     }
-    .fb-hero-bg{ position:absolute; inset:0; z-index:0; overflow:hidden; }
+    .fb-grid{
+      width:min(1320px,94vw); margin:0 auto;
+      display:grid; grid-template-columns:55% 45%;
+      align-items:center; gap:clamp(36px,4vw,72px);
+    }
+    /* — colonna video: schermo incassato, proporzioni preservate — */
+    .fb-video-col{ position:relative; }
+    .fb-video-container{
+      position:relative; width:100%;
+      height:clamp(440px,70vh,640px);
+      border-radius:12px; overflow:hidden;
+      background:#000;
+      box-shadow:0 24px 70px rgba(0,0,0,0.6), 0 0 0 1px rgba(227,236,239,0.06);
+    }
     .fb-video-element{
       position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-      width:100%; height:100%; object-fit:cover; z-index:1;
+      width:100%; height:100%; object-fit:cover; display:block;
     }
-    .fb-video-overlay{
-      position:absolute; inset:0; z-index:2; pointer-events:none;
-      background:linear-gradient(to bottom,
-        rgba(0,0,0,0.7) 0%,
-        rgba(0,0,0,0.5) 50%,
-        rgba(0,0,0,0.9) 100%);
-    }
-    .fb-content-wrapper{
-      position:relative; z-index:3;
-      width:min(1280px,92vw); margin:0 auto;
-      display:flex; align-items:center;
-      padding:clamp(72px,12vh,140px) 0;
-    }
-    .fb-text-block{
-      display:flex; flex-direction:column; gap:1.4rem;
-      max-width:640px;
+    /* — colonna testo: blocco indipendente, centrato verticalmente — */
+    .fb-text-col{
+      display:flex; flex-direction:column; gap:1.5rem;
+      padding:clamp(8px,2vw,40px) clamp(4px,1.5vw,28px);
     }
     .fb-eyebrow{
-      font-family:var(--font); font-weight:700; font-size:.6rem;
-      letter-spacing:.4em; text-transform:uppercase; color:var(--ice);
-      text-shadow:0 1px 8px rgba(0,0,0,.6);
+      font-family:var(--font); font-weight:700; font-size:.62rem;
+      letter-spacing:.3em; text-transform:uppercase; color:var(--ice);
     }
     .fb-title{
       font-family:var(--font-display); font-weight:400;
-      font-size:clamp(2.6rem,6vw,5rem); line-height:.96;
+      font-size:clamp(2.6rem,4.6vw,4.4rem); line-height:.92;
       letter-spacing:.005em; text-transform:uppercase; color:var(--ice);
-      margin:0; text-shadow:0 4px 30px rgba(0,0,0,.55);
+      margin:0;
     }
     .fb-description{
       font-family:var(--font); font-weight:400;
-      font-size:clamp(1rem,1.3vw,1.18rem); line-height:1.75;
-      color:rgba(255,255,255,0.88); max-width:54ch; margin:0;
-      text-shadow:0 1px 10px rgba(0,0,0,.5);
+      font-size:.95rem; line-height:1.85; letter-spacing:.01em;
+      color:#8b949e; max-width:48ch; margin:.25rem 0 0;
     }
-    .fb-actions{ margin-top:.8rem; }
+    .fb-actions{ margin-top:1rem; }
     .fb-btn-primary{
       display:inline-flex; align-items:center; justify-content:center;
       padding:1.05rem 2.6rem; min-height:54px;
@@ -222,9 +221,19 @@
       background:var(--ice-light); transform:translateY(-2px);
       box-shadow:0 14px 36px rgba(227,236,239,.22);
     }
+    /* — mobile: colonna unica, video sopra ~40vh, testo sotto — */
     @media(max-width:780px){
-      .fb-section{ min-height:78svh; }
-      .fb-content-wrapper{ padding:clamp(56px,9vh,96px) 0; }
+      .fb-section{ padding:clamp(48px,7vh,72px) 1.4rem; }
+      .fb-grid{
+        grid-template-columns:1fr; gap:28px; width:100%;
+      }
+      .fb-video-container{ height:40vh; min-height:300px; border-radius:12px; }
+      .fb-text-col{
+        padding:0; align-items:center; text-align:center; gap:1.2rem;
+      }
+      .fb-title{ font-size:clamp(2.2rem,9vw,3rem); }
+      .fb-description{ max-width:42ch; }
+      .fb-actions{ width:100%; }
       .fb-actions .fb-btn-primary{ width:100%; }
     }
 
@@ -1082,9 +1091,59 @@
     }
 
     /* ════════ SOLUZIONI DI NOLEGGIO — CAROUSEL MOBILE ════════
-       Desktop usa lo stage (menu+pane); ≤780px usa le card monolitiche. */
+       Desktop usa la griglia .svc-grid; ≤780px usa le card monolitiche. */
     .svc-carousel{ display:none; }
     .svc-dots{ display:none; }
+
+    /* ════════ SOLUZIONI — GRIGLIA DESKTOP (blocco integrato, niente tab) ════════ */
+    .svc-grid{
+      display:grid; grid-template-columns:repeat(3,1fr);
+      gap:clamp(18px,1.6vw,26px); align-items:stretch;
+    }
+    @media(max-width:1024px) and (min-width:781px){ .svc-grid{ grid-template-columns:repeat(2,1fr); } }
+    .svc-tile{
+      display:flex; flex-direction:column; gap:16px;
+      padding:26px 24px 28px;
+      background:linear-gradient(180deg, rgba(28,33,42,0.45), rgba(13,17,23,0.6));
+      border:1px solid rgba(227,236,239,0.10); border-radius:18px;
+      transition:transform .35s var(--ease), border-color .35s var(--ease), box-shadow .35s var(--ease);
+    }
+    .svc-tile:hover{
+      transform:translateY(-4px); border-color:var(--bdr-ice);
+      box-shadow:0 16px 44px rgba(0,0,0,0.5);
+    }
+    /* colonna centrale evidenziata: bordo ghiaccio sottile */
+    .svc-tile--feature{ border:1px solid var(--ice); }
+    .svc-tile--feature:hover{ border-color:var(--ice); }
+    .svc-tile__tag{
+      display:flex; align-items:baseline; gap:10px;
+      font-family:var(--font-display); text-transform:uppercase;
+      font-size:1.5rem; line-height:1; letter-spacing:.01em; color:var(--ice);
+    }
+    .svc-tile__num{
+      font-family:var(--font); font-weight:700; font-size:.9rem;
+      color:var(--ice); opacity:.7; letter-spacing:.1em;
+    }
+    .svc-tile__media{
+      width:100%; aspect-ratio:16/10; border-radius:14px; overflow:hidden;
+      background:#000; display:flex; align-items:center; justify-content:center;
+    }
+    .svc-tile__media img{
+      width:100%; height:100%; object-fit:contain;
+      mix-blend-mode:screen; filter:brightness(1.4) contrast(1.12);
+    }
+    .svc-tile__text{
+      margin:0; font-size:1.02rem; line-height:1.65;
+      color:rgba(255,255,255,0.85);
+    }
+    @media(min-width:781px){
+      /* via lo stage a tab su desktop: la griglia integrata lo sostituisce */
+      .aura-showcase__stage{ display:none !important; }
+    }
+    @media(max-width:780px){
+      /* su mobile comanda il carousel: la griglia sparisce */
+      .svc-grid{ display:none !important; }
+    }
 
     @media(max-width:780px){
       /* via lo stage desktop: niente più "tab sopra, leggi sotto" */
@@ -1257,14 +1316,15 @@
 
   <!-- FEATURE BLOCKS -->
   <section class="fb-section" id="brand-manifesto">
-    <div class="fb-hero-bg">
-      <video autoplay loop muted playsinline class="fb-video-element">
-        <source src="intro-brand.mp4" type="video/mp4">
-      </video>
-      <div class="fb-video-overlay"></div>
-    </div>
-    <div class="fb-content-wrapper">
-      <div class="fb-text-block reveal">
+    <div class="fb-grid">
+      <div class="fb-video-col">
+        <div class="fb-video-container">
+          <video autoplay loop muted playsinline class="fb-video-element">
+            <source src="intro-brand.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+      <div class="fb-text-col reveal">
         <span class="fb-eyebrow">AURA RENT MANIFESTO</span>
         <h2 class="fb-title">IL SOGNO HA UNA NUOVA FORMA</h2>
         <p class="fb-description">
@@ -1366,6 +1426,40 @@
           </article>
         </div>
 
+      </div>
+
+      <!-- GRIGLIA DESKTOP: blocco integrato a colonne, niente più tab (solo >780px) -->
+      <div class="svc-grid" aria-label="Soluzioni di noleggio">
+        <article class="svc-tile">
+          <span class="svc-tile__tag"><span class="svc-tile__num">01</span> Rent to Rent</span>
+          <div class="svc-tile__media"><img src="subject-rent.png" alt="Rent to Rent" loading="lazy"></div>
+          <p class="svc-tile__text">Noleggio dedicato agli operatori del settore: metti a reddito la nostra flotta con condizioni riservate e contratti su misura dedicati a scalare la tua attività.</p>
+        </article>
+        <article class="svc-tile svc-tile--feature">
+          <span class="svc-tile__tag"><span class="svc-tile__num">02</span> Noleggio No Scoring</span>
+          <div class="svc-tile__media"><img src="subject-noscore.png" alt="Noleggio No Scoring" loading="lazy"></div>
+          <p class="svc-tile__text">Accesso al noleggio senza verifica creditizia. Una soluzione semplice, flessibile e rapida, anche senza i classici requisiti bancari tradizionali.</p>
+        </article>
+        <article class="svc-tile">
+          <span class="svc-tile__tag"><span class="svc-tile__num">03</span> Account Business</span>
+          <div class="svc-tile__media"><img src="subject-business.png" alt="Account Business" loading="lazy"></div>
+          <p class="svc-tile__text">Auto aziendali con account business dedicato: dashboard gestionale completa, fatturazione centralizzata e consulente unico a te riservato.</p>
+        </article>
+        <article class="svc-tile">
+          <span class="svc-tile__tag"><span class="svc-tile__num">04</span> Veicoli Commerciali</span>
+          <div class="svc-tile__media"><img src="subject-vehicles.png" alt="Veicoli Commerciali" loading="lazy"></div>
+          <p class="svc-tile__text">Furgoni e vetture da lavoro ottimizzate per ogni esigenza aziendale, disponibili per noleggi agili a breve, medio e lungo termine.</p>
+        </article>
+        <article class="svc-tile">
+          <span class="svc-tile__tag"><span class="svc-tile__num">05</span> Produzioni &amp; Eventi</span>
+          <div class="svc-tile__media"><img src="subject-events.png" alt="Produzioni e Eventi" loading="lazy"></div>
+          <p class="svc-tile__text">Auto esclusive per video musicali, spot pubblicitari e set cinematografici. Fornitura di vetture di scena iconiche e supporto logistico sul set.</p>
+        </article>
+        <article class="svc-tile">
+          <span class="svc-tile__tag"><span class="svc-tile__num">06</span> Partnership</span>
+          <div class="svc-tile__media"><img src="subject-partner.png" alt="Partnership" loading="lazy"></div>
+          <p class="svc-tile__text">Collaborazioni commerciali ad alto livello con hotel, agenzie e corporate brand. Costruiamo accordi sinergici su misura a vantaggio reciproco.</p>
+        </article>
       </div>
 
       <!-- CAROUSEL MOBILE: card monolitiche autonome (solo ≤780px) -->
