@@ -1230,10 +1230,8 @@
         transform:scale(1.15);
       }
     }
-    /* ════════ CLOUDERCAR WIDGET — forzatura palette dark luxury ════════
-       Override dall'esterno del gestionale (carmego.cloudercar.com).
-       NB: se il widget usa Shadow DOM, alcune regole potrebbero non penetrare:
-       in quel caso serve ritocco lato config widget. */
+    /* ════════ CLOUDERCAR WIDGET (Vuetify) — forzatura palette dark luxury ════════
+       Widget online = Vue/Vuetify, niente Shadow DOM: forziamo via classi .v-* */
     #clouderpro{
       background:rgba(15,15,15,0.75) !important;
       border:1px solid rgba(255,255,255,0.08) !important;
@@ -1243,41 +1241,78 @@
       box-shadow:0 20px 40px rgba(0,0,0,0.5) !important;
       max-width:1100px; margin:0 auto;
     }
+    /* 1. CARD CAMPI: i blocchi bianchi accesi → scuri integrati */
+    #clouderpro .clouder-field,
+    #clouderpro .search-field,
+    #clouderpro [class*="card"],
+    #clouderpro [class*="input-wrapper"],
+    #clouderpro .v-card,
+    #clouderpro .v-sheet,
+    #clouderpro .v-input__control,
+    #clouderpro .v-field{
+      background-color:#161616 !important;
+      border:1px solid rgba(255,255,255,0.08) !important;
+      color:#ffffff !important;
+      box-shadow:none !important;
+    }
+    /* 2. TESTI / INPUT / VALORI: tutto leggibile, niente fondi accesi interni */
     #clouderpro input,
     #clouderpro select,
-    #clouderpro .form-control,
-    #clouderpro .dropdown-menu{
-      background-color:#1a1a1a !important;
-      border:1px solid rgba(255,255,255,0.1) !important;
+    #clouderpro p,
+    #clouderpro span,
+    #clouderpro label,
+    #clouderpro .v-label,
+    #clouderpro .v-field-label,
+    #clouderpro [class*="text"]{
       color:#ffffff !important;
-      border-radius:8px !important;
-      font-family:inherit !important;
+      background-color:transparent !important;
     }
+    #clouderpro .v-field__input,
+    #clouderpro .v-field__field,
+    #clouderpro .v-field{
+      background-color:transparent !important;
+      color:#ffffff !important;
+    }
+    #clouderpro .v-field__overlay{ background:transparent !important; }
+    #clouderpro input::placeholder,
+    #clouderpro .v-label{ color:rgba(255,255,255,0.5) !important; }
+    /* icone (calendario/orologio/frecce) visibili sul dark */
+    #clouderpro svg, #clouderpro .v-icon{ color:var(--ice) !important; opacity:.9; }
+    /* 3a. PULSANTE PRINCIPALE (Avanti) e elevated → ice */
     #clouderpro button,
-    #clouderpro .btn-primary,
-    #clouderpro [type="button"]{
-      background:var(--ice) !important;
+    #clouderpro [role="button"],
+    #clouderpro .v-btn--variant-elevated,
+    #clouderpro .v-btn--variant-flat{
+      background-color:var(--ice) !important;
       color:#000000 !important;
       font-weight:700 !important;
       text-transform:uppercase !important;
-      letter-spacing:0.1em !important;
+      letter-spacing:0.05em !important;
+      border-radius:6px !important;
+      box-shadow:none !important;
+    }
+    /* 3b. PULSANTI SECONDARI (Auto/Van non attivi) → dark outline */
+    #clouderpro .v-btn--variant-outlined,
+    #clouderpro .v-tab:not(.v-tab--selected),
+    #clouderpro button:not([class*="primary"]):not([class*="accent"]):not(.v-tab--selected){
+      background-color:rgba(255,255,255,0.05) !important;
+      color:#ffffff !important;
+      border:1px solid rgba(255,255,255,0.1) !important;
+    }
+    /* tab attiva (Auto/Van selezionato) → accento ice pieno */
+    #clouderpro .v-tab--selected{
+      background-color:var(--ice) !important; color:#000 !important;
       border:none !important;
-      border-radius:8px !important;
-      transition:all 0.3s ease !important;
     }
     #clouderpro button:hover,
-    #clouderpro .btn-primary:hover,
-    #clouderpro [type="button"]:hover{
+    #clouderpro .v-btn--variant-elevated:hover{
       background:#ffffff !important;
       box-shadow:0 0 15px rgba(227,236,239,0.4) !important;
     }
-    #clouderpro label,
-    #clouderpro span,
-    #clouderpro p{
-      color:#e0e0e0 !important;
+    /* "Powered by ClouderCar" tenue */
+    #clouderpro [class*="powered"], #clouderpro a[href*="cloudercar"]{
+      opacity:.4 !important; filter:grayscale(1);
     }
-    /* placeholder leggibili sul fondo scuro */
-    #clouderpro input::placeholder{ color:rgba(255,255,255,0.45) !important; }
 
     /* ════ TOGGLE espandi/comprimi widget prenotazione ════ */
     #clouderpro-wrap{ position:relative; }
@@ -1298,13 +1333,12 @@
     .clouder-toggle__icon{ transition:transform .35s var(--ease); }
     /* stato ESPANSO: freccia in su */
     #clouderpro-wrap:not(.clouder-collapsed) .clouder-toggle__icon{ transform:rotate(180deg); }
-    /* stato COMPATTO di default: widget rimpicciolito e altezza ridotta */
+    /* stato COMPATTO di default: mostra l'intera riga campi, nasconde il brand sotto */
     #clouderpro-wrap.clouder-collapsed #clouderpro{
-      max-height:96px; overflow:hidden;
-      max-width:560px;
-      -webkit-mask-image:linear-gradient(to bottom, #000 64px, transparent 96px);
-      mask-image:linear-gradient(to bottom, #000 64px, transparent 96px);
-      transition:max-height .4s var(--ease), max-width .4s var(--ease);
+      max-height:200px; overflow:hidden;
+      -webkit-mask-image:linear-gradient(to bottom, #000 168px, transparent 200px);
+      mask-image:linear-gradient(to bottom, #000 168px, transparent 200px);
+      transition:max-height .4s var(--ease);
     }
     #clouderpro-wrap:not(.clouder-collapsed) #clouderpro{
       max-height:1200px; overflow:visible;
