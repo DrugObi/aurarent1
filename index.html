@@ -624,10 +624,21 @@
       .nav-container-fixed{
         top:14px; width:92%; height:52px; padding:0 18px;
       }
+      /* navbar ultra-minimal: nessuna barra/contenitore visibile, solo logo + hamburger flottanti */
+      .nav-container-fixed,
+      .site-header.show .nav-container-fixed,
+      .site-header.is-scrolled .nav-container-fixed{
+        background:transparent !important;
+        border:none !important;
+        box-shadow:none !important;
+        backdrop-filter:none !important; -webkit-backdrop-filter:none !important;
+      }
       .site-header.is-scrolled .nav-container-fixed{ transform:translateX(-50%) scale(.98); }
+      /* logo tassativamente a sinistra, hamburger a destra */
+      .nav-inner{ justify-content:space-between !important; }
       .nav-menu-links{ display:none }        /* i link vanno nell'overlay */
       .nav-btn-prenota{ display:none }       /* la CTA vive nell'overlay mobile */
-      .sh-menu-toggle{ display:flex }
+      .sh-menu-toggle{ display:flex; margin-left:auto; }
       .nav-logo-img{ height:24px }
       /* hamburger → X magnetica quando il menu è aperto */
       body.menu-open .sh-menu-toggle .hamburger-line:nth-child(1){ transform:translateY(3.25px) rotate(45deg) }
@@ -1334,15 +1345,21 @@
     /* stato ESPANSO: freccia in su */
     #clouderpro-wrap:not(.clouder-collapsed) .clouder-toggle__icon{ transform:rotate(180deg); }
     /* stato COMPATTO di default: mostra l'intera riga campi, nasconde il brand sotto */
+    /* stato COMPATTO: il widget SPARISCE al 100%, nessuna fetta visibile */
     #clouderpro-wrap.clouder-collapsed #clouderpro{
-      max-height:200px; overflow:hidden;
-      -webkit-mask-image:linear-gradient(to bottom, #000 168px, transparent 200px);
-      mask-image:linear-gradient(to bottom, #000 168px, transparent 200px);
-      transition:max-height .4s var(--ease);
+      max-height:0 !important;
+      opacity:0 !important;
+      padding:0 !important;
+      margin:0 auto !important;
+      overflow:hidden !important;
+      border:none !important;
+      backdrop-filter:none !important; -webkit-backdrop-filter:none !important;
+      box-shadow:none !important;
+      transition:all .4s ease-in-out;
     }
     #clouderpro-wrap:not(.clouder-collapsed) #clouderpro{
-      max-height:1200px; overflow:visible;
-      transition:max-height .5s var(--ease);
+      max-height:1200px; opacity:1; overflow:visible;
+      transition:all .4s ease-in-out;
     }
   </style>
 </head>
