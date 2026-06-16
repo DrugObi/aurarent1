@@ -1278,6 +1278,38 @@
     }
     /* placeholder leggibili sul fondo scuro */
     #clouderpro input::placeholder{ color:rgba(255,255,255,0.45) !important; }
+
+    /* ════ TOGGLE espandi/comprimi widget prenotazione ════ */
+    #clouderpro-wrap{ position:relative; }
+    .clouder-toggle{
+      display:inline-flex; align-items:center; gap:.55rem;
+      margin:0 auto .9rem; padding:.6rem 1.25rem;
+      background:rgba(255,255,255,0.05);
+      border:1px solid rgba(255,255,255,0.14); border-radius:100px;
+      color:var(--ice); cursor:pointer;
+      font-family:var(--font); font-weight:700; font-size:.62rem;
+      letter-spacing:.16em; text-transform:uppercase;
+      transition:background .3s var(--ease), border-color .3s var(--ease), box-shadow .3s var(--ease);
+    }
+    .clouder-toggle:hover{
+      background:rgba(255,255,255,0.1); border-color:var(--bdr-ice);
+      box-shadow:0 0 14px rgba(227,236,239,0.12);
+    }
+    .clouder-toggle__icon{ transition:transform .35s var(--ease); }
+    /* stato ESPANSO: freccia in su */
+    #clouderpro-wrap:not(.clouder-collapsed) .clouder-toggle__icon{ transform:rotate(180deg); }
+    /* stato COMPATTO di default: widget rimpicciolito e altezza ridotta */
+    #clouderpro-wrap.clouder-collapsed #clouderpro{
+      max-height:96px; overflow:hidden;
+      max-width:560px;
+      -webkit-mask-image:linear-gradient(to bottom, #000 64px, transparent 96px);
+      mask-image:linear-gradient(to bottom, #000 64px, transparent 96px);
+      transition:max-height .4s var(--ease), max-width .4s var(--ease);
+    }
+    #clouderpro-wrap:not(.clouder-collapsed) #clouderpro{
+      max-height:1200px; overflow:visible;
+      transition:max-height .5s var(--ease);
+    }
   </style>
 </head>
 <body>
@@ -1334,7 +1366,13 @@
   </div>
 
   <!-- STICKY SEARCH WIDGET -->
-  <div class="sticky-search" id="clouderpro-wrap">
+  <div class="sticky-search clouder-collapsed" id="clouderpro-wrap">
+    <button type="button" class="clouder-toggle" id="clouderToggle"
+            aria-expanded="false" aria-controls="clouderpro"
+            onclick="toggleClouder()">
+      <span class="clouder-toggle__label">Espandi prenotazione</span>
+      <svg class="clouder-toggle__icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
     <div id="clouderpro">
       <div id="reservation_step">
         <when-where :locale="'it'"></when-where>
@@ -1342,6 +1380,16 @@
     </div>
     <script src="https://carmego.cloudercar.com/js/when-where.js?id=5bddba31c2b227aeba89"></script>
   </div>
+  <script>
+    function toggleClouder(){
+      var wrap=document.getElementById('clouderpro-wrap');
+      var btn=document.getElementById('clouderToggle');
+      var label=btn.querySelector('.clouder-toggle__label');
+      var collapsed=wrap.classList.toggle('clouder-collapsed');
+      btn.setAttribute('aria-expanded', String(!collapsed));
+      label.textContent = collapsed ? 'Espandi prenotazione' : 'Comprimi';
+    }
+  </script>
 
   <!-- HERO a livelli: watermark 4X4 (z1) / auto frontale (z2) / testo (z3) -->
   <section class="hero hero--layered">
