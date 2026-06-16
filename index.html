@@ -1133,10 +1133,19 @@
       background:#000; display:flex; align-items:center; justify-content:center;
     }
     .svc-tile__media img{
-      width:100%; height:100%; object-fit:cover;
+      width:100%; height:100%; object-fit:cover; object-position:center center;
       transform:scale(1.15); transition:transform .5s var(--ease);
     }
     .svc-tile:hover .svc-tile__media img{ transform:scale(1.20); }
+    /* calibrazione mirata: card 01 (chiave) e 05 (auto+persona) non vanno tagliate */
+    .svc-grid .svc-tile:nth-child(1) .svc-tile__media img,
+    .svc-grid .svc-tile:nth-child(5) .svc-tile__media img{
+      transform:scale(1.04) !important; object-fit:contain !important; background:#000000 !important;
+    }
+    .svc-grid .svc-tile:nth-child(1):hover .svc-tile__media img,
+    .svc-grid .svc-tile:nth-child(5):hover .svc-tile__media img{
+      transform:scale(1.06) !important;
+    }
     .svc-tile__text{
       margin:0; font-size:1.02rem; line-height:1.65;
       color:rgba(255,255,255,0.85);
@@ -1195,8 +1204,12 @@
         background:#000; display:flex; align-items:center; justify-content:center;
       }
       .svc-card__media img{
-        width:100%; height:100%; object-fit:cover;
+        width:100%; height:100%; object-fit:cover; object-position:center center;
         transform:scale(1.15);
+      }
+      .svc-carousel .svc-card:nth-child(1) .svc-card__media img,
+      .svc-carousel .svc-card:nth-child(5) .svc-card__media img{
+        transform:scale(1.04) !important; object-fit:contain !important; background:#000000 !important;
       }
       /* c. testo descrittivo sotto l'immagine */
       .svc-card__text{
@@ -1217,6 +1230,54 @@
         transform:scale(1.15);
       }
     }
+    /* ════════ CLOUDERCAR WIDGET — forzatura palette dark luxury ════════
+       Override dall'esterno del gestionale (carmego.cloudercar.com).
+       NB: se il widget usa Shadow DOM, alcune regole potrebbero non penetrare:
+       in quel caso serve ritocco lato config widget. */
+    #clouderpro{
+      background:rgba(15,15,15,0.75) !important;
+      border:1px solid rgba(255,255,255,0.08) !important;
+      border-radius:16px !important;
+      padding:24px !important;
+      backdrop-filter:blur(16px) !important; -webkit-backdrop-filter:blur(16px) !important;
+      box-shadow:0 20px 40px rgba(0,0,0,0.5) !important;
+      max-width:1100px; margin:0 auto;
+    }
+    #clouderpro input,
+    #clouderpro select,
+    #clouderpro .form-control,
+    #clouderpro .dropdown-menu{
+      background-color:#1a1a1a !important;
+      border:1px solid rgba(255,255,255,0.1) !important;
+      color:#ffffff !important;
+      border-radius:8px !important;
+      font-family:inherit !important;
+    }
+    #clouderpro button,
+    #clouderpro .btn-primary,
+    #clouderpro [type="button"]{
+      background:var(--ice) !important;
+      color:#000000 !important;
+      font-weight:700 !important;
+      text-transform:uppercase !important;
+      letter-spacing:0.1em !important;
+      border:none !important;
+      border-radius:8px !important;
+      transition:all 0.3s ease !important;
+    }
+    #clouderpro button:hover,
+    #clouderpro .btn-primary:hover,
+    #clouderpro [type="button"]:hover{
+      background:#ffffff !important;
+      box-shadow:0 0 15px rgba(227,236,239,0.4) !important;
+    }
+    #clouderpro label,
+    #clouderpro span,
+    #clouderpro p{
+      color:#e0e0e0 !important;
+    }
+    /* placeholder leggibili sul fondo scuro */
+    #clouderpro input::placeholder{ color:rgba(255,255,255,0.45) !important; }
   </style>
 </head>
 <body>
@@ -1273,22 +1334,13 @@
   </div>
 
   <!-- STICKY SEARCH WIDGET -->
-  <div class="sticky-search">
-    <div class="sticky-search__inner">
-      <div class="ss-field">
-        <span class="ss-label">Luogo</span>
-        <span class="ss-value">Milano — Malpensa (MXP)</span>
+  <div class="sticky-search" id="clouderpro-wrap">
+    <div id="clouderpro">
+      <div id="reservation_step">
+        <when-where :locale="'it'"></when-where>
       </div>
-      <div class="ss-field">
-        <span class="ss-label">Ritiro</span>
-        <span class="ss-value">12 giu · 10:00</span>
-      </div>
-      <div class="ss-field">
-        <span class="ss-label">Riconsegna</span>
-        <span class="ss-value">15 giu · 18:00</span>
-      </div>
-      <button class="ss-submit" type="button" onclick="bookNow()">Cerca</button>
     </div>
+    <script src="https://carmego.cloudercar.com/js/when-where.js?id=5bddba31c2b227aeba89"></script>
   </div>
 
   <!-- HERO a livelli: watermark 4X4 (z1) / auto frontale (z2) / testo (z3) -->
