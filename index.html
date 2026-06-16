@@ -184,12 +184,12 @@
       box-shadow:0 24px 70px rgba(0,0,0,0.6), 0 0 0 1px rgba(227,236,239,0.06);
     }
     @keyframes videoLoopFade{
-      0%{ opacity:0; } 5%{ opacity:1; } 95%{ opacity:1; } 100%{ opacity:0; }
+      0%{ opacity:1; } 96%{ opacity:1; } 99%{ opacity:0; } 100%{ opacity:1; }
     }
     .fb-video-element{
       position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
       width:100%; height:100%; object-fit:cover; display:block;
-      animation:videoLoopFade 10s infinite ease-in-out;
+      animation:videoLoopFade 10s infinite linear;
     }
     /* — colonna testo: blocco indipendente, centrato verticalmente — */
     .fb-text-col{
@@ -1248,7 +1248,7 @@
       border:1px solid rgba(255,255,255,0.08) !important;
       border-radius:16px !important;
       padding:24px !important;
-      backdrop-filter:blur(16px) !important; -webkit-backdrop-filter:blur(16px) !important;
+      backdrop-filter:blur(20px) !important; -webkit-backdrop-filter:blur(20px) !important;
       box-shadow:0 20px 40px rgba(0,0,0,0.5) !important;
       max-width:1100px; margin:0 auto;
     }
@@ -1262,9 +1262,20 @@
     #clouderpro .v-input__control,
     #clouderpro .v-field{
       background-color:#161616 !important;
-      border:1px solid rgba(255,255,255,0.08) !important;
+      border:1px solid rgba(255,255,255,0.05) !important;
+      border-radius:12px !important;
       color:#ffffff !important;
       box-shadow:none !important;
+      transition:border-color 0.3s ease !important;
+    }
+    /* hover: bordo che si illumina delicatamente in ice */
+    #clouderpro .clouder-field:hover,
+    #clouderpro .search-field:hover,
+    #clouderpro [class*="input-wrapper"]:hover,
+    #clouderpro .v-card:hover,
+    #clouderpro .v-input__control:hover,
+    #clouderpro .v-field:hover{
+      border-color:rgba(227,236,239,0.4) !important;
     }
     /* 2. TESTI / INPUT / VALORI: tutto leggibile, niente fondi accesi interni */
     #clouderpro input,
@@ -1326,20 +1337,22 @@
     }
 
     /* ════ TOGGLE espandi/comprimi widget prenotazione ════ */
-    #clouderpro-wrap{ position:relative; }
+    #clouderpro-wrap{ position:relative; display:flex; flex-direction:column; width:100%; padding:0 15px; }
+    /* contenitore toggle centrato perfettamente */
     .clouder-toggle{
-      display:inline-flex; align-items:center; gap:.55rem;
-      margin:0 auto .9rem; padding:.6rem 1.25rem;
-      background:rgba(255,255,255,0.05);
-      border:1px solid rgba(255,255,255,0.14); border-radius:100px;
+      display:flex; justify-content:center; align-items:center; gap:.55rem;
+      width:auto; min-width:240px; align-self:center;
+      margin:20px 0; padding:.7rem 1.5rem;
+      background:rgba(255,255,255,0.08);
+      border:1px solid rgba(227,236,239,0.28); border-radius:100px;
       color:var(--ice); cursor:pointer;
-      font-family:var(--font); font-weight:700; font-size:.62rem;
+      font-family:var(--font); font-weight:700; font-size:.64rem;
       letter-spacing:.16em; text-transform:uppercase;
       transition:background .3s var(--ease), border-color .3s var(--ease), box-shadow .3s var(--ease);
     }
     .clouder-toggle:hover{
-      background:rgba(255,255,255,0.1); border-color:var(--bdr-ice);
-      box-shadow:0 0 14px rgba(227,236,239,0.12);
+      background:rgba(255,255,255,0.14); border-color:var(--ice);
+      box-shadow:0 0 16px rgba(227,236,239,0.2);
     }
     .clouder-toggle__icon{ transition:transform .35s var(--ease); }
     /* stato ESPANSO: freccia in su */
@@ -1440,6 +1453,34 @@
       btn.setAttribute('aria-expanded', String(!collapsed));
       label.textContent = collapsed ? 'Espandi prenotazione' : 'Comprimi';
     }
+    /* apre il widget, aggiorna toggle, scrolla al form */
+    function openClouder(){
+      var wrap=document.getElementById('clouderpro-wrap');
+      var btn=document.getElementById('clouderToggle');
+      if(!wrap) return;
+      wrap.classList.remove('clouder-collapsed');
+      if(btn){
+        btn.setAttribute('aria-expanded','true');
+        var label=btn.querySelector('.clouder-toggle__label');
+        if(label) label.textContent='Comprimi';
+      }
+      // chiude eventuale overlay mobile, poi scrolla al form
+      document.body.classList.remove('menu-open');
+      var ov=document.getElementById('shMobileOverlay'); if(ov) ov.classList.remove('show');
+      wrap.scrollIntoView({behavior:'smooth', block:'center'});
+    }
+    /* logica globale: qualsiasi elemento il cui testo contiene "Prenota"
+       (e che NON sia il toggle stesso) apre il widget al click */
+    document.addEventListener('click', function(e){
+      var el=e.target.closest('a,button');
+      if(!el) return;
+      if(el.id==='clouderToggle' || el.closest('#clouderpro')) return;
+      var txt=(el.textContent||'').trim().toLowerCase();
+      if(txt.indexOf('prenota')!==-1){
+        e.preventDefault();
+        openClouder();
+      }
+    });
   </script>
 
   <!-- HERO a livelli: watermark 4X4 (z1) / auto frontale (z2) / testo (z3) -->
@@ -1454,7 +1495,7 @@
           Flotta esclusiva, consegna in due ore, zero burocrazia. Il noleggio premium che fa rumore.
         </p>
         <div class="hero-cta-row" id="a-cta">
-          <button class="hero-cta" onclick="document.querySelector('.sticky-search').scrollIntoView({behavior:'smooth'})">Prenota ora</button>
+          <button class="hero-cta">Prenota ora</button>
           <button class="hero-cta hero-cta--ghost" onclick="document.getElementById('flotta').scrollIntoView({behavior:'smooth'})">Esplora la flotta</button>
         </div>
       </div>
@@ -1464,7 +1505,7 @@
 
   <!-- STATS minimal -->
   <div class="stats-strip reveal">
-    <div class="stat-item"><div class="stat-num">48<em>+</em></div><span class="stat-desc">Vetture disponibili</span></div>
+    <div class="stat-item"><div class="stat-num">44<em>+</em></div><span class="stat-desc">Vetture disponibili</span></div>
     <div class="stat-item"><div class="stat-num">24<em>/7</em></div><span class="stat-desc">Assistenza dedicata</span></div>
     <div class="stat-item"><div class="stat-num">3<em>s</em></div><span class="stat-desc">0 – 100 km/h medio</span></div>
     <div class="stat-item"><div class="stat-num">100<em>%</em></div><span class="stat-desc">Clienti soddisfatti</span></div>
@@ -1794,7 +1835,7 @@
       </div>
       <p class="manifesto__text">Consegna in due ore, assistenza attiva giorno e notte, vetture sempre revisionate. Quando decidi di muoverti, noi siamo già pronti.</p>
       <div class="btn-row reveal d2 mf-cta">
-        <button class="btn-primary" onclick="document.querySelector('.sticky-search').scrollIntoView({behavior:'smooth'})">Prenota Ora</button>
+        <button class="btn-primary">Prenota Ora</button>
         <button class="btn-ghost" onclick="document.getElementById('flotta').scrollIntoView({behavior:'smooth'})">Esplora la Flotta</button>
       </div>
     </div>
