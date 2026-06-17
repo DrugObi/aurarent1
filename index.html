@@ -16,6 +16,7 @@
     :root{
       --hero-bg-image:url('https://d8j0ntlcm91z4.cloudfront.net/user_37wLEcgtT99OWtuf2iqxdzZdDOJ/hf_20260612_223734_84169e34-3f65-472b-ab09-c04150eb849d.png');
       --ice:#E3ECEF; --ice-light:#F2F7F9; --ice-dim:#9FB4BC;
+      --cyan:#00F2FE;
       --onyx:#121212; --onyx-2:#161616; --onyx-3:#1C1C1C; --onyx-deep:#090d12;
       --txt-mute:#B3C0C4;
       --ice-glow:rgba(227,236,239,0.55);
@@ -141,37 +142,51 @@
     .hero-cta--ghost{ background:transparent; color:var(--ice); border:1px solid var(--bdr-ice) }
     .hero-cta--ghost:hover{ background:rgba(227,236,239,.06); border-color:var(--ice); box-shadow:none }
 
-    /* ════ STATS — bande orizzontali interattive "AP Archive" ════ */
+    /* ════ STATS — bande orizzontali interattive premium (luxury automotive) ════ */
     .stats-strip{
       max-width:1100px; margin:0 auto; padding:4.5rem 2.5rem;
       display:flex; flex-direction:column;        /* container verticale di 3 righe */
     }
-    /* ogni statistica = riga full-width delimitata da hairline opaca */
+    /* ogni statistica = riga full-width, altezza generosa, transizione cinematografica su tutto */
     .stat-item{
-      width:100%; display:flex; align-items:center; justify-content:space-between;
-      padding:24px 16px;
+      width:100%; position:relative; display:flex; align-items:center; justify-content:space-between;
+      padding:40px 24px;
       border-bottom:1px solid rgba(255,255,255,0.1);
-      transition:background-color .3s ease;
+      background-image:linear-gradient(90deg, rgba(0,242,254,0.05) 0%, rgba(0,0,0,0) 60%);
+      background-size:200% 100%; background-repeat:no-repeat;
+      background-position:200% 0;                  /* gradiente totalmente fuori scena a riposo */
+      transition:all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
     }
     .stat-item:first-child{ border-top:1px solid rgba(255,255,255,0.1); }
-    /* hover: l'intera riga si accende di nero fumo + riflesso ciano impercettibile */
-    .stat-item:hover{ background-color:rgba(0,242,254,0.03); }
-    /* numero gigante a sinistra */
+    /* HOVER spettacolare: gradiente ciano entra, linea inferiore = lama di luce */
+    .stat-item:hover{
+      background-position:0 0;
+      border-bottom:1px solid var(--cyan);
+    }
+    /* numero gigante a sinistra: slitta a destra + bagliore neon su hover */
     .stat-num{
       font-weight:800; font-size:3.5rem; line-height:1; letter-spacing:-.04em;
       flex:0 0 auto;
+      transition:transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), text-shadow 0.5s ease;
+    }
+    .stat-item:hover .stat-num{
+      transform:translateX(15px);
+      text-shadow:0 0 12px rgba(0,242,254,0.4);
     }
     .stat-num em{ font-style:normal; font-weight:300; color:var(--ice) }
-    /* descrizione a destra, centrata verticalmente */
+    /* descrizione a destra, centrata verticalmente; vira al ciano su hover */
     .stat-desc{
       font-size:.72rem; letter-spacing:.28em; text-transform:uppercase;
       color:rgba(227,236,239,.55); text-align:right; flex:0 1 auto;
+      transition:color 0.5s ease, letter-spacing 0.5s ease;
     }
+    .stat-item:hover .stat-desc{ color:var(--cyan); letter-spacing:.32em; }
     /* MOBILE ≤768px: STESSA struttura a strisce — numero sx + testo dx, niente incolonnamento */
     @media(max-width:768px){
       .stats-strip{ padding:3rem 1.2rem; }
-      .stat-item{ padding:20px 8px; gap:14px; }
+      .stat-item{ padding:26px 10px; gap:14px; }
       .stat-num{ font-size:2rem; }
+      .stat-item:hover .stat-num{ transform:translateX(8px); }
       .stat-desc{ font-size:.56rem; letter-spacing:.16em; line-height:1.3; }
     }
 
@@ -478,19 +493,39 @@
 
     /* ════ FOOTER ════ */
     footer{ padding:2.5rem; border-top:1px solid var(--bdr); position:relative; }
-    /* HQ data: riga testuale minimale, centrata, sopra i crediti */
+    /* HQ data: layout a 3 colonne, fiero ed elegante, dati come elementi di design vivi */
     .footer-hq{
-      max-width:1280px; margin:0 auto 1.6rem; padding-bottom:1.4rem;
-      display:flex; align-items:center; justify-content:center; flex-wrap:wrap;
-      gap:.2rem .9rem; text-align:center;
-      border-bottom:1px solid rgba(255,255,255,0.06);
+      max-width:1280px; margin:0 auto 2.4rem; padding-bottom:2.4rem;
+      display:flex; align-items:flex-start; justify-content:center; flex-wrap:wrap;
+      gap:2rem 4.5rem; text-align:center;
+      border-bottom:1px solid rgba(255,255,255,0.08);
+    }
+    .footer-hq-col{ display:flex; flex-direction:column; align-items:center; gap:.55rem; min-width:0; }
+    .footer-hq-label{
+      font-family:var(--font); font-size:.6rem; font-weight:700;
+      letter-spacing:.34em; text-transform:uppercase; color:rgba(227,236,239,.32);
     }
     .footer-hq-item{
-      font-size:.62rem; font-weight:300; letter-spacing:.14em; text-transform:uppercase;
-      color:rgba(227,236,239,.4); text-decoration:none; transition:color .3s ease;
+      position:relative; font-family:var(--font);
+      font-size:1.15rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase;
+      color:var(--ice); text-decoration:none; line-height:1.3;
+      transition:color .35s ease, text-shadow .35s ease;
     }
-    a.footer-hq-item:hover{ color:var(--ice); }
-    .footer-hq-sep{ color:rgba(227,236,239,.22); font-size:.62rem; }
+    /* sottolineatura animata ciano che cresce da sinistra (solo sui link) */
+    a.footer-hq-item::after{
+      content:""; position:absolute; left:0; bottom:-6px; height:1px; width:0;
+      background:var(--cyan); transition:width .4s cubic-bezier(0.25,1,0.5,1);
+    }
+    a.footer-hq-item:hover{
+      color:var(--cyan); text-shadow:0 0 14px rgba(0,242,254,0.45);
+    }
+    a.footer-hq-item:hover::after{ width:100%; }
+    /* la sede non è un link: resta sobria ma leggibile */
+    span.footer-hq-item{ font-weight:600; color:rgba(227,236,239,.78); letter-spacing:.03em; }
+    @media(max-width:768px){
+      .footer-hq{ gap:1.6rem 0; flex-direction:column; align-items:center; }
+      .footer-hq-item{ font-size:1rem; }
+    }
     .footer-content{
       position:static;
       max-width:1280px; margin:0 auto;
@@ -1129,9 +1164,8 @@
       transform:translateY(-4px); border-color:var(--bdr-ice);
       box-shadow:0 16px 44px rgba(0,0,0,0.5);
     }
-    /* colonna centrale evidenziata: bordo ghiaccio sottile */
-    .svc-tile--feature{ border:1px solid var(--ice); }
-    .svc-tile--feature:hover{ border-color:var(--ice); }
+    /* card 02: NESSUN bordo acceso di default — identica a 01/03, si illumina solo su :hover (eredita .svc-tile:hover) */
+    .svc-tile--feature{ border:1px solid rgba(227,236,239,0.10); }
     .svc-tile__tag{
       display:flex; align-items:baseline; gap:10px;
       font-family:var(--font-display); text-transform:uppercase;
@@ -1689,11 +1723,18 @@
 
   <footer id="contatti">
     <div class="footer-hq">
-      <a href="tel:+393758013299" class="footer-hq-item">+39 375 801 3299</a>
-      <span class="footer-hq-sep">·</span>
-      <a href="mailto:info@aurarent.rent" class="footer-hq-item">info@aurarent.rent</a>
-      <span class="footer-hq-sep">·</span>
-      <span class="footer-hq-item">Via della Moscova 13, 20121 Milano (MI)</span>
+      <div class="footer-hq-col">
+        <span class="footer-hq-label">Telefono</span>
+        <a href="tel:+393758013299" class="footer-hq-item">+39 375 801 3299</a>
+      </div>
+      <div class="footer-hq-col">
+        <span class="footer-hq-label">E-mail</span>
+        <a href="mailto:info@aurarent.rent" class="footer-hq-item">info@aurarent.rent</a>
+      </div>
+      <div class="footer-hq-col">
+        <span class="footer-hq-label">Sede</span>
+        <span class="footer-hq-item">Via della Moscova 13, 20121 Milano</span>
+      </div>
     </div>
     <div class="footer-content">
       <span class="footer-logo"><img src="logo-aurarent.png" alt="Aura-rent" class="footer-logo-img"></span>
