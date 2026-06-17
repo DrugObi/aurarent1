@@ -143,26 +143,35 @@
 
     /* ════ STATS — minimal & distanziati ════ */
     .stats-strip{
-      max-width:1280px; margin:0 auto; padding:5rem 2.5rem;
-      display:grid; grid-template-columns:repeat(4,1fr); gap:1.5rem;
+      max-width:1100px; margin:0 auto; padding:5rem 2.5rem;
+      display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem;
       border-top:1px solid var(--bdr);
     }
-    @media(max-width:680px){ .stats-strip{grid-template-columns:repeat(2,1fr); gap:1.25rem; padding:4rem 1.5rem} }
-    /* card minimale scurissima: numero gigante sopra, descrizione sotto */
+    @media(max-width:680px){ .stats-strip{grid-template-columns:1fr; gap:1.25rem; padding:4rem 1.5rem} }
+    /* card glass interattiva: numero gigante sopra, descrizione sotto */
     .stat-item{
-      text-align:left;
-      background:var(--onyx-2);
+      position:relative; text-align:left; overflow:hidden;
+      background:rgba(18,18,18,0.65);
+      backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
       border:1px solid rgba(255,255,255,0.05);
       border-radius:12px;
       padding:1.9rem 1.6rem;
       display:flex; flex-direction:column;
-      transition:border-color .4s var(--ease), box-shadow .4s var(--ease), transform .4s var(--ease);
+      transition:all .4s ease;
     }
+    /* riflesso azzurro/ciano soft sullo sfondo (faro xeno / metallo liquido) */
+    .stat-item::before{
+      content:""; position:absolute; inset:0; z-index:0; pointer-events:none;
+      background:radial-gradient(120% 80% at 80% 0%, rgba(0,242,254,0.06) 0%, transparent 55%);
+      opacity:0; transition:opacity .4s ease;
+    }
+    .stat-item > *{ position:relative; z-index:1; }
     .stat-item:hover{
-      border-color:var(--bdr-ice);
-      box-shadow:0 0 26px rgba(227,236,239,0.10), inset 0 0 0 1px rgba(227,236,239,0.04);
+      border:1px solid rgba(0,242,254,0.2);
+      box-shadow:0 0 30px rgba(0,242,254,0.08), inset 0 0 22px rgba(0,242,254,0.05);
       transform:translateY(-3px);
     }
+    .stat-item:hover::before{ opacity:1; }
     .stat-num{ font-weight:800; font-size:clamp(2.4rem,4vw,3.2rem); line-height:1; letter-spacing:-.04em }
     .stat-num em{ font-style:normal; font-weight:300; color:var(--ice) }
     .stat-desc{ font-size:.6rem; letter-spacing:.28em; text-transform:uppercase; color:rgba(227,236,239,.42); margin-top:1.1rem; display:block }
@@ -464,12 +473,14 @@
     .btn-primary:hover{ background:var(--ice-light); transform:translateY(-2px); box-shadow:0 12px 36px rgba(227,236,239,.28) }
     .btn-ghost{ font-weight:600; font-size:.72rem; letter-spacing:.18em; text-transform:uppercase; color:var(--ice);
       background:transparent; padding:1.1rem 2.6rem; border:1px solid var(--bdr-ice); border-radius:var(--r-sm);
-      cursor:pointer; font-family:var(--font); transition:all .25s }
+      cursor:pointer; font-family:var(--font); transition:all .25s;
+      display:inline-flex; align-items:center; justify-content:center; text-decoration:none; }
     .btn-ghost:hover{ border-color:var(--ice); background:rgba(227,236,239,.07); transform:translateY(-2px) }
 
     /* ════ FOOTER ════ */
     footer{ padding:2.5rem; border-top:1px solid var(--bdr); }
     .footer-content{
+      position:relative;
       max-width:1280px; margin:0 auto;
       display:flex; align-items:center; justify-content:space-between;
       flex-wrap:wrap; gap:1rem;
@@ -482,6 +493,11 @@
     }
     .footer-logo-img:hover{ opacity:1 }
     footer span{ font-size:.58rem; font-weight:300; letter-spacing:.18em; color:rgba(227,236,239,.2) }
+    /* copyright perfettamente centrato sulla pagina (desktop), indipendente da logo/legal */
+    .footer-copy{
+      position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+      text-align:center; display:block; white-space:nowrap; pointer-events:none;
+    }
     .footer-legal{ display:inline-flex; align-items:center; gap:.2rem; }
     .footer-sep{ color:rgba(227,236,239,.25); }
     .footer-legal a{
@@ -498,6 +514,7 @@
       }
       .footer-logo-img{ height:auto; max-width:56px; opacity:.7; }
       .footer-copy{
+        position:static; transform:none; left:auto; top:auto; white-space:normal; pointer-events:auto;
         font-size:.56rem; letter-spacing:.16em;
         color:rgba(227,236,239,.28); order:3;
       }
@@ -864,9 +881,17 @@
       }
       .hero--layered .hero-eyebrow{ font-size:.72rem !important; margin-bottom:.2rem !important; }
       .hero--layered .hero-tagline{ font-size:1rem !important; max-width:32ch !important; margin-top:.2rem !important; }
-      /* CTA più snelle e distanziate: non soffocano la tipografia */
-      .hero--layered .hero-cta-row{ flex-direction:column !important; width:100%; gap:.85rem; margin-top:1.4rem; }
-      .hero--layered .hero-cta{ width:100%; min-height:46px !important; padding:.85rem 2rem !important; }
+      /* CTA ultra-sportive: compatte, centrate, non più "mattoni" a tutta larghezza */
+      .hero--layered .hero-cta-row{
+        flex-direction:column !important; align-items:center !important;
+        width:100%; gap:.7rem; margin-top:2.6rem !important;
+      }
+      .hero--layered .hero-cta{
+        width:auto !important; max-width:280px; min-width:230px; min-height:0 !important;
+        padding:13px 30px !important;
+        font-size:.66rem !important; letter-spacing:.15em !important;
+        border-radius:4px !important;
+      }
       .hero-vtag{ display:none; }          /* via il tag verticale che affolla su mobile */
     }
 
@@ -1321,7 +1346,6 @@
   <div class="stats-strip reveal">
     <div class="stat-item"><div class="stat-num">44<em>+</em></div><span class="stat-desc">Vetture disponibili</span></div>
     <div class="stat-item"><div class="stat-num">24<em>/7</em></div><span class="stat-desc">Assistenza dedicata</span></div>
-    <div class="stat-item"><div class="stat-num">3<em>s</em></div><span class="stat-desc">0 – 100 km/h medio</span></div>
     <div class="stat-item"><div class="stat-num">100<em>%</em></div><span class="stat-desc">Clienti soddisfatti</span></div>
   </div>
 
@@ -1645,7 +1669,7 @@
       <p class="manifesto__text">Consegna in due ore, assistenza attiva giorno e notte, vetture sempre revisionate. Quando decidi di muoverti, noi siamo già pronti.</p>
       <div class="btn-row reveal d2 mf-cta">
         <a href="https://carmego.cloudercar.com" target="_blank" rel="noopener noreferrer" class="btn-primary">Prenota Ora</a>
-        <button class="btn-ghost" onclick="document.getElementById('flotta').scrollIntoView({behavior:'smooth'})">Esplora la Flotta</button>
+        <a href="tel:#" class="btn-ghost">Chiama Ora</a>
       </div>
     </div>
   </section>
