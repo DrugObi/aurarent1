@@ -141,38 +141,38 @@
     .hero-cta--ghost{ background:transparent; color:var(--ice); border:1px solid var(--bdr-ice) }
     .hero-cta--ghost:hover{ background:rgba(227,236,239,.06); border-color:var(--ice); box-shadow:none }
 
-    /* ════ STATS — minimal & distanziati ════ */
-    /* ════ STATISTICHE — stile "AP Archive": bande orizzontali full-width ════ */
+    /* ════ STATS — bande orizzontali interattive "AP Archive" ════ */
     .stats-strip{
-      max-width:1280px; margin:0 auto; padding:4rem 2.5rem;
-      display:flex; flex-direction:column;
-      border-top:1px solid rgba(255,255,255,0.1);
+      max-width:1100px; margin:0 auto; padding:4.5rem 2.5rem;
+      display:flex; flex-direction:column;        /* container verticale di 3 righe */
     }
-    /* ogni banda: numero enorme a sinistra, descrizione di fianco, separata da linea sottile */
+    /* ogni statistica = riga full-width delimitata da hairline opaca */
     .stat-item{
-      display:flex; align-items:center; gap:2.5rem;
-      padding:2.4rem 1.2rem;
+      width:100%; display:flex; align-items:center; justify-content:space-between;
+      padding:24px 16px;
       border-bottom:1px solid rgba(255,255,255,0.1);
-      transition:background-color .4s ease;
+      transition:background-color .3s ease;
     }
-    .stat-item:hover{
-      background-color:rgba(10,25,30,0.4);   /* nero fumo con tocco ciano scuro */
-    }
+    .stat-item:first-child{ border-top:1px solid rgba(255,255,255,0.1); }
+    /* hover: l'intera riga si accende di nero fumo + riflesso ciano impercettibile */
+    .stat-item:hover{ background-color:rgba(0,242,254,0.03); }
+    /* numero gigante a sinistra */
     .stat-num{
-      font-weight:800; font-size:clamp(3rem,7vw,5.2rem); line-height:1;
-      letter-spacing:-.04em; flex:0 0 auto; min-width:3.4em;
-      text-transform:uppercase;
+      font-weight:800; font-size:3.5rem; line-height:1; letter-spacing:-.04em;
+      flex:0 0 auto;
     }
     .stat-num em{ font-style:normal; font-weight:300; color:var(--ice) }
+    /* descrizione a destra, centrata verticalmente */
     .stat-desc{
-      font-size:.82rem; font-weight:700; letter-spacing:.28em; text-transform:uppercase;
-      color:rgba(227,236,239,.55); margin:0; display:block;
+      font-size:.72rem; letter-spacing:.28em; text-transform:uppercase;
+      color:rgba(227,236,239,.55); text-align:right; flex:0 1 auto;
     }
-    @media(max-width:680px){
-      .stats-strip{ padding:3rem 1.5rem; }
-      .stat-item{ gap:1.2rem; padding:1.9rem .4rem; }
-      .stat-num{ font-size:clamp(2.6rem,14vw,3.6rem); min-width:2.6em; }
-      .stat-desc{ font-size:.66rem; letter-spacing:.2em; }
+    /* MOBILE ≤768px: STESSA struttura a strisce — numero sx + testo dx, niente incolonnamento */
+    @media(max-width:768px){
+      .stats-strip{ padding:3rem 1.2rem; }
+      .stat-item{ padding:20px 8px; gap:14px; }
+      .stat-num{ font-size:2rem; }
+      .stat-desc{ font-size:.56rem; letter-spacing:.16em; line-height:1.3; }
     }
 
     /* ════ SECTIONS ════ */
@@ -477,9 +477,22 @@
     .btn-ghost:hover{ border-color:var(--ice); background:rgba(227,236,239,.07); transform:translateY(-2px) }
 
     /* ════ FOOTER ════ */
-    footer{ padding:2.5rem; border-top:1px solid var(--bdr); }
+    footer{ padding:2.5rem; border-top:1px solid var(--bdr); position:relative; }
+    /* HQ data: riga testuale minimale, centrata, sopra i crediti */
+    .footer-hq{
+      max-width:1280px; margin:0 auto 1.6rem; padding-bottom:1.4rem;
+      display:flex; align-items:center; justify-content:center; flex-wrap:wrap;
+      gap:.2rem .9rem; text-align:center;
+      border-bottom:1px solid rgba(255,255,255,0.06);
+    }
+    .footer-hq-item{
+      font-size:.62rem; font-weight:300; letter-spacing:.14em; text-transform:uppercase;
+      color:rgba(227,236,239,.4); text-decoration:none; transition:color .3s ease;
+    }
+    a.footer-hq-item:hover{ color:var(--ice); }
+    .footer-hq-sep{ color:rgba(227,236,239,.22); font-size:.62rem; }
     .footer-content{
-      position:relative;
+      position:static;
       max-width:1280px; margin:0 auto;
       display:flex; align-items:center; justify-content:space-between;
       flex-wrap:wrap; gap:1rem;
@@ -492,10 +505,11 @@
     }
     .footer-logo-img:hover{ opacity:1 }
     footer span{ font-size:.58rem; font-weight:300; letter-spacing:.18em; color:rgba(227,236,239,.2) }
-    /* copyright perfettamente centrato sulla pagina (desktop), indipendente da logo/legal */
+    /* copyright perfettamente centrato sulla LARGHEZZA PIENA del footer (viewport), indipendente da logo/legal */
     .footer-copy{
-      position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
-      text-align:center; display:block; white-space:nowrap; pointer-events:none;
+      position:absolute; left:0; right:0; margin:0 auto;
+      top:auto; bottom:auto;
+      width:100%; text-align:center; display:block; white-space:nowrap; pointer-events:none;
     }
     .footer-legal{ display:inline-flex; align-items:center; gap:.2rem; }
     .footer-sep{ color:rgba(227,236,239,.25); }
@@ -1668,12 +1682,19 @@
       <p class="manifesto__text">Consegna in due ore, assistenza attiva giorno e notte, vetture sempre revisionate. Quando decidi di muoverti, noi siamo già pronti.</p>
       <div class="btn-row reveal d2 mf-cta">
         <a href="https://carmego.cloudercar.com" target="_blank" rel="noopener noreferrer" class="btn-primary">Prenota Ora</a>
-        <a href="tel:#" class="btn-ghost">Chiama Ora</a>
+        <a href="tel:+393758013299" class="btn-ghost">Chiama Ora</a>
       </div>
     </div>
   </section>
 
   <footer id="contatti">
+    <div class="footer-hq">
+      <a href="tel:+393758013299" class="footer-hq-item">+39 375 801 3299</a>
+      <span class="footer-hq-sep">·</span>
+      <a href="mailto:info@aurarent.rent" class="footer-hq-item">info@aurarent.rent</a>
+      <span class="footer-hq-sep">·</span>
+      <span class="footer-hq-item">Via della Moscova 13, 20121 Milano (MI)</span>
+    </div>
     <div class="footer-content">
       <span class="footer-logo"><img src="logo-aurarent.png" alt="Aura-rent" class="footer-logo-img"></span>
       <span class="footer-copy">© 2026 Aura.rent — Tutti i diritti riservati</span>
