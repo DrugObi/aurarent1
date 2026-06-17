@@ -135,6 +135,7 @@
       font-family:var(--font); font-weight:800; font-size:.72rem; letter-spacing:.16em; text-transform:uppercase;
       color:var(--onyx); background:var(--ice); padding:1.1rem 2.4rem; border:none; cursor:pointer;
       border-radius:var(--r-sm); transition:background .25s,transform .25s,box-shadow .25s;
+      display:inline-flex; align-items:center; justify-content:center; text-decoration:none;
     }
     .hero-cta:hover{ background:var(--ice-light); transform:translateY(-2px); box-shadow:0 12px 32px rgba(227,236,239,.18) }
     .hero-cta--ghost{ background:transparent; color:var(--ice); border:1px solid var(--bdr-ice) }
@@ -458,7 +459,8 @@
     .btn-row{ display:flex; gap:1rem; flex-wrap:wrap; justify-content:center; position:relative; z-index:1 }
     .btn-primary{ font-weight:700; font-size:.72rem; letter-spacing:.18em; text-transform:uppercase; color:var(--onyx);
       background:var(--ice); padding:1.1rem 2.6rem; border:none; border-radius:var(--r-sm); cursor:pointer;
-      font-family:var(--font); transition:background .25s,transform .25s,box-shadow .25s }
+      font-family:var(--font); transition:background .25s,transform .25s,box-shadow .25s;
+      display:inline-flex; align-items:center; justify-content:center; text-decoration:none; }
     .btn-primary:hover{ background:var(--ice-light); transform:translateY(-2px); box-shadow:0 12px 36px rgba(227,236,239,.28) }
     .btn-ghost{ font-weight:600; font-size:.72rem; letter-spacing:.18em; text-transform:uppercase; color:var(--ice);
       background:transparent; padding:1.1rem 2.6rem; border:1px solid var(--bdr-ice); border-radius:var(--r-sm);
@@ -656,34 +658,6 @@
       body.menu-open .sh-menu-toggle .hamburger-line:nth-child(2){ transform:translateY(-3.25px) rotate(-45deg) }
     }
 
-    /* ════ STICKY SEARCH WIDGET ════ */
-    .sticky-search{
-      position:sticky; top:96px; z-index:1000;
-      background:rgba(11,13,15,0.82);
-      backdrop-filter:blur(22px) saturate(1.4); -webkit-backdrop-filter:blur(22px) saturate(1.4);
-      border-bottom:1px solid var(--bdr-ice); box-shadow:0 8px 30px rgba(0,0,0,0.35);
-    }
-    .sticky-search__inner{
-      max-width:1280px; margin:0 auto; padding:.9rem 2.5rem;
-      display:flex; align-items:center; gap:1.5rem; flex-wrap:wrap;
-    }
-    .ss-field{ display:flex; flex-direction:column; gap:.25rem; padding-right:1.5rem;
-      border-right:1px solid var(--bdr) }
-    .ss-field:last-of-type{ border-right:none }
-    .ss-label{ font-weight:700; font-size:.5rem; letter-spacing:.3em; text-transform:uppercase; color:var(--ice) }
-    .ss-value{ font-size:.92rem; color:var(--ice); white-space:nowrap }
-    .ss-submit{ margin-left:auto; padding:.8rem 2rem; font-family:var(--font); font-weight:700;
-      font-size:.7rem; letter-spacing:.18em; text-transform:uppercase; color:var(--onyx);
-      background:var(--ice); border:none; border-radius:var(--r-sm); cursor:pointer;
-      transition:background .25s,transform .25s,box-shadow .25s }
-    .ss-submit:hover{ background:var(--ice-light); transform:translateY(-2px); box-shadow:0 8px 24px rgba(227,236,239,0.3) }
-    @media(max-width:680px){
-      .sticky-search{ top:80px }
-      .sticky-search__inner{ padding:.8rem 1.3rem; gap:1rem }
-      .ss-field{ border-right:none; padding-right:0 }
-      .ss-submit{ width:100%; margin-left:0 }
-    }
-
     /* ════ SECTION BREAK ════ */
     .section-break{ padding:7rem 2.5rem; background:var(--onyx) }
     @media(max-width:680px){ .section-break{ padding:5rem 1.5rem } }
@@ -797,8 +771,8 @@
     .sb-title em, .stat-num em, .mf-word.dim, .hero-eyebrow,
     .manifesto__num, .section-label, .sb-eyebrow, .fb-hero-eyebrow{ color:var(--ice-bright) }
     .hero h1, .final-section h2, .mf-word, .section-title{ text-shadow:0 0 10px rgba(197,220,228,0.2) }
-    .hero-cta, .fb-hero-cta, .btn-primary, .ss-submit{ background:var(--ice-bright); color:#0E0E0E }
-    .hero-cta:hover, .fb-hero-cta:hover, .btn-primary:hover, .ss-submit:hover{ background:#D4E6ED }
+    .hero-cta, .fb-hero-cta, .btn-primary{ background:var(--ice-bright); color:#0E0E0E }
+    .hero-cta:hover, .fb-hero-cta:hover, .btn-primary:hover{ background:#D4E6ED }
     .fb-card:hover .fb-card-cta{ color:var(--ice-bright) }
 
     /* 3. HERO: respiro, immagine imponente, spazio premium */
@@ -874,11 +848,6 @@
       #landing{ display:flex; flex-direction:column; }
       .site-header{ order:-2; }            /* navbar sempre in cima */
       .hero.hero--layered{ order:-1; }     /* hero subito sotto la navbar */
-      /* la search non è più appiccicata in cima: scende dopo la hero, statica */
-      .sticky-search{
-        order:0; position:static !important; top:auto !important;
-        margin:0; width:100%;
-      }
 
       /* HERO a tutto schermo, testo gigante centrato sopra l'immagine */
       .hero--layered{
@@ -901,15 +870,6 @@
       .hero-vtag{ display:none; }          /* via il tag verticale che affolla su mobile */
     }
 
-    /* 4. STICKY BAR: integrata, bordo ghiaccio opaco, ombra morbida */
-    .sticky-search{
-      background:#1A1A1A;
-      border:1px solid rgba(197,220,228,0.10);
-      border-bottom:1px solid rgba(197,220,228,0.10);
-      box-shadow:0 20px 40px rgba(0,0,0,0.5);
-      backdrop-filter:none; -webkit-backdrop-filter:none;
-    }
-
     /* ════ LEGGIBILITÀ GLOBALE TESTI — più ariosi e premium ════ */
     /* Override del grigio spento: bianco opaco ad alta leggibilità su TUTTE le descrizioni */
     .hero-tagline, .fb-card-desc, .benefit-desc, .manifesto__text,
@@ -930,10 +890,10 @@
       color:rgba(255,255,255,0.85) !important; font-weight:400 !important;
     }
     /* testi interni ai box / gestionale: minimo 1rem, distanziati */
-    .ss-value, .fb-card-price, .field-value{
+    .fb-card-price, .field-value{
       font-size:1rem; line-height:1.6; letter-spacing:0.02em; color:rgba(255,255,255,0.85);
     }
-    .ss-label, .field-label{ font-size:.6rem; letter-spacing:0.18em }
+    .field-label{ font-size:.6rem; letter-spacing:0.18em }
     /* navigazione più leggibile (plancia: label uppercase spaziati) */
     @media(max-width:680px){
       .hero-tagline, .manifesto__text, .sb-text{ font-size:1.1rem }
@@ -1248,317 +1208,7 @@
         transform:scale(1.15);
       }
     }
-    /* ════════ CLOUDERCAR WIDGET (Vuetify) — forzatura palette dark luxury ════════
-       Widget online = Vue/Vuetify, niente Shadow DOM: forziamo via classi .v-* */
-    #clouderpro{
-      background:rgba(15,15,15,0.75) !important;
-      border:1px solid rgba(255,255,255,0.08) !important;
-      border-radius:16px !important;
-      padding:24px !important;
-      backdrop-filter:blur(20px) !important; -webkit-backdrop-filter:blur(20px) !important;
-      box-shadow:0 20px 40px rgba(0,0,0,0.5) !important;
-      max-width:1100px; margin:0 auto;
-    }
-    /* 1. CARD CAMPI: i blocchi bianchi accesi → scuri integrati */
-    #clouderpro .clouder-field,
-    #clouderpro .search-field,
-    #clouderpro [class*="card"],
-    #clouderpro [class*="input-wrapper"],
-    #clouderpro .v-card,
-    #clouderpro .v-sheet,
-    #clouderpro .v-input__control,
-    #clouderpro .v-field{
-      background-color:#161616 !important;
-      border:1px solid rgba(255,255,255,0.05) !important;
-      border-radius:12px !important;
-      color:#ffffff !important;
-      box-shadow:none !important;
-      transition:border-color 0.3s ease !important;
-    }
-    /* hover: bordo che si illumina delicatamente in ice */
-    #clouderpro .clouder-field:hover,
-    #clouderpro .search-field:hover,
-    #clouderpro [class*="input-wrapper"]:hover,
-    #clouderpro .v-card:hover,
-    #clouderpro .v-input__control:hover,
-    #clouderpro .v-field:hover{
-      border-color:rgba(227,236,239,0.4) !important;
-    }
-    /* 2. TESTI / INPUT / VALORI: tutto leggibile, niente fondi accesi interni */
-    #clouderpro input,
-    #clouderpro select,
-    #clouderpro p,
-    #clouderpro span,
-    #clouderpro label,
-    #clouderpro .v-label,
-    #clouderpro .v-field-label,
-    #clouderpro [class*="text"]{
-      color:#ffffff !important;
-      background-color:transparent !important;
-    }
-    #clouderpro .v-field__input,
-    #clouderpro .v-field__field,
-    #clouderpro .v-field{
-      background-color:transparent !important;
-      color:#ffffff !important;
-    }
-    #clouderpro .v-field__overlay{ background:transparent !important; }
-    #clouderpro input::placeholder,
-    #clouderpro .v-label{ color:rgba(255,255,255,0.5) !important; }
-    /* icone (calendario/orologio/frecce) visibili sul dark */
-    #clouderpro svg, #clouderpro .v-icon{ color:var(--ice) !important; opacity:.9; }
-    /* 3a. PULSANTE PRINCIPALE (Avanti) e elevated → ice */
-    #clouderpro button,
-    #clouderpro [role="button"],
-    #clouderpro .v-btn--variant-elevated,
-    #clouderpro .v-btn--variant-flat{
-      background-color:var(--ice) !important;
-      color:#000000 !important;
-      font-weight:700 !important;
-      text-transform:uppercase !important;
-      letter-spacing:0.05em !important;
-      border-radius:6px !important;
-      box-shadow:none !important;
-    }
-    /* 3b. PULSANTI SECONDARI (Auto/Van non attivi) → dark outline */
-    #clouderpro .v-btn--variant-outlined,
-    #clouderpro .v-tab:not(.v-tab--selected),
-    #clouderpro button:not([class*="primary"]):not([class*="accent"]):not(.v-tab--selected){
-      background-color:rgba(255,255,255,0.05) !important;
-      color:#ffffff !important;
-      border:1px solid rgba(255,255,255,0.1) !important;
-    }
-    /* tab attiva (Auto/Van selezionato) → accento ice pieno */
-    #clouderpro .v-tab--selected{
-      background-color:var(--ice) !important; color:#000 !important;
-      border:none !important;
-    }
-    #clouderpro button:hover,
-    #clouderpro .v-btn--variant-elevated:hover{
-      background:#ffffff !important;
-      box-shadow:0 0 15px rgba(227,236,239,0.4) !important;
-    }
-    /* "Powered by ClouderCar" tenue */
-    #clouderpro [class*="powered"], #clouderpro a[href*="cloudercar"]{
-      opacity:.4 !important; filter:grayscale(1);
-    }
-    /* MENU A TENDINA / CALENDARI Vuetify iniettati nel <body> (fuori da #clouderpro):
-       vanno scuriti globalmente, altrimenti restano bianchi accesi */
-    body > .v-overlay-container .v-overlay__content,
-    body > .v-overlay-container .v-menu .v-list,
-    body > .v-overlay-container .v-card,
-    body > .v-overlay-container .v-picker,
-    body > .v-overlay-container .v-date-picker,
-    body > .v-overlay-container .v-date-picker-month,
-    body > .v-overlay-container .v-list{
-      background-color:#161616 !important;
-      color:#ffffff !important;
-      border:1px solid rgba(255,255,255,0.08) !important;
-      border-radius:12px !important;
-      box-shadow:0 20px 50px rgba(0,0,0,0.6) !important;
-    }
-    body > .v-overlay-container .v-list-item,
-    body > .v-overlay-container .v-date-picker-month__day,
-    body > .v-overlay-container .v-btn,
-    body > .v-overlay-container span,
-    body > .v-overlay-container .v-label{
-      color:#ffffff !important; background-color:transparent !important;
-    }
-    body > .v-overlay-container .v-list-item:hover,
-    body > .v-overlay-container .v-date-picker-month__day:hover{
-      background-color:rgba(227,236,239,0.12) !important;
-    }
-    /* giorno selezionato nel calendario → accento ice */
-    body > .v-overlay-container .v-date-picker-month__day--selected .v-btn,
-    body > .v-overlay-container .v-list-item--active{
-      background-color:var(--ice) !important; color:#000 !important;
-    }
-    body > .v-overlay-container .v-overlay__scrim{ background:rgba(0,0,0,0.6) !important; }
-
-    /* ════ PUNTO 8 — FIX SOVRAPPOSIZIONE LABEL/VALORE (box "Dove vuoi riconsegnare", es. "Modena") ════
-       La floating label Vuetify è in absolute dentro .v-field; quando l'input è valorizzato
-       si accavalla sul testo. Diamo respiro verticale al valore e rimpiccioliamo la label flottante. */
-    #clouderpro .v-field{
-      --v-field-padding-top:22px !important;
-    }
-    #clouderpro .v-field__field{
-      padding-top:20px !important;
-    }
-    #clouderpro .v-field__input{
-      padding-top:20px !important;
-      padding-bottom:6px !important;
-      line-height:1.5 !important;
-      min-height:54px !important;
-      align-items:flex-end !important;
-    }
-    /* label a riposo: verticalmente centrata, niente overflow sul valore */
-    #clouderpro .v-field .v-label,
-    #clouderpro .v-field .v-field-label,
-    #clouderpro .v-field__label{
-      top:50% !important;
-      transform:translateY(-50%) !important;
-      line-height:1.2 !important;
-      font-size:0.9rem !important;
-      max-width:calc(100% - 24px) !important;
-      white-space:nowrap !important;
-      overflow:hidden !important;
-      text-overflow:ellipsis !important;
-    }
-    /* label flottante (input attivo/valorizzato): risale in alto, più piccola, staccata dal valore */
-    #clouderpro .v-field--active .v-label,
-    #clouderpro .v-field--active .v-field-label,
-    #clouderpro .v-field--active .v-field__label,
-    #clouderpro .v-field--dirty .v-field__label,
-    #clouderpro .v-field--focused .v-field__label,
-    #clouderpro .v-label--clickable.v-field-label--floating,
-    #clouderpro .v-field-label--floating{
-      top:8px !important;
-      transform:translateY(0) scale(0.74) !important;
-      transform-origin:top left !important;
-      font-size:0.82rem !important;
-      line-height:1.1 !important;
-      opacity:.75 !important;
-    }
-    /* il valore selezionato (es. "Modena") resta in basso, ben distanziato dalla label */
-    #clouderpro .v-field--active .v-field__input,
-    #clouderpro .v-field--dirty .v-field__input{
-      padding-top:26px !important;
-    }
-
-    /* ════ PUNTO 9 — FIX CALENDARIO / DATE-PICKER BIANCO E VUOTO ════
-       Il picker viene iniettato nel <body>; le regole con "body > .v-overlay-container" non
-       intercettano i wrapper intermedi → restava bianco su bianco. Qui targetizziamo l'intero
-       overlay container ovunque sia, header/controlli/giorni/settimana inclusi. */
-    .v-overlay-container .v-overlay__content,
-    .v-overlay-container .v-menu .v-list,
-    .v-overlay-container .v-picker,
-    .v-overlay-container .v-picker__body,
-    .v-overlay-container .v-date-picker,
-    .v-overlay-container .v-date-picker-month,
-    .v-overlay-container .v-date-picker-years,
-    .v-overlay-container .v-date-picker-months,
-    .v-overlay-container .v-date-picker-header,
-    .v-overlay-container .v-date-picker-controls,
-    .v-overlay-container .v-card.v-picker,
-    .v-overlay-container .v-list{
-      background-color:#161616 !important;
-      color:#ffffff !important;
-      border-color:rgba(255,255,255,0.08) !important;
-    }
-    /* tutti i testi/numeri del picker forzati a chiaro e visibili sul fondo scuro */
-    .v-overlay-container .v-date-picker *,
-    .v-overlay-container .v-picker *,
-    .v-overlay-container .v-list-item *{
-      color:#ffffff !important;
-    }
-    .v-overlay-container .v-date-picker-month__day,
-    .v-overlay-container .v-date-picker-month__day .v-btn,
-    .v-overlay-container .v-date-picker-month__weekday,
-    .v-overlay-container .v-date-picker-controls .v-btn,
-    .v-overlay-container .v-date-picker-header *,
-    .v-overlay-container .v-list-item,
-    .v-overlay-container .v-list-item-title{
-      color:#ffffff !important;
-      background-color:transparent !important;
-      opacity:1 !important;
-    }
-    /* giorni fuori mese / disabilitati: grigio chiaro leggibile, mai invisibili */
-    .v-overlay-container .v-date-picker-month__day--hide-adjacent{ visibility:hidden !important; }
-    .v-overlay-container .v-date-picker .v-btn--disabled,
-    .v-overlay-container .v-date-picker .v-btn--disabled *,
-    .v-overlay-container .v-date-picker-month__day .v-btn--disabled,
-    .v-overlay-container .v-date-picker-month__day .v-btn--disabled *{
-      color:rgba(255,255,255,0.32) !important; opacity:1 !important;
-    }
-    /* frecce/chevron di navigazione mese visibili */
-    .v-overlay-container .v-date-picker-controls .v-icon,
-    .v-overlay-container .v-date-picker-header .v-icon,
-    .v-overlay-container .v-picker .v-icon{
-      color:var(--ice) !important; opacity:1 !important;
-    }
-    /* hover e giorno selezionato */
-    .v-overlay-container .v-date-picker-month__day:hover .v-btn,
-    .v-overlay-container .v-list-item:hover{
-      background-color:rgba(227,236,239,0.14) !important;
-    }
-    .v-overlay-container .v-date-picker-month__day--selected .v-btn,
-    .v-overlay-container .v-list-item--active{
-      background-color:var(--ice) !important;
-    }
-    .v-overlay-container .v-date-picker-month__day--selected .v-btn,
-    .v-overlay-container .v-date-picker-month__day--selected .v-btn *,
-    .v-overlay-container .v-list-item--active,
-    .v-overlay-container .v-list-item--active *{
-      color:#000000 !important;
-    }
-    /* oggi: ring ice senza fondo pieno */
-    .v-overlay-container .v-date-picker-month__day .v-btn--active{
-      border:1px solid var(--ice) !important;
-    }
-
-    /* ════ TOGGLE espandi/comprimi widget prenotazione ════ */
-    #clouderpro-wrap{ position:relative; display:flex; flex-direction:column; width:100%; padding:0 15px; }
-    /* contenitore toggle centrato perfettamente — SOLO MOBILE (≤768px) */
-    .clouder-toggle{
-      display:none;   /* su desktop il toggle vive nel "Prenota" della navbar */
-      justify-content:center; align-items:center; gap:.55rem;
-      width:auto; min-width:240px; align-self:center;
-      margin:20px 0; padding:.7rem 1.5rem;
-      background:rgba(255,255,255,0.08);
-      border:1px solid rgba(227,236,239,0.28); border-radius:100px;
-      color:var(--ice); cursor:pointer;
-      font-family:var(--font); font-weight:700; font-size:.64rem;
-      letter-spacing:.16em; text-transform:uppercase;
-      transition:background .3s var(--ease), border-color .3s var(--ease), box-shadow .3s var(--ease);
-    }
-    @media(max-width:768px){
-      .clouder-toggle{ display:flex; }   /* capsula visibile solo su mobile */
-    }
-    .clouder-toggle:hover{
-      background:rgba(255,255,255,0.14); border-color:var(--ice);
-      box-shadow:0 0 16px rgba(227,236,239,0.2);
-    }
-    .clouder-toggle__icon{ transition:transform .35s var(--ease); }
-    /* stato ESPANSO: freccia in su */
-    #clouderpro-wrap:not(.clouder-collapsed) .clouder-toggle__icon{ transform:rotate(180deg); }
-    /* stato COMPATTO di default: mostra l'intera riga campi, nasconde il brand sotto */
-    /* stato COMPATTO: il widget SPARISCE al 100%, nessuna fetta visibile */
-    #clouderpro-wrap.clouder-collapsed #clouderpro{
-      max-height:0 !important;
-      opacity:0 !important;
-      padding:0 !important;
-      margin:0 auto !important;
-      overflow:hidden !important;
-      border:none !important;
-      backdrop-filter:none !important; -webkit-backdrop-filter:none !important;
-      box-shadow:none !important;
-      transition:all .4s ease-in-out;
-    }
-    #clouderpro-wrap:not(.clouder-collapsed) #clouderpro{
-      max-height:1200px; opacity:1; overflow:visible;
-      transition:all .4s ease-in-out;
-    }
-
-    /* ════ PIANO B — PULSANTE PORTALE CLOUDERCAR (fallback sempre disponibile) ════ */
-    .clouder-portal-btn{
-      display:inline-flex; align-items:center; justify-content:center; gap:.7rem;
-      align-self:center; margin:22px auto 4px;
-      padding:1.05rem 2.4rem;
-      background:linear-gradient(180deg, rgba(227,236,239,0.06), rgba(227,236,239,0.02));
-      border:1px solid var(--bdr-ice); border-radius:100px;
-      color:var(--ice); text-decoration:none;
-      font-family:var(--font); font-weight:700; font-size:.72rem;
-      letter-spacing:.18em; text-transform:uppercase;
-      transition:background .4s var(--ease), border-color .4s var(--ease), box-shadow .4s var(--ease), transform .4s var(--ease);
-    }
-    .clouder-portal-btn svg{ transition:transform .4s var(--ease); }
-    .clouder-portal-btn:hover{
-      background:var(--ice); color:var(--onyx);
-      border-color:var(--ice);
-      box-shadow:0 0 26px rgba(227,236,239,0.32);
-      transform:translateY(-2px);
-    }
-    .clouder-portal-btn:hover svg{ transform:translate(3px,-3px); stroke:var(--onyx); }
+    /* Widget ClouderCar e relativo CSS rimossi: prenotazione via link diretto al portale */
   </style>
 </head>
 <body>
@@ -1595,7 +1245,7 @@
           <li class="nav-link-item"><a href="#contatti">Contatti</a></li>
         </ul>
 
-        <a href="#" class="nav-btn-prenota">Prenota</a>
+        <a href="https://carmego.cloudercar.com" target="_blank" rel="noopener noreferrer" class="nav-btn-prenota">Prenota</a>
         <button class="sh-menu-toggle" aria-label="Apri menu" aria-expanded="false">
           <span class="hamburger-line"></span>
           <span class="hamburger-line"></span>
@@ -1610,81 +1260,12 @@
       <a href="#flotta" class="sh-mobile-link">Flotta</a>
       <a href="#vantaggi" class="sh-mobile-link">Vantaggi</a>
       <a href="#contatti" class="sh-mobile-link">Contatti</a>
-      <a href="#" class="sh-mobile-link sh-mobile-cta">Prenota</a>
+      <a href="https://carmego.cloudercar.com" target="_blank" rel="noopener noreferrer" class="sh-mobile-link sh-mobile-cta">Prenota</a>
     </nav>
   </div>
 
-  <!-- STICKY SEARCH WIDGET -->
-  <div class="sticky-search clouder-collapsed" id="clouderpro-wrap">
-    <button type="button" class="clouder-toggle" id="clouderToggle"
-            aria-expanded="false" aria-controls="clouderpro"
-            onclick="toggleClouder()">
-      <span class="clouder-toggle__label">Espandi prenotazione</span>
-      <svg class="clouder-toggle__icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-    </button>
-    <div id="clouderpro">
-      <div id="reservation_step">
-        <when-where :locale="'it'"></when-where>
-      </div>
-    </div>
-    <!-- PIANO B: accesso diretto al portale ClouderCar, sempre disponibile e privo di bug grafici -->
-    <a href="https://carmego.cloudercar.com" target="_blank" rel="noopener noreferrer" class="clouder-portal-btn">
-      Prenota direttamente sul portale
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
-    </a>
-    <script src="https://carmego.cloudercar.com/js/when-where.js?id=5bddba31c2b227aeba89"></script>
-  </div>
   <script>
-    function toggleClouder(){
-      var wrap=document.getElementById('clouderpro-wrap');
-      var btn=document.getElementById('clouderToggle');
-      var label=btn.querySelector('.clouder-toggle__label');
-      var collapsed=wrap.classList.toggle('clouder-collapsed');
-      btn.setAttribute('aria-expanded', String(!collapsed));
-      label.textContent = collapsed ? 'Espandi prenotazione' : 'Comprimi';
-    }
-    /* apre il widget (se chiuso), aggiorna toggle, scrolla al form */
-    function openClouder(){
-      var wrap=document.getElementById('clouderpro-wrap');
-      var btn=document.getElementById('clouderToggle');
-      if(!wrap) return;
-      wrap.classList.remove('clouder-collapsed');
-      if(btn){
-        btn.setAttribute('aria-expanded','true');
-        var label=btn.querySelector('.clouder-toggle__label');
-        if(label) label.textContent='Comprimi';
-      }
-      document.body.classList.remove('menu-open');
-      var ov=document.getElementById('shMobileOverlay'); if(ov) ov.classList.remove('show');
-      wrap.scrollIntoView({behavior:'smooth', block:'center'});
-    }
-    /* apre/comprime il widget e scrolla (usato dal "Prenota" della navbar desktop) */
-    function bookToggleClouder(){
-      var wrap=document.getElementById('clouderpro-wrap');
-      if(!wrap) return;
-      var willOpen=wrap.classList.contains('clouder-collapsed');
-      toggleClouder();
-      if(willOpen){
-        document.body.classList.remove('menu-open');
-        var ov=document.getElementById('shMobileOverlay'); if(ov) ov.classList.remove('show');
-        wrap.scrollIntoView({behavior:'smooth', block:'center'});
-      }
-    }
-    /* logica globale: qualsiasi elemento il cui testo contiene "Prenota"
-       (e che NON sia il toggle stesso) apre il widget al click.
-       Il "Prenota" della navbar desktop fa invece toggle (apri/comprimi). */
-    document.addEventListener('click', function(e){
-      var el=e.target.closest('a,button');
-      if(!el) return;
-      if(el.id==='clouderToggle' || el.closest('#clouderpro')) return;
-      var txt=(el.textContent||'').trim().toLowerCase();
-      if(txt.indexOf('prenota')!==-1){
-        e.preventDefault();
-        if(el.classList.contains('nav-btn-prenota')){ bookToggleClouder(); }
-        else { openClouder(); }
-      }
-    });
-    /* SCROLLSPY: la voce di menu si illumina solo quando la sezione è in vista */
+      /* SCROLLSPY: la voce di menu si illumina solo quando la sezione è in vista */
     (function(){
       function initSpy(){
         var ids=['flotta','vantaggi','contatti'];
@@ -1728,7 +1309,7 @@
           Flotta esclusiva, consegna in due ore, zero burocrazia. Il noleggio premium che fa rumore.
         </p>
         <div class="hero-cta-row" id="a-cta">
-          <button class="hero-cta">Prenota ora</button>
+          <a href="https://carmego.cloudercar.com" target="_blank" rel="noopener noreferrer" class="hero-cta">Prenota ora</a>
           <button class="hero-cta hero-cta--ghost" onclick="document.getElementById('flotta').scrollIntoView({behavior:'smooth'})">Esplora la flotta</button>
         </div>
       </div>
@@ -2063,7 +1644,7 @@
       </div>
       <p class="manifesto__text">Consegna in due ore, assistenza attiva giorno e notte, vetture sempre revisionate. Quando decidi di muoverti, noi siamo già pronti.</p>
       <div class="btn-row reveal d2 mf-cta">
-        <button class="btn-primary">Prenota Ora</button>
+        <a href="https://carmego.cloudercar.com" target="_blank" rel="noopener noreferrer" class="btn-primary">Prenota Ora</a>
         <button class="btn-ghost" onclick="document.getElementById('flotta').scrollIntoView({behavior:'smooth'})">Esplora la Flotta</button>
       </div>
     </div>
@@ -2152,16 +1733,6 @@ function initReveal(){
     es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
   },{threshold:.1,rootMargin:'0px 0px -48px 0px'});
   document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
-}
-
-/* ════ BOOKING ════ */
-function bookNow(){
-  const btn=document.querySelector('.ss-submit');
-  if(!btn) return;
-  const original=btn.textContent;
-  btn.disabled=true;
-  btn.innerHTML='<span class="spinner" aria-hidden="true" style="display:inline-block;vertical-align:middle"></span>';
-  setTimeout(()=>{ btn.textContent=original; btn.disabled=false; },2000);
 }
 
 /* ════ FLOATING DOCK — scroll shrink + menu mobile ════ */
