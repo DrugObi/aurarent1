@@ -379,13 +379,12 @@
       flex-direction: column;
       gap: 6px;
     }
-    /* Blocco inferiore specifiche + CTA (ancoraggio geometrico sul fondo) */
+    /* Blocco inferiore specifiche (ancoraggio geometrico sul fondo, CTA rimossa) */
     .cat-footer-block {
       margin-top: auto; /* Sigilla il blocco sul fondo della card */
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      gap: 20px;
     }
     .cat-tag {
       font-size: 0.7rem;
@@ -442,33 +441,7 @@
     .badge-ice{ color:var(--ice); border-color:var(--bdr-ice); background:rgba(227,236,239,.07) }
     .badge-avail{ color:#5eddb4; border-color:rgba(94,221,180,.3); background:rgba(94,221,180,.06) }
     .badge-new{ color:#f0a870; border-color:rgba(240,168,112,.3); background:rgba(240,168,112,.06) }
-    /* Pulsante Scopri il Modello Interattivo */
-    .cat-cta {
-      background: transparent;
-      border: none;
-      color: #ffffff;
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.15em; /* Spaziatura premium */
-      cursor: pointer;
-      padding: 0;
-      transition: color 0.4s ease;
-    }
-    .cat-cta svg {
-      stroke: #ffffff;
-      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), stroke 0.4s ease;
-    }
-    .cat-card:hover .cat-cta {
-      color: var(--ice) !important;
-    }
-    .cat-card:hover .cat-cta svg {
-      transform: translateX(8px);
-      stroke: var(--ice) !important;
-    }
+    /* (Bottoni "Scopri il modello" rimossi: nessuna pagina di atterraggio dedicata) */
 
     /* ════ FINAL CTA ════ */
     .btn-row{ display:flex; gap:1rem; flex-wrap:wrap; justify-content:center; position:relative; z-index:1 }
@@ -788,7 +761,7 @@
     .hero h1, .final-section h2, .mf-word, .section-title{ text-shadow:0 0 10px rgba(197,220,228,0.2) }
     .hero-cta, .fb-hero-cta, .btn-primary, .ss-submit{ background:var(--ice-bright); color:#0E0E0E }
     .hero-cta:hover, .fb-hero-cta:hover, .btn-primary:hover, .ss-submit:hover{ background:#D4E6ED }
-    .cat-cta:hover, .fb-card:hover .fb-card-cta{ color:var(--ice-bright) }
+    .fb-card:hover .fb-card-cta{ color:var(--ice-bright) }
 
     /* 3. HERO: respiro, immagine imponente, spazio premium */
     .hero:not(.hero--layered){ gap:4rem; padding:8rem 2.5rem; min-height:auto; align-items:center }
@@ -1148,14 +1121,16 @@
       transform:scale(1.15); transition:transform .5s var(--ease);
     }
     .svc-tile:hover .svc-tile__media img{ transform:scale(1.20); }
-    /* calibrazione mirata: card 01 (chiave) e 05 (auto+persona) non vanno tagliate */
+    /* card 01 (chiave) e 05 (auto+persona): cover pieno come le altre, niente bande nere.
+       object-position calibrato per non tagliare il soggetto chiave (centro-alto). */
     .svc-grid .svc-tile:nth-child(1) .svc-tile__media img,
     .svc-grid .svc-tile:nth-child(5) .svc-tile__media img{
-      transform:scale(1.04) !important; object-fit:contain !important; background:#000000 !important;
+      object-fit:cover !important; width:100% !important; height:100% !important;
+      object-position:center center !important; transform:scale(1.05) !important; background:#000000 !important;
     }
     .svc-grid .svc-tile:nth-child(1):hover .svc-tile__media img,
     .svc-grid .svc-tile:nth-child(5):hover .svc-tile__media img{
-      transform:scale(1.06) !important;
+      transform:scale(1.10) !important;
     }
     .svc-tile__text{
       margin:0; font-size:1.02rem; line-height:1.65;
@@ -1220,7 +1195,8 @@
       }
       .svc-carousel .svc-card:nth-child(1) .svc-card__media img,
       .svc-carousel .svc-card:nth-child(5) .svc-card__media img{
-        transform:scale(1.04) !important; object-fit:contain !important; background:#000000 !important;
+        object-fit:cover !important; width:100% !important; height:100% !important;
+        object-position:center center !important; transform:scale(1.05) !important; background:#000000 !important;
       }
       /* c. testo descrittivo sotto l'immagine */
       .svc-card__text{
@@ -1367,6 +1343,127 @@
       background-color:var(--ice) !important; color:#000 !important;
     }
     body > .v-overlay-container .v-overlay__scrim{ background:rgba(0,0,0,0.6) !important; }
+
+    /* ════ PUNTO 8 — FIX SOVRAPPOSIZIONE LABEL/VALORE (box "Dove vuoi riconsegnare", es. "Modena") ════
+       La floating label Vuetify è in absolute dentro .v-field; quando l'input è valorizzato
+       si accavalla sul testo. Diamo respiro verticale al valore e rimpiccioliamo la label flottante. */
+    #clouderpro .v-field{
+      --v-field-padding-top:22px !important;
+    }
+    #clouderpro .v-field__field{
+      padding-top:20px !important;
+    }
+    #clouderpro .v-field__input{
+      padding-top:20px !important;
+      padding-bottom:6px !important;
+      line-height:1.5 !important;
+      min-height:54px !important;
+      align-items:flex-end !important;
+    }
+    /* label a riposo: verticalmente centrata, niente overflow sul valore */
+    #clouderpro .v-field .v-label,
+    #clouderpro .v-field .v-field-label,
+    #clouderpro .v-field__label{
+      top:50% !important;
+      transform:translateY(-50%) !important;
+      line-height:1.2 !important;
+      font-size:0.9rem !important;
+      max-width:calc(100% - 24px) !important;
+      white-space:nowrap !important;
+      overflow:hidden !important;
+      text-overflow:ellipsis !important;
+    }
+    /* label flottante (input attivo/valorizzato): risale in alto, più piccola, staccata dal valore */
+    #clouderpro .v-field--active .v-label,
+    #clouderpro .v-field--active .v-field-label,
+    #clouderpro .v-field--active .v-field__label,
+    #clouderpro .v-field--dirty .v-field__label,
+    #clouderpro .v-field--focused .v-field__label,
+    #clouderpro .v-label--clickable.v-field-label--floating,
+    #clouderpro .v-field-label--floating{
+      top:8px !important;
+      transform:translateY(0) scale(0.74) !important;
+      transform-origin:top left !important;
+      font-size:0.82rem !important;
+      line-height:1.1 !important;
+      opacity:.75 !important;
+    }
+    /* il valore selezionato (es. "Modena") resta in basso, ben distanziato dalla label */
+    #clouderpro .v-field--active .v-field__input,
+    #clouderpro .v-field--dirty .v-field__input{
+      padding-top:26px !important;
+    }
+
+    /* ════ PUNTO 9 — FIX CALENDARIO / DATE-PICKER BIANCO E VUOTO ════
+       Il picker viene iniettato nel <body>; le regole con "body > .v-overlay-container" non
+       intercettano i wrapper intermedi → restava bianco su bianco. Qui targetizziamo l'intero
+       overlay container ovunque sia, header/controlli/giorni/settimana inclusi. */
+    .v-overlay-container .v-overlay__content,
+    .v-overlay-container .v-menu .v-list,
+    .v-overlay-container .v-picker,
+    .v-overlay-container .v-picker__body,
+    .v-overlay-container .v-date-picker,
+    .v-overlay-container .v-date-picker-month,
+    .v-overlay-container .v-date-picker-years,
+    .v-overlay-container .v-date-picker-months,
+    .v-overlay-container .v-date-picker-header,
+    .v-overlay-container .v-date-picker-controls,
+    .v-overlay-container .v-card.v-picker,
+    .v-overlay-container .v-list{
+      background-color:#161616 !important;
+      color:#ffffff !important;
+      border-color:rgba(255,255,255,0.08) !important;
+    }
+    /* tutti i testi/numeri del picker forzati a chiaro e visibili sul fondo scuro */
+    .v-overlay-container .v-date-picker *,
+    .v-overlay-container .v-picker *,
+    .v-overlay-container .v-list-item *{
+      color:#ffffff !important;
+    }
+    .v-overlay-container .v-date-picker-month__day,
+    .v-overlay-container .v-date-picker-month__day .v-btn,
+    .v-overlay-container .v-date-picker-month__weekday,
+    .v-overlay-container .v-date-picker-controls .v-btn,
+    .v-overlay-container .v-date-picker-header *,
+    .v-overlay-container .v-list-item,
+    .v-overlay-container .v-list-item-title{
+      color:#ffffff !important;
+      background-color:transparent !important;
+      opacity:1 !important;
+    }
+    /* giorni fuori mese / disabilitati: grigio chiaro leggibile, mai invisibili */
+    .v-overlay-container .v-date-picker-month__day--hide-adjacent{ visibility:hidden !important; }
+    .v-overlay-container .v-date-picker .v-btn--disabled,
+    .v-overlay-container .v-date-picker .v-btn--disabled *,
+    .v-overlay-container .v-date-picker-month__day .v-btn--disabled,
+    .v-overlay-container .v-date-picker-month__day .v-btn--disabled *{
+      color:rgba(255,255,255,0.32) !important; opacity:1 !important;
+    }
+    /* frecce/chevron di navigazione mese visibili */
+    .v-overlay-container .v-date-picker-controls .v-icon,
+    .v-overlay-container .v-date-picker-header .v-icon,
+    .v-overlay-container .v-picker .v-icon{
+      color:var(--ice) !important; opacity:1 !important;
+    }
+    /* hover e giorno selezionato */
+    .v-overlay-container .v-date-picker-month__day:hover .v-btn,
+    .v-overlay-container .v-list-item:hover{
+      background-color:rgba(227,236,239,0.14) !important;
+    }
+    .v-overlay-container .v-date-picker-month__day--selected .v-btn,
+    .v-overlay-container .v-list-item--active{
+      background-color:var(--ice) !important;
+    }
+    .v-overlay-container .v-date-picker-month__day--selected .v-btn,
+    .v-overlay-container .v-date-picker-month__day--selected .v-btn *,
+    .v-overlay-container .v-list-item--active,
+    .v-overlay-container .v-list-item--active *{
+      color:#000000 !important;
+    }
+    /* oggi: ring ice senza fondo pieno */
+    .v-overlay-container .v-date-picker-month__day .v-btn--active{
+      border:1px solid var(--ice) !important;
+    }
 
     /* ════ TOGGLE espandi/comprimi widget prenotazione ════ */
     #clouderpro-wrap{ position:relative; display:flex; flex-direction:column; width:100%; padding:0 15px; }
@@ -1817,7 +1914,6 @@
                 <div class="cat-spec"><div class="spec-val">3.9<small>s</small></div><div class="spec-key">0 – 100</div></div>
                 <div class="cat-spec"><div class="spec-val">270<small>km/h</small></div><div class="spec-key">V-max</div></div>
               </div>
-              <button class="cat-cta" aria-label="Scopri Mercedes-AMG A45s">Scopri il modello<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
             </div>
           </div>
         </div>
@@ -1836,7 +1932,6 @@
                 <div class="cat-spec"><div class="spec-val">9G<small>-tronic</small></div><div class="spec-key">Trasmissione</div></div>
                 <div class="cat-spec"><div class="spec-val">7/8<small>posti</small></div><div class="spec-key">Capacità</div></div>
               </div>
-              <button class="cat-cta" aria-label="Scopri Mercedes-Benz Classe V 300d">Scopri il modello<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
             </div>
           </div>
         </div>
@@ -1855,7 +1950,6 @@
                 <div class="cat-spec"><div class="spec-val">4.5<small>s</small></div><div class="spec-key">0 – 100</div></div>
                 <div class="cat-spec"><div class="spec-val">250<small>km/h</small></div><div class="spec-key">V-max</div></div>
               </div>
-              <button class="cat-cta" aria-label="Scopri BMW M440i Cabrio">Scopri il modello<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
             </div>
           </div>
         </div>
@@ -1874,7 +1968,6 @@
                 <div class="cat-spec"><div class="spec-val">Auto</div><div class="spec-key">Cambio</div></div>
                 <div class="cat-spec"><div class="spec-val">5<small>posti</small></div><div class="spec-key">Capacità</div></div>
               </div>
-              <button class="cat-cta" aria-label="Scopri BMW Serie 1">Scopri il modello<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
             </div>
           </div>
         </div>
@@ -1893,7 +1986,6 @@
                 <div class="cat-spec"><div class="spec-val">3.8<small>s</small></div><div class="spec-key">0 – 100</div></div>
                 <div class="cat-spec"><div class="spec-val">250<small>km/h</small></div><div class="spec-key">V-max</div></div>
               </div>
-              <button class="cat-cta" aria-label="Scopri Audi RSQ8">Scopri il modello<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
             </div>
           </div>
         </div>
