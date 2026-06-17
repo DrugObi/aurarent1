@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Aura.rent — Termini e Condizioni</title>
+  <link rel="icon" type="image/png" href="favicon.png"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --ice:#E3ECEF; --ice-dim:#9FB4BC;
+      --onyx:#121212; --onyx-2:#161616; --onyx-deep:#090d12;
+      --bdr:rgba(227,236,239,0.08); --bdr-ice:rgba(227,236,239,0.22);
+      --font:'Inter',system-ui,-apple-system,sans-serif;
+      --font-display:'Anton',Impact,sans-serif;
+      --ease:cubic-bezier(0.33,1,0.68,1);
+    }
+    *{ margin:0; padding:0; box-sizing:border-box; }
+    body{
+      background:var(--onyx); color:var(--ice); font-family:var(--font);
+      line-height:1.7; font-weight:300; -webkit-font-smoothing:antialiased;
+      min-height:100vh; display:flex; flex-direction:column;
+    }
+    .legal-header{
+      padding:2.2rem 2.5rem; border-bottom:1px solid var(--bdr);
+      display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;
+    }
+    .legal-header a.back{
+      display:inline-flex; align-items:center; gap:.6rem;
+      color:var(--ice-dim); text-decoration:none; font-size:.66rem;
+      letter-spacing:.18em; text-transform:uppercase; font-weight:600;
+      transition:color .3s ease;
+    }
+    .legal-header a.back:hover{ color:var(--ice); }
+    .legal-header .brand{ font-family:var(--font-display); font-size:1.1rem; letter-spacing:.04em; color:var(--ice); }
+    .legal-wrap{ flex:1; max-width:860px; margin:0 auto; padding:5rem 2.5rem 6rem; width:100%; }
+    .legal-eyebrow{
+      font-size:.62rem; letter-spacing:.32em; text-transform:uppercase;
+      color:var(--ice-dim); margin-bottom:1.2rem; display:block;
+    }
+    h1{
+      font-family:var(--font-display); font-weight:400;
+      font-size:clamp(2.4rem,6vw,3.8rem); line-height:1.05;
+      letter-spacing:-.01em; margin-bottom:1rem; text-transform:uppercase;
+    }
+    .legal-updated{ font-size:.7rem; letter-spacing:.1em; color:var(--ice-dim); margin-bottom:3.5rem; }
+    .legal-intro{ font-size:1.02rem; color:rgba(227,236,239,0.85); margin-bottom:3rem; }
+    .legal-section{
+      background:var(--onyx-2); border:1px solid rgba(255,255,255,0.05);
+      border-radius:12px; padding:2rem 2rem 1.6rem; margin-bottom:1.5rem;
+      transition:border-color .4s var(--ease);
+    }
+    .legal-section:hover{ border-color:var(--bdr-ice); }
+    .legal-section h2{
+      font-size:1.05rem; font-weight:700; letter-spacing:.02em;
+      color:var(--ice); margin-bottom:.9rem;
+    }
+    .legal-section p{ font-size:.92rem; color:rgba(227,236,239,0.7); margin-bottom:.8rem; }
+    .legal-section p:last-child{ margin-bottom:0; }
+    .legal-note{
+      margin-top:2.5rem; padding:1.4rem 1.6rem; border-radius:12px;
+      border:1px dashed var(--bdr-ice); background:rgba(227,236,239,0.02);
+      font-size:.78rem; color:var(--ice-dim); letter-spacing:.02em;
+    }
+    footer{
+      padding:2.5rem; border-top:1px solid var(--bdr);
+      display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;
+    }
+    footer span, footer a{ font-size:.58rem; font-weight:300; letter-spacing:.18em; }
+    footer span{ color:rgba(227,236,239,.2); }
+    footer .footer-legal a{ color:rgba(227,236,239,.45); text-decoration:none; transition:color .3s ease; }
+    footer .footer-legal a:hover{ color:var(--ice); }
+    @media(max-width:600px){ .legal-wrap{ padding:3.5rem 1.5rem 4.5rem; } .legal-header{ padding:1.6rem 1.5rem; } }
+  </style>
+</head>
+<body>
+  <header class="legal-header">
+    <a href="index.html" class="back">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+      Torna al sito
+    </a>
+    <span class="brand">AURA.RENT</span>
+  </header>
+  <main class="legal-wrap">
+    <span class="legal-eyebrow">Documento legale</span>
+    <h1>Termini e Condizioni</h1>
+    <p class="legal-updated">Ultimo aggiornamento: 17/06/2026</p>
+    <p class="legal-intro">I presenti Termini e Condizioni regolano l'utilizzo del sito Aura.rent e la fruizione dei servizi di noleggio auto. Il testo seguente è un segnaposto da personalizzare.</p>
+    <section class="legal-section">
+      <h2>1. Oggetto del servizio</h2>
+      <p>Aura.rent offre un servizio di noleggio di autovetture di lusso. Le presenti condizioni disciplinano i rapporti tra Aura.rent e il cliente. Dettagliare l'ambito del servizio.</p>
+    </section>
+    <section class="legal-section">
+      <h2>2. Requisiti per il noleggio</h2>
+      <p>Il noleggio è subordinato al possesso dei requisiti di legge, tra cui età minima, patente valida ed eventuale anzianità di guida. Specificare i requisiti applicati.</p>
+    </section>
+    <section class="legal-section">
+      <h2>3. Prenotazioni e pagamenti</h2>
+      <p>Le prenotazioni si perfezionano secondo le modalità indicate sul sito e sul portale di prenotazione. Indicare condizioni di pagamento, cauzione ed eventuali costi accessori.</p>
+    </section>
+    <section class="legal-section">
+      <h2>4. Politica di cancellazione</h2>
+      <p>Le condizioni di modifica e cancellazione delle prenotazioni, con eventuali penali, sono definite al momento della prenotazione. Inserire la politica di cancellazione applicata.</p>
+    </section>
+    <section class="legal-section">
+      <h2>5. Responsabilità e obblighi del cliente</h2>
+      <p>Il cliente è tenuto a utilizzare il veicolo con diligenza e nel rispetto del codice della strada, rispondendo di eventuali danni secondo quanto previsto dal contratto di noleggio.</p>
+    </section>
+    <section class="legal-section">
+      <h2>6. Legge applicabile e foro competente</h2>
+      <p>I presenti Termini sono regolati dalla legge italiana. Per ogni controversia è competente il Foro di [città], salvo diversa previsione inderogabile di legge.</p>
+    </section>
+    <div class="legal-note">Questo documento contiene testi segnaposto forniti a scopo dimostrativo. I contenuti definitivi, conformi al GDPR (Reg. UE 2016/679) e alla normativa italiana vigente, devono essere redatti e validati prima della pubblicazione ufficiale.</div>
+  </main>
+  <footer>
+    <span>© 2026 Aura.rent — Tutti i diritti riservati</span>
+    <span class="footer-legal">
+      <a href="privacy-policy.html">Privacy</a> ·
+      <a href="cookie-policy.html">Cookie</a> ·
+      <a href="termini-condizioni.html">Termini</a>
+    </span>
+  </footer>
+</body>
+</html>

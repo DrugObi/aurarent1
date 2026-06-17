@@ -100,9 +100,6 @@
       radial-gradient(ellipse 80% 60% at 35% 25%, rgba(227,236,239,0.07) 0%, transparent 60%),
       linear-gradient(160deg,#1a1a1a 0%,#0e0e0e 100%);
     }
-    .hero-bg::after{ content:'A'; position:absolute; right:-.06em; bottom:-.24em;
-      font-family:var(--font-display); font-size:clamp(16rem,30vw,28rem); line-height:1;
-      color:rgba(227,236,239,.05); user-select:none }
     .hero-vtag{
       position:absolute; top:2rem; left:2rem; z-index:2;
       font-size:.58rem; font-weight:600; letter-spacing:.4em; color:var(--ice-dim);
@@ -146,14 +143,28 @@
     /* ════ STATS — minimal & distanziati ════ */
     .stats-strip{
       max-width:1280px; margin:0 auto; padding:5rem 2.5rem;
-      display:grid; grid-template-columns:repeat(4,1fr); gap:2.5rem;
+      display:grid; grid-template-columns:repeat(4,1fr); gap:1.5rem;
       border-top:1px solid var(--bdr);
     }
-    @media(max-width:680px){ .stats-strip{grid-template-columns:repeat(2,1fr); gap:3rem 2rem; padding:4rem 1.5rem} }
-    .stat-item{ text-align:left }
+    @media(max-width:680px){ .stats-strip{grid-template-columns:repeat(2,1fr); gap:1.25rem; padding:4rem 1.5rem} }
+    /* card minimale scurissima: numero gigante sopra, descrizione sotto */
+    .stat-item{
+      text-align:left;
+      background:var(--onyx-2);
+      border:1px solid rgba(255,255,255,0.05);
+      border-radius:12px;
+      padding:1.9rem 1.6rem;
+      display:flex; flex-direction:column;
+      transition:border-color .4s var(--ease), box-shadow .4s var(--ease), transform .4s var(--ease);
+    }
+    .stat-item:hover{
+      border-color:var(--bdr-ice);
+      box-shadow:0 0 26px rgba(227,236,239,0.10), inset 0 0 0 1px rgba(227,236,239,0.04);
+      transform:translateY(-3px);
+    }
     .stat-num{ font-weight:800; font-size:clamp(2.4rem,4vw,3.2rem); line-height:1; letter-spacing:-.04em }
     .stat-num em{ font-style:normal; font-weight:300; color:var(--ice) }
-    .stat-desc{ font-size:.6rem; letter-spacing:.28em; text-transform:uppercase; color:rgba(227,236,239,.3); margin-top:.9rem; display:block }
+    .stat-desc{ font-size:.6rem; letter-spacing:.28em; text-transform:uppercase; color:rgba(227,236,239,.42); margin-top:1.1rem; display:block }
 
     /* ════ SECTIONS ════ */
     .section-wrap{ padding:7rem 2.5rem; max-width:1280px; margin:0 auto }
@@ -455,8 +466,12 @@
     .btn-ghost:hover{ border-color:var(--ice); background:rgba(227,236,239,.07); transform:translateY(-2px) }
 
     /* ════ FOOTER ════ */
-    footer{ padding:2.5rem; border-top:1px solid var(--bdr); display:flex; justify-content:space-between;
-      align-items:center; flex-wrap:wrap; gap:1rem }
+    footer{ padding:2.5rem; border-top:1px solid var(--bdr); }
+    .footer-content{
+      max-width:1280px; margin:0 auto;
+      display:flex; align-items:center; justify-content:space-between;
+      flex-wrap:wrap; gap:1rem;
+    }
     .footer-logo{ display:inline-flex; align-items:center }
     .footer-logo-img{
       height:36px; width:auto; object-fit:contain; display:block;
@@ -465,6 +480,29 @@
     }
     .footer-logo-img:hover{ opacity:1 }
     footer span{ font-size:.58rem; font-weight:300; letter-spacing:.18em; color:rgba(227,236,239,.2) }
+    .footer-legal{ display:inline-flex; align-items:center; gap:.2rem; }
+    .footer-sep{ color:rgba(227,236,239,.25); }
+    .footer-legal a{
+      color:rgba(227,236,239,.45); text-decoration:none;
+      padding:.35rem .55rem; border-radius:6px;
+      transition:color .3s ease, background .3s ease;
+    }
+    .footer-legal a:hover{ color:var(--ice); }
+    /* ── Footer mobile: colonna pulita, simmetrica, ben spaziata ── */
+    @media(max-width:680px){
+      footer{ padding:3rem 1.5rem; }
+      .footer-content{
+        flex-direction:column; align-items:center; text-align:center; gap:24px;
+      }
+      .footer-logo-img{ height:auto; max-width:56px; opacity:.7; }
+      .footer-copy{
+        font-size:.56rem; letter-spacing:.16em;
+        color:rgba(227,236,239,.28); order:3;
+      }
+      .footer-logo{ order:1; }
+      .footer-legal{ order:2; gap:.35rem; }
+      .footer-legal a{ padding:.45rem .7rem; font-size:.62rem; }
+    }
 
     /* ════ HEADER — GLASSMORPHIC FLOATING DOCK ════ */
     /* ════════════════════════════════════════════════
@@ -791,13 +829,6 @@
       background-position:center !important;
       background-repeat:no-repeat !important;
     }
-    /* watermark 4X4 tenue sul fondo */
-    .hero-watermark{
-      position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-      z-index:1; font-family:var(--font-display); font-size:24vw; line-height:1;
-      letter-spacing:-.04em; color:rgba(227,236,239,0.04);
-      user-select:none; pointer-events:none; white-space:nowrap;
-    }
     /* la vecchia immagine-auto a colonna non serve più */
     .hero-car{ display:none !important; }
     .hero-layer{ display:contents; }
@@ -835,7 +866,6 @@
     }
     @media (max-width:992px){
       .hero--layered{ padding:140px 1.2rem 4rem !important; }
-      .hero-watermark{ font-size:38vw }
     }
 
     /* ════════ MOBILE ≤780px — HERO IMMERSIVA + SEARCH RIPOSIZIONATA ════════ */
@@ -857,16 +887,17 @@
         justify-content:center !important;
         background-position:center center !important;
       }
-      .hero--layered .hero-inner{ gap:1.1rem; }
+      .hero--layered .hero-inner{ gap:1.4rem; }
       .hero--layered h1, .hero--layered .hero h1{
-        font-size:3rem !important; line-height:.92 !important;
+        font-size:3.4rem !important; line-height:1.1 !important;
+        margin:.6rem 0 !important;
         text-shadow:0 4px 30px rgba(0,0,0,0.6) !important;
       }
-      .hero--layered .hero-eyebrow{ font-size:.7rem !important; }
-      .hero--layered .hero-tagline{ font-size:1.02rem !important; max-width:32ch !important; }
-      .hero--layered .hero-cta-row{ flex-direction:column !important; width:100%; gap:.7rem; margin-top:.4rem; }
-      .hero--layered .hero-cta{ width:100%; min-height:54px; }
-      .hero-watermark{ font-size:54vw }
+      .hero--layered .hero-eyebrow{ font-size:.72rem !important; margin-bottom:.2rem !important; }
+      .hero--layered .hero-tagline{ font-size:1rem !important; max-width:32ch !important; margin-top:.2rem !important; }
+      /* CTA più snelle e distanziate: non soffocano la tipografia */
+      .hero--layered .hero-cta-row{ flex-direction:column !important; width:100%; gap:.85rem; margin-top:1.4rem; }
+      .hero--layered .hero-cta{ width:100%; min-height:46px !important; padding:.85rem 2rem !important; }
       .hero-vtag{ display:none; }          /* via il tag verticale che affolla su mobile */
     }
 
@@ -1507,6 +1538,27 @@
       max-height:1200px; opacity:1; overflow:visible;
       transition:all .4s ease-in-out;
     }
+
+    /* ════ PIANO B — PULSANTE PORTALE CLOUDERCAR (fallback sempre disponibile) ════ */
+    .clouder-portal-btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:.7rem;
+      align-self:center; margin:22px auto 4px;
+      padding:1.05rem 2.4rem;
+      background:linear-gradient(180deg, rgba(227,236,239,0.06), rgba(227,236,239,0.02));
+      border:1px solid var(--bdr-ice); border-radius:100px;
+      color:var(--ice); text-decoration:none;
+      font-family:var(--font); font-weight:700; font-size:.72rem;
+      letter-spacing:.18em; text-transform:uppercase;
+      transition:background .4s var(--ease), border-color .4s var(--ease), box-shadow .4s var(--ease), transform .4s var(--ease);
+    }
+    .clouder-portal-btn svg{ transition:transform .4s var(--ease); }
+    .clouder-portal-btn:hover{
+      background:var(--ice); color:var(--onyx);
+      border-color:var(--ice);
+      box-shadow:0 0 26px rgba(227,236,239,0.32);
+      transform:translateY(-2px);
+    }
+    .clouder-portal-btn:hover svg{ transform:translate(3px,-3px); stroke:var(--onyx); }
   </style>
 </head>
 <body>
@@ -1575,6 +1627,11 @@
         <when-where :locale="'it'"></when-where>
       </div>
     </div>
+    <!-- PIANO B: accesso diretto al portale ClouderCar, sempre disponibile e privo di bug grafici -->
+    <a href="https://carmego.cloudercar.com" target="_blank" rel="noopener noreferrer" class="clouder-portal-btn">
+      Prenota direttamente sul portale
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+    </a>
     <script src="https://carmego.cloudercar.com/js/when-where.js?id=5bddba31c2b227aeba89"></script>
   </div>
   <script>
@@ -1660,9 +1717,8 @@
     })();
   </script>
 
-  <!-- HERO a livelli: watermark 4X4 (z1) / auto frontale (z2) / testo (z3) -->
+  <!-- HERO a livelli: auto frontale (z2) / testo (z3) -->
   <section class="hero hero--layered">
-    <span class="hero-watermark" aria-hidden="true">4X4</span>
     <div class="hero-car"></div>
     <div class="hero-layer">
       <div class="hero-inner">
@@ -2014,9 +2070,17 @@
   </section>
 
   <footer id="contatti">
-    <span class="footer-logo"><img src="logo-aurarent.png" alt="Aura-rent" class="footer-logo-img"></span>
-    <span>© 2026 Aura.rent — Tutti i diritti riservati</span>
-    <span>Privacy · Cookie · Termini</span>
+    <div class="footer-content">
+      <span class="footer-logo"><img src="logo-aurarent.png" alt="Aura-rent" class="footer-logo-img"></span>
+      <span class="footer-copy">© 2026 Aura.rent — Tutti i diritti riservati</span>
+      <span class="footer-legal">
+        <a href="privacy-policy.html">Privacy</a>
+        <span class="footer-sep">·</span>
+        <a href="cookie-policy.html">Cookie</a>
+        <span class="footer-sep">·</span>
+        <a href="termini-condizioni.html">Termini</a>
+      </span>
+    </div>
   </footer>
 
 </div><!-- /landing -->
