@@ -223,7 +223,7 @@
     @media(max-width:680px){ .section-wrap{padding:5rem 1.5rem} }
     .section-head{ margin-bottom:3.5rem }
     .section-label{ display:block; font-weight:700; font-size:.55rem; letter-spacing:.45em; text-transform:uppercase; color:var(--ice); margin-bottom:1rem }
-    .section-title{ font-weight:800; font-size:clamp(2rem,4vw,3.2rem); line-height:1.05; letter-spacing:-.03em }
+    .section-title{ font-weight:400; font-size:clamp(2rem,4vw,3.2rem); line-height:1.05; letter-spacing:-.03em; font-synthesis:none; }
     .section-title em{ font-style:normal; font-weight:300; color:var(--ice) }
 
     /* ════ BRAND MANIFESTO — editoriale asimmetrico, video incassato ════ */
@@ -876,6 +876,14 @@
     .hero h1, .final-section h2, .mf-word, .section-title{ text-shadow:0 0 10px rgba(197,220,228,0.2) }
     .hero-cta, .fb-hero-cta, .btn-primary{ background:var(--ice-bright); color:#0E0E0E }
     .hero-cta:hover, .fb-hero-cta:hover, .btn-primary:hover{ background:#D4E6ED }
+
+    /* FIX titolo "CATEGORIE AUTO" su mobile: proporzioni naturali Anton, niente schiacciamento/faux-bold */
+    @media(max-width:780px){
+      .section-title{
+        transform:none !important; font-stretch:normal; font-synthesis:none;
+        font-weight:400; letter-spacing:0.02em; line-height:1.04; word-spacing:.02em;
+      }
+    }
     .fb-card:hover .fb-card-cta{ color:var(--ice-bright) }
 
     /* 3. HERO: respiro, immagine imponente, spazio premium */
@@ -1307,7 +1315,7 @@
 
       /* dots LED minimali di scorrimento */
       .svc-dots{
-        display:flex; justify-content:center; gap:9px; margin-top:18px;
+        display:flex; justify-content:center; gap:9px; margin-top:18px; margin-bottom:4px;
       }
       .svc-dot{
         width:7px; height:7px; border-radius:50%;
@@ -1317,6 +1325,11 @@
         background:var(--ice); box-shadow:0 0 8px var(--ice);
         transform:scale(1.15);
       }
+      /* FIX fascia grigia: niente bleed della foto di sfondo sotto i dots — nero pieno coerente */
+      .aura-showcase{ background:var(--onyx-deep); padding-bottom:48px; }
+      .aura-showcase__bg{ display:none !important; }       /* su mobile il render foto non serve: via il grigio cemento */
+      .aura-showcase__scrim{ background:var(--onyx-deep) !important; }
+      .aura-showcase__inner{ position:relative; z-index:1; }
     }
     /* Widget ClouderCar e relativo CSS rimossi: prenotazione via link diretto al portale */
   </style>
