@@ -585,6 +585,29 @@
       transition:color .3s ease, background .3s ease;
     }
     .footer-legal a:hover{ color:var(--ice); }
+
+    /* ── Baseline legale: micro-tipografia editoriale, centrata, a tutta larghezza, in fondo a tutto ── */
+    .footer-legal-baseline{
+      display:block; width:100%;
+      max-width:1280px; margin:25px auto 0;
+      font-family:var(--font);
+      font-size:0.65rem; font-weight:300;
+      text-transform:uppercase; letter-spacing:0.15em;
+      color:rgba(255,255,255,0.3);            /* grigio fumo molto tenue a riposo */
+      line-height:1.8; text-align:center;
+    }
+    .footer-legal-baseline .flb-data,
+    .footer-legal-baseline .flb-links{ display:block; }
+    .footer-legal-baseline .flb-links{ margin-top:.5rem; }
+    .footer-legal-baseline .flb-sep{ color:rgba(255,255,255,0.18); margin:0 .15em; }
+    .footer-legal-baseline a{
+      color:rgba(255,255,255,0.3); text-decoration:none;
+      transition:color 0.3s ease;
+    }
+    .footer-legal-baseline a:hover{ color:#ffffff; }   /* accensione bianco puro al passaggio */
+    @media(max-width:680px){
+      .footer-legal-baseline{ font-size:.6rem; letter-spacing:.12em; padding:0 .5rem; }
+    }
     /* ── Footer mobile: colonna pulita, simmetrica, ben spaziata ── */
     @media(max-width:680px){
       footer{ padding:3rem 1.5rem; }
@@ -880,8 +903,11 @@
     /* FIX titolo "CATEGORIE AUTO" su mobile: proporzioni naturali Anton, niente schiacciamento/faux-bold */
     @media(max-width:780px){
       .section-title{
-        transform:none !important; font-stretch:normal; font-synthesis:none;
-        font-weight:400; letter-spacing:0.02em; line-height:1.04; word-spacing:.02em;
+        transform:none !important;                  /* nessuna compressione/schiacciamento ereditato */
+        font-stretch:normal !important;              /* proporzioni naturali Anton */
+        font-synthesis:none; font-weight:400;
+        letter-spacing:0.05em;                       /* slanciato e fiero (1.6px calcolati) */
+        line-height:1.04; word-spacing:normal;
       }
     }
     .fb-card:hover .fb-card-cta{ color:var(--ice-bright) }
@@ -1315,7 +1341,9 @@
 
       /* dots LED minimali di scorrimento */
       .svc-dots{
-        display:flex; justify-content:center; gap:9px; margin-top:18px; margin-bottom:4px;
+        display:flex; justify-content:center; gap:9px;
+        margin-top:18px; margin-bottom:0;            /* margin azzerato: nessun buco sotto i dots */
+        padding-bottom:8px; background:var(--onyx-deep);
       }
       .svc-dot{
         width:7px; height:7px; border-radius:50%;
@@ -1325,13 +1353,64 @@
         background:var(--ice); box-shadow:0 0 8px var(--ice);
         transform:scale(1.15);
       }
-      /* FIX fascia grigia: niente bleed della foto di sfondo sotto i dots — nero pieno coerente */
-      .aura-showcase{ background:var(--onyx-deep); padding-bottom:48px; }
+      /* FIX fascia grigia: nero assoluto su sezione, inner e carousel — nessun bleed del gradiente manifesto */
+      .aura-showcase{ background:var(--onyx-deep) !important; padding-bottom:40px; }
+      .aura-showcase__inner{ background:var(--onyx-deep); }
+      .svc-carousel{ background:var(--onyx-deep); }
       .aura-showcase__bg{ display:none !important; }       /* su mobile il render foto non serve: via il grigio cemento */
       .aura-showcase__scrim{ background:var(--onyx-deep) !important; }
       .aura-showcase__inner{ position:relative; z-index:1; }
     }
     /* Widget ClouderCar e relativo CSS rimossi: prenotazione via link diretto al portale */
+    /* ════════════════════════════════════════════════════════════════
+       MOBILE TOUCH — micro-interattività premium <768px
+       ════════════════════════════════════════════════════════════════ */
+    @media(max-width:768px){
+
+      /* ── 1. FEEDBACK TATTILE: ogni elemento cliccabile si comprime sotto
+            il pollice (scale 0.96, transizione velocissima 0.1s) ── */
+      .hero-cta, .btn-primary, .btn-ghost, .fb-btn-primary,
+      .sh-mobile-cta, .sh-mobile-link, .sh-menu-toggle,
+      .nav-link-item a, .footer-hq-item, .footer-legal-baseline a{
+        transition:transform 0.1s cubic-bezier(0.25, 1, 0.5, 1),
+                   color 0.3s ease, background 0.3s ease,
+                   border-color 0.3s ease, box-shadow 0.3s ease;
+      }
+      .hero-cta:active, .btn-primary:active, .btn-ghost:active, .fb-btn-primary:active,
+      .sh-mobile-cta:active, .sh-mobile-link:active, .sh-menu-toggle:active,
+      .nav-link-item a:active, .footer-hq-item:active, .footer-legal-baseline a:active{
+        transform:scale(0.96) !important;          /* compressione fisica sotto il dito */
+      }
+
+      /* ── 2. ACCENSIONE CARD AL TOUCH: replica istantanea dell'hover desktop —
+            bordo ghiaccio/platino, alone radiale profondo, immagine al 100% ── */
+      .cat-card:active, .svc-card:active{
+        border-color:var(--ice) !important;
+        box-shadow:0 20px 40px rgba(0,0,0,0.5),
+                   0 0 0 1px rgba(227,236,239,0.18),
+                   0 0 28px rgba(227,236,239,0.14) !important;   /* alone radiale profondo platino */
+        transition:border-color 0.12s ease, box-shadow 0.12s ease, transform 0.12s ease;
+      }
+      /* badge flotta che si accende come sull'hover desktop */
+      .cat-card:active .cat-badge{ box-shadow:0 0 14px rgba(227,236,239,0.35); border-color:var(--ice); }
+      .cat-card:active .badge-avail{ box-shadow:0 0 14px rgba(94,221,180,0.4); border-color:#5eddb4; }
+      .cat-card:active .badge-new{ box-shadow:0 0 14px rgba(240,168,112,0.4); border-color:#f0a870; }
+      /* immagine vettura flotta: micro-zoom luxury identico al desktop, luminosità piena */
+      .cat-card:active .cat-img-file{
+        transform:scale(1.30) scale(1.04) !important;
+        transition:transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+      }
+      /* immagine servizi: micro-zoom fluido (card standard) */
+      .svc-card:active .svc-card__media img{
+        transform:scale(1.20) !important;
+        transition:transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+      }
+      /* card 01 (Rent to Rent) e 05 (Produzioni & Eventi): rispetta il contain a scala ridotta, niente taglio */
+      .svc-carousel .svc-card:nth-child(1):active .svc-card__media img,
+      .svc-carousel .svc-card:nth-child(5):active .svc-card__media img{
+        transform:scale(1.10) !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -1791,14 +1870,18 @@
     <div class="footer-content">
       <span class="footer-logo"><img src="logo-aurarent.png" alt="Aura-rent" class="footer-logo-img"></span>
       <span class="footer-copy">© 2026 Aura.rent — Tutti i diritti riservati</span>
-      <span class="footer-legal">
-        <a href="privacy-policy.html">Privacy</a>
-        <span class="footer-sep">·</span>
-        <a href="cookie-policy.html">Cookie</a>
-        <span class="footer-sep">·</span>
-        <a href="termini-condizioni.html">Termini</a>
-      </span>
     </div>
+
+    <!-- Baseline legale: dati societari obbligatori + link normati -->
+    <small class="footer-legal-baseline">
+      <span class="flb-data">Aura Rent S.r.l. <span class="flb-sep">|</span> Sede Legale: Via della Moscova 13, 20121 Milano (MI) <span class="flb-sep">|</span> P.IVA e C.F. 12345678901 <span class="flb-sep">|</span> REA: MI - 987654 <span class="flb-sep">|</span> Capitale Sociale: € 100.000,00 i.v. <span class="flb-sep">|</span> PEC: aurarent@legalmail.it <span class="flb-sep">|</span> Iscritta al Registro delle Imprese di Milano</span>
+      <span class="flb-links">
+        <a href="privacy-policy.html">Privacy Policy</a> <span class="flb-sep">|</span>
+        <a href="cookie-policy.html">Cookie Policy</a> <span class="flb-sep">|</span>
+        <a href="termini-condizioni.html">Termini e Condizioni</a> <span class="flb-sep">|</span>
+        <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener noreferrer">Risoluzione Controversie (ODR)</a>
+      </span>
+    </small>
   </footer>
 
 </div><!-- /landing -->
