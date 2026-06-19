@@ -564,13 +564,6 @@
       .footer-hq{ gap:1.6rem 0; flex-direction:column; align-items:center; }
       .footer-hq-item{ font-size:.75rem; }
     }
-    .footer-content{
-      position:static;
-      max-width:1280px; margin:0 auto;
-      display:flex; align-items:center; justify-content:space-between;
-      flex-wrap:wrap; gap:1rem;
-    }
-    .footer-logo{ display:inline-flex; align-items:center }
     .footer-logo-img{
       height:36px; width:auto; object-fit:contain; display:block;
       opacity:.6;                          /* integrato col tono dark dei crediti */
@@ -578,20 +571,6 @@
     }
     .footer-logo-img:hover{ opacity:1 }
     footer span{ font-size:.58rem; font-weight:300; letter-spacing:.18em; color:rgba(227,236,239,.2) }
-    /* copyright perfettamente centrato sulla LARGHEZZA PIENA del footer (viewport), indipendente da logo/legal */
-    .footer-copy{
-      position:absolute; left:0; right:0; margin:0 auto;
-      top:auto; bottom:auto;
-      width:100%; text-align:center; display:block; white-space:nowrap; pointer-events:none;
-    }
-    .footer-legal{ display:inline-flex; align-items:center; gap:.2rem; }
-    .footer-sep{ color:rgba(227,236,239,.25); }
-    .footer-legal a{
-      color:rgba(227,236,239,.45); text-decoration:none;
-      padding:.35rem .55rem; border-radius:6px;
-      transition:color .3s ease, background .3s ease;
-    }
-    .footer-legal a:hover{ color:var(--ice); }
 
     /* ── Baseline legale: griglia editoriale a colonne titolate (look Converse) ── */
     .footer-legal-baseline{
@@ -609,6 +588,21 @@
     }
     .footer-legal-baseline .flb-col{
       display:flex; flex-direction:column; flex:1;
+    }
+    /* logo agganciato a sinistra, centrato verticalmente con le colonne */
+    .footer-legal-baseline .flb-logo{
+      display:flex; align-items:center; flex-shrink:0; align-self:center;
+    }
+    .footer-legal-baseline .flb-logo .footer-logo-img{
+      height:40px; width:auto; object-fit:contain; display:block;
+      opacity:.6; transition:opacity .3s ease;
+    }
+    .footer-legal-baseline .flb-logo .footer-logo-img:hover{ opacity:1; }
+    /* firma copyright: ultimissima riga, invisibile e pulitissima */
+    .footer-legal-baseline .flb-copy{
+      display:block; text-align:center; margin-top:24px;
+      font-size:0.6rem; font-weight:300; text-transform:uppercase;
+      letter-spacing:0.15em; color:rgba(255,255,255,0.22);
     }
     /* titolo colonna in evidenza */
     .footer-legal-baseline .flb-title{
@@ -636,24 +630,15 @@
       .footer-legal-baseline .flb-container{
         flex-direction:column; text-align:center; align-items:center; gap:30px;
       }
+      .footer-legal-baseline .flb-logo{ margin-bottom:6px; }
       .footer-legal-baseline .flb-links{ margin-top:30px; }
       .footer-legal-baseline .flb-links a{ margin:0 10px; }
+      .footer-legal-baseline .flb-copy{ margin-top:24px; }
     }
     /* ── Footer mobile: colonna pulita, simmetrica, ben spaziata ── */
     @media(max-width:680px){
       footer{ padding:3rem 1.5rem; }
-      .footer-content{
-        flex-direction:column; align-items:center; text-align:center; gap:24px;
-      }
       .footer-logo-img{ height:auto; max-width:56px; opacity:.7; }
-      .footer-copy{
-        position:static; transform:none; left:auto; top:auto; white-space:normal; pointer-events:auto;
-        font-size:.56rem; letter-spacing:.16em;
-        color:rgba(227,236,239,.28); order:3;
-      }
-      .footer-logo{ order:1; }
-      .footer-legal{ order:2; gap:.35rem; }
-      .footer-legal a{ padding:.45rem .7rem; font-size:.62rem; }
     }
 
     /* ════ HEADER — GLASSMORPHIC FLOATING DOCK ════ */
@@ -1097,8 +1082,11 @@
     .aura-showcase__scrim{
       position:absolute; inset:0; z-index:-1; pointer-events:none;
       background:
+        radial-gradient(rgba(227,236,239,0.12) 1px, transparent 1px),
         linear-gradient(90deg, rgba(18,18,18,.96) 0%, rgba(18,18,18,.82) 45%, rgba(18,18,18,.4) 100%),
         linear-gradient(0deg, rgba(18,18,18,.9) 0%, rgba(18,18,18,.3) 50%);
+      background-size:24px 24px, auto, auto;
+      background-position:center, center, center;
     }
     .aura-showcase__inner{ width:min(1280px,92vw); margin:0 auto; }
     .aura-showcase__head{ margin-bottom:clamp(36px,6vh,72px); }
@@ -1392,7 +1380,13 @@
       .aura-showcase__inner{ background:var(--onyx-deep); }
       .svc-carousel{ background:var(--onyx-deep); }
       .aura-showcase__bg{ display:none !important; }       /* su mobile il render foto non serve: via il grigio cemento */
-      .aura-showcase__scrim{ background:var(--onyx-deep) !important; }
+      .aura-showcase__scrim{
+        background:
+          radial-gradient(rgba(227,236,239,0.12) 1px, transparent 1px),
+          var(--onyx-deep) !important;
+        background-size:24px 24px, auto !important;
+        background-position:center, center !important;
+      }
       .aura-showcase__inner{ position:relative; z-index:1; }
     }
     /* Widget ClouderCar e relativo CSS rimossi: prenotazione via link diretto al portale */
@@ -1901,14 +1895,10 @@
         <a href="https://www.google.com/maps/search/?api=1&query=Via+della+Moscova+13+20121+Milano+MI" target="_blank" rel="noopener noreferrer" class="footer-hq-item">Via della Moscova 13, 20121 Milano</a>
       </div>
     </div>
-    <div class="footer-content">
-      <span class="footer-logo"><img src="logo-aurarent.png" alt="Aura-rent" class="footer-logo-img"></span>
-      <span class="footer-copy">© 2026 Aura.rent — Tutti i diritti riservati</span>
-    </div>
-
-    <!-- Baseline legale: dati societari obbligatori + link normati -->
+    <!-- Baseline legale: logo + dati societari + link normati + firma -->
     <small class="footer-legal-baseline">
       <span class="flb-container">
+        <span class="flb-logo"><img src="logo-aurarent.png" alt="Aura-rent" class="footer-logo-img"></span>
         <span class="flb-col">
           <span class="flb-title">Aura Rent</span>
           <span class="flb-line">Aura Rent S.r.l.</span>
@@ -1936,6 +1926,7 @@
         <a href="termini-condizioni.html">Termini e Condizioni</a> <span class="flb-dot">•</span>
         <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener noreferrer">Risoluzione Controversie (ODR)</a>
       </span>
+      <span class="flb-copy">© 2026 Aura.rent — Tutti i diritti riservati</span>
     </small>
   </footer>
 
