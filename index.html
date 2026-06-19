@@ -605,8 +605,21 @@
       transition:color 0.3s ease;
     }
     .footer-legal-baseline a:hover{ color:#ffffff; }   /* accensione bianco puro al passaggio */
-    @media(max-width:680px){
-      .footer-legal-baseline{ font-size:.6rem; letter-spacing:.12em; padding:0 .5rem; }
+    @media(max-width:768px){
+      /* Firma tecnica ariosa: microscopica, quasi invisibile, righe ben distanziate */
+      .footer-legal-baseline{
+        font-size:0.58rem;                        /* microscopico */
+        letter-spacing:0.18em;                    /* massima aria tra i caratteri */
+        line-height:2.2;                          /* righe nettamente distanziate, niente blocco compresso */
+        color:rgba(255,255,255,0.18);             /* fonde col nero, leggibile solo a fuoco */
+        padding:0 1rem;
+      }
+      .footer-legal-baseline a{ color:rgba(255,255,255,0.18); }
+      /* separatori col respiro laterale per evitare parole spezzate a parete */
+      .footer-legal-baseline .flb-sep{ padding:0 6px; margin:0; }
+      /* netta separazione tra dati statici e link cliccabili */
+      .footer-legal-baseline .flb-links{ margin-top:12px; }
+      .footer-legal-baseline .flb-links a{ display:inline-block; padding:2px 0; }
     }
     /* ── Footer mobile: colonna pulita, simmetrica, ben spaziata ── */
     @media(max-width:680px){
