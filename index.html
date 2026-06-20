@@ -245,6 +245,9 @@
       width:100%; height:100%; object-fit:cover; display:block;
       opacity:1; transition:opacity .6s ease-in-out;   /* fade temporale gestito via JS su onended */
       pointer-events:none;
+      transform:scale(1.04);                /* zoom +4%: spinge i bordi chiari nativi fuori dal frame visibile */
+      transform-origin:center center;
+      backface-visibility:hidden;           /* GPU attiva, niente sfarfallii durante il loop */
     }
     /* overlay SOLO a destra: striscia che stacca il video dal testo, bordi alto/basso/sinistra netti */
     .fb-video-overlay{
