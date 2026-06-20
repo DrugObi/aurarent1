@@ -240,19 +240,17 @@
       position:relative; overflow:hidden;
       background:#000;
     }
-    @keyframes videoLoopFade{
-      0%{ opacity:1; } 96%{ opacity:1; } 99%{ opacity:0; } 100%{ opacity:1; }
-    }
     .fb-video-element{
       position:absolute; inset:0;
       width:100%; height:100%; object-fit:cover; display:block;
-      animation:videoLoopFade 10s infinite linear;
+      opacity:1; transition:opacity .6s ease-in-out;   /* fade temporale gestito via JS su onended */
       pointer-events:none;
     }
-    /* overlay secco: sfuma da destra (#000) verso sinistra, fonde il taglio centrale */
+    /* overlay SOLO a destra: striscia che stacca il video dal testo, bordi alto/basso/sinistra netti */
     .fb-video-overlay{
-      position:absolute; inset:0; z-index:1; pointer-events:none;
-      background:linear-gradient(to left, #000000 0%, transparent 40%);
+      position:absolute; top:0; right:0; bottom:0; z-index:1; pointer-events:none;
+      width:30%;
+      background:linear-gradient(to right, transparent 0%, #000000 100%);
     }
     /* scudo anti-interazione preservato */
     .fb-video-shield{
@@ -312,7 +310,8 @@
       }
       .fb-video-side{ height:42vh; min-height:300px; }
       .fb-video-overlay{
-        background:linear-gradient(to top, #000000 0%, transparent 45%);
+        top:auto; left:0; right:0; bottom:0; width:100%; height:35%;
+        background:linear-gradient(to bottom, transparent 0%, #000000 100%);
       }
       .fb-text-side{
         padding:clamp(32px,8vw,56px) 1.6rem clamp(48px,10vw,72px);
@@ -1557,7 +1556,7 @@
   <!-- FEATURE BLOCKS -->
   <section class="fb-section" id="brand-manifesto">
     <div class="fb-video-side">
-      <video autoplay loop muted playsinline disablepictureinpicture disableremoteplayback controlslist="nodownload noplaylist noremoteplayback" oncontextmenu="return false" class="fb-video-element">
+      <video id="fbManifestoVideo" autoplay muted playsinline disablepictureinpicture disableremoteplayback controlslist="nodownload noplaylist noremoteplayback" oncontextmenu="return false" class="fb-video-element">
         <source src="intro-brand.mp4" type="video/mp4">
       </video>
       <div class="fb-video-overlay" aria-hidden="true"></div>
@@ -2155,6 +2154,21 @@ function initReveal(){
   car.addEventListener('scroll', function(){
     if(!ticking){ ticking = true; requestAnimationFrame(update); }
   }, {passive:true});
+})();
+
+/* — Manifesto: loop in dissolvenza temporale (no loop nativo) — */
+(function(){
+  var v = document.getElementById('fbManifestoVideo');
+  if(!v) return;
+  v.addEventListener('ended', function(){
+    v.style.opacity = '0';                 // fade-out in nero
+    setTimeout(function(){
+      v.currentTime = 0;
+      var p = v.play();
+      if(p && p.catch) p.catch(function(){});
+      v.style.opacity = '1';               // rientro in dissolvenza
+    }, 600);                               // = durata transition opacity
+  });
 })();
 
 </script>
