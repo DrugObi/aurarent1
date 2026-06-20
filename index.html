@@ -30,7 +30,7 @@
       --ease-expo:cubic-bezier(0.76,0,0.24,1);
     }
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-    html{scroll-behavior:smooth; overflow-x:hidden}
+    html{scroll-behavior:smooth}
     #vantaggi,#flotta,#contatti{ scroll-margin-top:140px }
     body{
       background:var(--onyx); color:var(--ice); font-family:var(--font);
@@ -125,7 +125,6 @@
     .hero h1{
       font-size:clamp(4rem,10vw,9rem); line-height:.88;
       letter-spacing:-.03em; margin:1.4rem 0 1.6rem; opacity:0; transform:translateY(24px);
-      text-shadow:0 4px 30px rgba(0,0,0,0.85);
     }
     .hero h1 em{ font-style:normal; color:var(--ice-dim); display:block }
     .hero-tagline{
@@ -134,15 +133,14 @@
     }
     .hero-cta-row{ display:flex; gap:1rem; flex-wrap:wrap; margin-top:2.2rem; opacity:0; transform:translateY(14px) }
     .hero-cta{
-      font-family:var(--font); font-weight:800; font-size:.72rem; letter-spacing:.15em; text-transform:uppercase;
-      color:var(--ice); background:rgba(255,255,255,0.03); -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px);
-      padding:1.1rem 2.4rem; border:1px solid rgba(227,236,239,0.3); cursor:pointer;
-      border-radius:2px; transition:background .2s ease,border-color .2s ease,box-shadow .2s ease,color .2s ease,transform .2s ease;
+      font-family:var(--font); font-weight:800; font-size:.72rem; letter-spacing:.16em; text-transform:uppercase;
+      color:var(--onyx); background:var(--ice); padding:1.1rem 2.4rem; border:none; cursor:pointer;
+      border-radius:var(--r-sm); transition:background .25s,transform .25s,box-shadow .25s;
       display:inline-flex; align-items:center; justify-content:center; text-decoration:none;
     }
-    .hero-cta:hover{ background:rgba(255,255,255,0.08); border-color:rgba(227,236,239,1); color:#ffffff; box-shadow:0 0 15px rgba(227,236,239,.3); transform:translateY(-2px) }
-    .hero-cta--ghost{ background:transparent; -webkit-backdrop-filter:none; backdrop-filter:none; color:var(--ice); border:1px solid rgba(255,255,255,0.15) }
-    .hero-cta--ghost:hover{ background:rgba(227,236,239,.04); border-color:rgba(227,236,239,.6); color:#ffffff; box-shadow:none; transform:translateY(-2px) }
+    .hero-cta:hover{ background:var(--ice-light); transform:translateY(-2px); box-shadow:0 12px 32px rgba(227,236,239,.18) }
+    .hero-cta--ghost{ background:transparent; color:var(--ice); border:1px solid var(--bdr-ice) }
+    .hero-cta--ghost:hover{ background:rgba(227,236,239,.06); border-color:var(--ice); box-shadow:none }
 
     /* ════ STATS — CINEMATIC SPLIT PANELS (hypercar luxury) ════ */
     .stats-strip{
@@ -244,9 +242,17 @@
     .fb-video-container{
       position:relative; width:100%;
       height:clamp(440px,70vh,640px);
-      border-radius:12px; overflow:hidden;
+      overflow:hidden;
       background:#000;
-      box-shadow:0 24px 70px rgba(0,0,0,0.6), 0 0 0 1px rgba(227,236,239,0.06);
+      /* feather: i 4 bordi sfumano nel nero assoluto, il video emerge dal buio */
+      -webkit-mask-image:
+        linear-gradient(to right,  transparent 0%, #000 12%, #000 88%, transparent 100%),
+        linear-gradient(to bottom, transparent 0%, #000 12%, #000 88%, transparent 100%);
+      -webkit-mask-composite:source-in;
+      mask-image:
+        linear-gradient(to right,  transparent 0%, #000 12%, #000 88%, transparent 100%),
+        linear-gradient(to bottom, transparent 0%, #000 12%, #000 88%, transparent 100%);
+      mask-composite:intersect;
     }
     @keyframes videoLoopFade{
       0%{ opacity:1; } 96%{ opacity:1; } 99%{ opacity:0; } 100%{ opacity:1; }
@@ -267,13 +273,14 @@
       padding:clamp(8px,2vw,40px) clamp(4px,1.5vw,28px);
     }
     .fb-eyebrow{
-      font-family:var(--font); font-weight:700; font-size:.62rem;
-      letter-spacing:.3em; text-transform:uppercase; color:var(--ice);
+      font-family:var(--font); font-weight:700; font-size:.65rem;
+      letter-spacing:.2em; text-transform:uppercase; color:var(--ice);
+      opacity:.4;
     }
     .fb-title{
       font-family:var(--font-display); font-weight:400;
       font-size:clamp(2.6rem,4.6vw,4.4rem); line-height:.92;
-      letter-spacing:.005em; text-transform:uppercase; color:var(--ice);
+      letter-spacing:.06em; text-transform:uppercase; color:var(--ice);
       margin:0;
     }
     .fb-description{
@@ -284,16 +291,25 @@
     .fb-actions{ margin-top:1rem; }
     .fb-btn-primary{
       display:inline-flex; align-items:center; justify-content:center;
-      padding:1.05rem 2.6rem; min-height:54px;
-      font-family:var(--font); font-weight:800; font-size:.72rem;
-      letter-spacing:.16em; text-transform:uppercase;
-      color:var(--onyx); background:var(--ice); text-decoration:none;
-      border:1px solid var(--ice); border-radius:var(--r-sm);
-      transition:background .3s var(--ease),transform .3s var(--ease),box-shadow .3s var(--ease);
+      min-height:54px;
+      font-family:var(--font); font-weight:800;
+      text-transform:uppercase;
+      text-decoration:none;
+      background:transparent !important;
+      border:1px solid rgba(255,255,255,0.2) !important;
+      color:#ffffff !important;
+      letter-spacing:0.15em;
+      font-size:0.72rem;
+      padding:14px 32px;
+      box-shadow:none !important;
+      border-radius:0px !important;
+      transition:all 0.4s cubic-bezier(0.25,1,0.5,1);
     }
     .fb-btn-primary:hover{
-      background:var(--ice-light); transform:translateY(-2px);
-      box-shadow:0 14px 36px rgba(227,236,239,.22);
+      border-color:rgba(255,255,255,1) !important;
+      background:rgba(255,255,255,0.04) !important;
+      color:#ffffff !important;
+      transform:translateY(-1px);
     }
     /* — mobile: colonna unica, video sopra ~40vh, testo sotto — */
     @media(max-width:780px){
@@ -435,11 +451,6 @@
       transform: scale(1.30) scale(1.04); /* base 1.30 × micro-zoom hover luxury */
     }
     .cat-img:has(.cat-img-file){ color:transparent; }
-    /* gradiente fondo immagine: blinda leggibilità di eventuali testi/badge in overlay */
-    .cat-img::after{
-      content:""; position:absolute; inset:0; pointer-events:none; z-index:1;
-      background:linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 50%);
-    }
     /* BODY: prende tutto lo spazio sotto l'immagine e distribuisce header in alto / footer in basso */
     .cat-body {
       display: flex;
@@ -540,15 +551,15 @@
       gap:2rem 4.5rem; text-align:center;
       border-bottom:1px solid rgba(255,255,255,0.08);
     }
-    .footer-hq-col{ display:flex; flex-direction:column; align-items:center; gap:1.1rem; min-width:0; }
+    .footer-hq-col{ display:flex; flex-direction:column; align-items:center; gap:.55rem; min-width:0; }
     .footer-hq-label{
       font-family:var(--font); font-size:.75rem; font-weight:300;
       letter-spacing:.2em; text-transform:uppercase; color:rgba(255,255,255,0.4);
     }
     .footer-hq-item{
       position:relative; font-family:var(--font);
-      font-size:.86rem; font-weight:300; letter-spacing:.04em; text-transform:uppercase;
-      color:rgba(255,255,255,0.75); text-decoration:none; line-height:1.3;
+      font-size:1.15rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase;
+      color:var(--ice); text-decoration:none; line-height:1.3;
       transition:color .35s ease, text-shadow .35s ease;
     }
     /* sottolineatura animata ghiaccio che cresce da sinistra (su tutti i link, sede inclusa) */
@@ -562,8 +573,15 @@
     a.footer-hq-item:hover::after{ width:100%; }
     @media(max-width:768px){
       .footer-hq{ gap:1.6rem 0; flex-direction:column; align-items:center; }
-      .footer-hq-item{ font-size:.75rem; }
+      .footer-hq-item{ font-size:1rem; }
     }
+    .footer-content{
+      position:static;
+      max-width:1280px; margin:0 auto;
+      display:flex; align-items:center; justify-content:space-between;
+      flex-wrap:wrap; gap:1rem;
+    }
+    .footer-logo{ display:inline-flex; align-items:center }
     .footer-logo-img{
       height:36px; width:auto; object-fit:contain; display:block;
       opacity:.6;                          /* integrato col tono dark dei crediti */
@@ -571,74 +589,71 @@
     }
     .footer-logo-img:hover{ opacity:1 }
     footer span{ font-size:.58rem; font-weight:300; letter-spacing:.18em; color:rgba(227,236,239,.2) }
+    /* copyright perfettamente centrato sulla LARGHEZZA PIENA del footer (viewport), indipendente da logo/legal */
+    .footer-copy{
+      position:absolute; left:0; right:0; margin:0 auto;
+      top:auto; bottom:auto;
+      width:100%; text-align:center; display:block; white-space:nowrap; pointer-events:none;
+    }
+    .footer-legal{ display:inline-flex; align-items:center; gap:.2rem; }
+    .footer-sep{ color:rgba(227,236,239,.25); }
+    .footer-legal a{
+      color:rgba(227,236,239,.45); text-decoration:none;
+      padding:.35rem .55rem; border-radius:6px;
+      transition:color .3s ease, background .3s ease;
+    }
+    .footer-legal a:hover{ color:var(--ice); }
 
-    /* ── Baseline legale: griglia editoriale a colonne titolate (look Converse) ── */
+    /* ── Baseline legale: micro-tipografia editoriale, centrata, a tutta larghezza, in fondo a tutto ── */
     .footer-legal-baseline{
       display:block; width:100%;
+      max-width:1280px; margin:25px auto 0;
       font-family:var(--font);
-      text-transform:uppercase;
-      color:rgba(255,255,255,0.4);
-      line-height:1.8;
+      font-size:0.65rem; font-weight:300;
+      text-transform:uppercase; letter-spacing:0.15em;
+      color:rgba(255,255,255,0.3);            /* grigio fumo molto tenue a riposo */
+      line-height:1.8; text-align:center;
     }
-    /* griglia colonne: 4 blocchi verticali ariosi */
-    .footer-legal-baseline .flb-container{
-      display:flex; justify-content:space-between; align-items:flex-start;
-      gap:40px; max-width:1200px; margin:70px auto 30px auto;
-      padding:0 20px; text-align:left;
-    }
-    .footer-legal-baseline .flb-col{
-      display:flex; flex-direction:column; flex:1;
-    }
-    /* logo agganciato a sinistra, centrato verticalmente con le colonne */
-    .footer-legal-baseline .flb-logo{
-      display:flex; align-items:center; flex-shrink:0; align-self:center;
-    }
-    .footer-legal-baseline .flb-logo .footer-logo-img{
-      height:40px; width:auto; object-fit:contain; display:block;
-      opacity:.6; transition:opacity .3s ease;
-    }
-    .footer-legal-baseline .flb-logo .footer-logo-img:hover{ opacity:1; }
-    /* firma copyright: ultimissima riga, invisibile e pulitissima */
-    .footer-legal-baseline .flb-copy{
-      display:block; text-align:center; margin-top:24px;
-      font-size:0.6rem; font-weight:300; text-transform:uppercase;
-      letter-spacing:0.15em; color:rgba(255,255,255,0.22);
-    }
-    /* titolo colonna in evidenza */
-    .footer-legal-baseline .flb-title{
-      font-size:0.75rem; font-weight:600; text-transform:uppercase;
-      letter-spacing:0.1em; color:rgba(255,255,255,0.7); margin-bottom:15px;
-    }
-    /* righe dati: una per riga, leggere e distanziate */
-    .footer-legal-baseline .flb-line{
-      font-size:0.68rem; font-weight:300; line-height:1.8;
-      color:rgba(255,255,255,0.35); letter-spacing:0.05em; text-transform:none;
-    }
-    /* striscia link: barra orizzontale separata e centrata */
-    .footer-legal-baseline .flb-links{
-      display:block; text-align:center; margin-top:40px;
-      font-size:0.65rem; letter-spacing:0.12em; text-transform:uppercase;
-    }
-    .footer-legal-baseline .flb-links a{ margin:0 15px; }
-    .footer-legal-baseline .flb-dot{ color:rgba(255,255,255,0.18); margin:0; }
+    .footer-legal-baseline .flb-data,
+    .footer-legal-baseline .flb-links{ display:block; }
+    .footer-legal-baseline .flb-links{ margin-top:.5rem; }
+    .footer-legal-baseline .flb-sep{ color:rgba(255,255,255,0.18); margin:0 .15em; }
     .footer-legal-baseline a{
-      color:rgba(255,255,255,0.4); text-decoration:none;
+      color:rgba(255,255,255,0.3); text-decoration:none;
       transition:color 0.3s ease;
     }
     .footer-legal-baseline a:hover{ color:#ffffff; }   /* accensione bianco puro al passaggio */
-    @media(max-width:680px){
-      .footer-legal-baseline .flb-container{
-        flex-direction:column; text-align:center; align-items:center; gap:30px;
+    @media(max-width:768px){
+      /* Firma tecnica ariosa: microscopica, quasi invisibile, righe ben distanziate */
+      .footer-legal-baseline{
+        font-size:0.58rem;                        /* microscopico */
+        letter-spacing:0.18em;                    /* massima aria tra i caratteri */
+        line-height:2.2;                          /* righe nettamente distanziate, niente blocco compresso */
+        color:rgba(255,255,255,0.18);             /* fonde col nero, leggibile solo a fuoco */
+        padding:0 1rem;
       }
-      .footer-legal-baseline .flb-logo{ margin-bottom:6px; }
-      .footer-legal-baseline .flb-links{ margin-top:30px; }
-      .footer-legal-baseline .flb-links a{ margin:0 10px; }
-      .footer-legal-baseline .flb-copy{ margin-top:24px; }
+      .footer-legal-baseline a{ color:rgba(255,255,255,0.18); }
+      /* separatori col respiro laterale per evitare parole spezzate a parete */
+      .footer-legal-baseline .flb-sep{ padding:0 6px; margin:0; }
+      /* netta separazione tra dati statici e link cliccabili */
+      .footer-legal-baseline .flb-links{ margin-top:12px; }
+      .footer-legal-baseline .flb-links a{ display:inline-block; padding:2px 0; }
     }
     /* ── Footer mobile: colonna pulita, simmetrica, ben spaziata ── */
     @media(max-width:680px){
       footer{ padding:3rem 1.5rem; }
+      .footer-content{
+        flex-direction:column; align-items:center; text-align:center; gap:24px;
+      }
       .footer-logo-img{ height:auto; max-width:56px; opacity:.7; }
+      .footer-copy{
+        position:static; transform:none; left:auto; top:auto; white-space:normal; pointer-events:auto;
+        font-size:.56rem; letter-spacing:.16em;
+        color:rgba(227,236,239,.28); order:3;
+      }
+      .footer-logo{ order:1; }
+      .footer-legal{ order:2; gap:.35rem; }
+      .footer-legal a{ padding:.45rem .7rem; font-size:.62rem; }
     }
 
     /* ════ HEADER — GLASSMORPHIC FLOATING DOCK ════ */
@@ -666,9 +681,9 @@
       width:90%;
       max-width:1100px;
       height:56px;                                     /* sottile e slanciata */
-      background:rgba(10,10,10,0.75) !important;        /* vetro scuro luxury */
-      backdrop-filter:blur(20px) !important;
-      -webkit-backdrop-filter:blur(20px) !important;
+      background:rgba(13,17,23,0.7) !important;        /* vetro scuro trasparente */
+      backdrop-filter:blur(12px) !important;
+      -webkit-backdrop-filter:blur(12px) !important;
       border:1px solid rgba(255,255,255,0.08) !important;
       border-radius:30px !important;                   /* capsula rotonda perfetta */
       box-shadow:0 10px 40px rgba(0,0,0,0.5);
@@ -684,7 +699,7 @@
     /* contrazione lieve su scroll, resta centrata */
     .site-header.is-scrolled .nav-container-fixed{
       transform:translateX(-50%) scale(.98);
-      background:rgba(10,10,10,0.85) !important;
+      background:rgba(13,17,23,0.82) !important;
     }
 
     /* BRAND LOGO */
@@ -721,14 +736,14 @@
 
     /* CTA PRENOTA */
     .nav-btn-prenota{
-      background:transparent; border:1px solid rgba(227,236,239,0.3); color:var(--ice);
+      background:transparent; border:1px solid var(--ice); color:var(--ice);
       padding:9px 22px; border-radius:30px;
-      font-size:.75rem; font-weight:700; text-transform:uppercase; letter-spacing:.15em;
+      font-size:.75rem; font-weight:700; text-transform:uppercase; letter-spacing:.1em;
       cursor:pointer; text-decoration:none; white-space:nowrap; flex-shrink:0;
       transition:all .3s cubic-bezier(0.16,1,0.3,1);
     }
     .nav-btn-prenota:hover{
-      background:rgba(227,236,239,0.08); border-color:var(--ice); color:#ffffff;
+      background:var(--ice); color:#0d1117;
       box-shadow:0 0 15px var(--ice-glow);
     }
 
@@ -748,8 +763,8 @@
     /* overlay menu mobile a tutto schermo */
     .sh-mobile-overlay{
       position:fixed; inset:0; z-index:1090;
-      background:rgba(10,10,10,0.75);
-      backdrop-filter:blur(20px) saturate(1.4); -webkit-backdrop-filter:blur(20px) saturate(1.4);
+      background:rgba(7,9,12,0.92);
+      backdrop-filter:blur(24px) saturate(1.4); -webkit-backdrop-filter:blur(24px) saturate(1.4);
       display:flex; align-items:center; justify-content:center;
       opacity:0; visibility:hidden; transition:opacity .45s var(--ease), visibility .45s var(--ease) }
     .sh-mobile-overlay.is-open{ opacity:1; visibility:visible }
@@ -903,7 +918,7 @@
     .sb-title, .stat-num, .benefit-title,
     .mf-word{ letter-spacing:-0.04em; line-height:0.9 }
     /* .cat-name escluso dalla compressione: il nome modello ha bisogno di respiro (line-height gestito sopra) */
-    .cat-name{ letter-spacing:0.02em }
+    .cat-name{ letter-spacing:0.01em }
     .hero-tagline, .fb-card-desc, .benefit-desc, .manifesto__text,
     .sb-text, .fb-hero-sub{ font-weight:400; color:rgba(255,255,255,0.85) }
 
@@ -913,9 +928,8 @@
     .sb-title em, .stat-num em, .mf-word.dim, .hero-eyebrow,
     .manifesto__num, .section-label, .sb-eyebrow, .fb-hero-eyebrow{ color:var(--ice-bright) }
     .hero h1, .final-section h2, .mf-word, .section-title{ text-shadow:0 0 10px rgba(197,220,228,0.2) }
-    .hero-cta, .fb-hero-cta, .btn-primary{ background:rgba(255,255,255,0.03); color:var(--ice) }
-    .hero-cta:hover, .fb-hero-cta:hover, .btn-primary:hover{ background:rgba(255,255,255,0.08); color:#ffffff }
-    .hero-cta--ghost{ background:transparent; color:var(--ice) }
+    .hero-cta, .fb-hero-cta, .btn-primary{ background:var(--ice-bright); color:#0E0E0E }
+    .hero-cta:hover, .fb-hero-cta:hover, .btn-primary:hover{ background:#D4E6ED }
 
     /* FIX titolo "CATEGORIE AUTO" su mobile: proporzioni naturali Anton, niente schiacciamento/faux-bold */
     @media(max-width:780px){
@@ -1012,10 +1026,9 @@
       }
       .hero--layered .hero-inner{ gap:1.4rem; }
       .hero--layered h1, .hero--layered .hero h1{
-        font-size:4rem !important; line-height:1.05 !important;
-        letter-spacing:0.02em !important;
+        font-size:3.4rem !important; line-height:1.1 !important;
         margin:.6rem 0 !important;
-        text-shadow:0 4px 30px rgba(0,0,0,0.85) !important;
+        text-shadow:0 4px 30px rgba(0,0,0,0.6) !important;
       }
       .hero--layered .hero-eyebrow{ font-size:.72rem !important; margin-bottom:.2rem !important; }
       .hero--layered .hero-tagline{ font-size:1rem !important; max-width:32ch !important; margin-top:.2rem !important; }
@@ -1028,9 +1041,8 @@
         width:auto !important; max-width:260px; min-width:220px; min-height:0 !important;
         padding:12px 28px !important;
         font-size:.64rem !important; letter-spacing:.18em !important;
-        border-radius:2px !important;
+        border-radius:4px !important;
       }
-      .hero--layered .hero-cta:active{ border-color:rgba(227,236,239,1) !important; box-shadow:0 0 15px rgba(227,236,239,.3) !important; color:#ffffff !important; }
       .hero-vtag{ display:none; }          /* via il tag verticale che affolla su mobile */
     }
 
@@ -1082,11 +1094,8 @@
     .aura-showcase__scrim{
       position:absolute; inset:0; z-index:-1; pointer-events:none;
       background:
-        radial-gradient(rgba(227,236,239,0.12) 1px, transparent 1px),
         linear-gradient(90deg, rgba(18,18,18,.96) 0%, rgba(18,18,18,.82) 45%, rgba(18,18,18,.4) 100%),
         linear-gradient(0deg, rgba(18,18,18,.9) 0%, rgba(18,18,18,.3) 50%);
-      background-size:24px 24px, auto, auto;
-      background-position:center, center, center;
     }
     .aura-showcase__inner{ width:min(1280px,92vw); margin:0 auto; }
     .aura-showcase__head{ margin-bottom:clamp(36px,6vh,72px); }
@@ -1380,13 +1389,7 @@
       .aura-showcase__inner{ background:var(--onyx-deep); }
       .svc-carousel{ background:var(--onyx-deep); }
       .aura-showcase__bg{ display:none !important; }       /* su mobile il render foto non serve: via il grigio cemento */
-      .aura-showcase__scrim{
-        background:
-          radial-gradient(rgba(227,236,239,0.12) 1px, transparent 1px),
-          var(--onyx-deep) !important;
-        background-size:24px 24px, auto !important;
-        background-position:center, center !important;
-      }
+      .aura-showcase__scrim{ background:var(--onyx-deep) !important; }
       .aura-showcase__inner{ position:relative; z-index:1; }
     }
     /* Widget ClouderCar e relativo CSS rimossi: prenotazione via link diretto al portale */
@@ -1754,7 +1757,7 @@
         <span class="mf-word">il</span>
         <span class="mf-word dim">desiderio</span>
       </div>
-      <p class="manifesto__text">Libertà su quattro ruote. Esclusiva, puntuale, senza compromessi.</p>
+      <p class="manifesto__text">Non noleggiamo solo automobili. Consegniamo libertà su quattro ruote — esclusiva, puntuale, senza compromessi. Ogni vettura è pronta dove e quando conta.</p>
     </div>
   </section>
 
@@ -1895,38 +1898,20 @@
         <a href="https://www.google.com/maps/search/?api=1&query=Via+della+Moscova+13+20121+Milano+MI" target="_blank" rel="noopener noreferrer" class="footer-hq-item">Via della Moscova 13, 20121 Milano</a>
       </div>
     </div>
-    <!-- Baseline legale: logo + dati societari + link normati + firma -->
+    <div class="footer-content">
+      <span class="footer-logo"><img src="logo-aurarent.png" alt="Aura-rent" class="footer-logo-img"></span>
+      <span class="footer-copy">© 2026 Aura.rent — Tutti i diritti riservati</span>
+    </div>
+
+    <!-- Baseline legale: dati societari obbligatori + link normati -->
     <small class="footer-legal-baseline">
-      <span class="flb-container">
-        <span class="flb-logo"><img src="logo-aurarent.png" alt="Aura-rent" class="footer-logo-img"></span>
-        <span class="flb-col">
-          <span class="flb-title">Aura Rent</span>
-          <span class="flb-line">Aura Rent S.r.l.</span>
-          <span class="flb-line">Capitale Sociale: € 100.000,00 i.v.</span>
-        </span>
-        <span class="flb-col">
-          <span class="flb-title">Registri</span>
-          <span class="flb-line">REA: MI - 987654</span>
-          <span class="flb-line">Iscritta al Reg. Imprese di Milano</span>
-        </span>
-        <span class="flb-col">
-          <span class="flb-title">Contatti &amp; PEC</span>
-          <span class="flb-line">PEC: aurarent@legalmail.it</span>
-          <span class="flb-line">P.IVA e C.F. 12345678901</span>
-        </span>
-        <span class="flb-col">
-          <span class="flb-title">Sede Legale</span>
-          <span class="flb-line">Via della Moscova 13</span>
-          <span class="flb-line">20121 Milano (MI)</span>
-        </span>
-      </span>
+      <span class="flb-data">Aura Rent S.r.l. <span class="flb-sep">|</span> Sede Legale: Via della Moscova 13, 20121 Milano (MI) <span class="flb-sep">|</span> P.IVA e C.F. 12345678901 <span class="flb-sep">|</span> REA: MI - 987654 <span class="flb-sep">|</span> Capitale Sociale: € 100.000,00 i.v. <span class="flb-sep">|</span> PEC: aurarent@legalmail.it <span class="flb-sep">|</span> Iscritta al Registro delle Imprese di Milano</span>
       <span class="flb-links">
-        <a href="privacy-policy.html">Privacy Policy</a> <span class="flb-dot">•</span>
-        <a href="cookie-policy.html">Cookie Policy</a> <span class="flb-dot">•</span>
-        <a href="termini-condizioni.html">Termini e Condizioni</a> <span class="flb-dot">•</span>
+        <a href="privacy-policy.html">Privacy Policy</a> <span class="flb-sep">|</span>
+        <a href="cookie-policy.html">Cookie Policy</a> <span class="flb-sep">|</span>
+        <a href="termini-condizioni.html">Termini e Condizioni</a> <span class="flb-sep">|</span>
         <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener noreferrer">Risoluzione Controversie (ODR)</a>
       </span>
-      <span class="flb-copy">© 2026 Aura.rent — Tutti i diritti riservati</span>
     </small>
   </footer>
 
