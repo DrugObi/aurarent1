@@ -32,10 +32,6 @@
     }
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
     html{scroll-behavior:smooth; overflow-y:scroll; scrollbar-gutter:stable}
-    /* durante l'intro: scroll bloccato. scrollbar-gutter:stable mantiene lo spazio
-       della scrollbar riservato, così al rilascio non c'è alcun layout shift. */
-    html.intro-lock{ overflow:hidden; scrollbar-gutter:stable; }
-    html.intro-lock body{ overflow:hidden; }
     #vantaggi,#flotta,#contatti{ scroll-margin-top:140px }
     body{
       background:var(--onyx); color:var(--ice); font-family:var(--font);
@@ -65,39 +61,35 @@
     @keyframes spin{ to{ transform:rotate(360deg) } }
 
     /* ════ LANDING ════ */
-    /* Il sito è visibile da subito: il video vive DENTRO l'Hero come background. */
     #landing{ opacity:1; }
 
-    /* ════ HERO VIDEO BACKGROUND (intro 4URA nativo nell'Hero) ════ */
+    /* ════ HERO — 3 LAYER FUSI: foto base (z0) → testo (z4) → video intro (z5) ════ */
     .hero.hero--layered{ position:relative; overflow:hidden; }
+
+    /* LAYER VIDEO (superiore): crossfade in opacity verso la foto base sotto */
     .hero-video{
       position:absolute; inset:0; width:100%; height:100%;
-      object-fit:cover; background:#000; z-index:1;
+      object-fit:cover; background:#000; z-index:5; opacity:1;
+      transition:opacity 1.6s ease-in-out;
       pointer-events:none;
     }
-    /* velo scuro sul video per leggibilità del testo quando emerge */
-    .hero.hero--layered::after{
-      content:''; position:absolute; inset:0; z-index:2; pointer-events:none;
-      background:radial-gradient(ellipse 90% 70% at 50% 55%, transparent 45%, rgba(0,0,0,.55) 100%);
-    }
-    /* il blocco testo/pulsanti sta SOPRA il video */
-    .hero--layered .hero-layer{ position:relative; z-index:10; }
-    #hero-content{ position:relative; z-index:10; }
+    .hero-video.faded{ opacity:0; }   /* allo scroll/skip: il video svanisce, emerge la foto */
 
-    /* STATO INIZIALE: testi invisibili finché il video non finisce */
+    /* LAYER TESTO (#hero-content): sotto al video (z4), emerge in crossfade */
+    .hero--layered .hero-layer{ position:relative; z-index:4; }
     #hero-content{
-      opacity:0; transform:translateY(30px); pointer-events:none;
+      position:relative; z-index:4;
+      opacity:0; transform:translateY(40px); pointer-events:none;
+      transition:opacity 1.6s ease-in-out, transform 1.4s cubic-bezier(0.25,1,0.5,1);
     }
-    /* TRANSIZIONE "INCOGNITO": l'UI emerge dall'oscurità del frame finale (fari LED) */
     #hero-content.content-reveal{
       opacity:1; transform:translateY(0); pointer-events:auto;
-      transition:opacity 1.6s ease-out, transform 1.4s cubic-bezier(0.85,0,0.15,1);
     }
 
-    /* hint "scorri verso l'alto" — ancorato all'Hero, appare via timer */
+    /* hint "scorri verso l'alto" — sopra al video (z6), appare via timer */
     #cine-hint{
       position:absolute; left:50%; bottom:clamp(2.2rem,6vh,4rem); transform:translateX(-50%);
-      z-index:11; display:flex; flex-direction:column; align-items:center; gap:.85rem;
+      z-index:6; display:flex; flex-direction:column; align-items:center; gap:.85rem;
       opacity:0; transition:opacity .9s var(--ease-expo); pointer-events:none;
       text-align:center;
     }
@@ -123,7 +115,7 @@
     }
     /* skip discreto in alto a destra dell'Hero */
     #cine-skip{
-      position:absolute; top:1.4rem; right:1.4rem; z-index:12;
+      position:absolute; top:1.4rem; right:1.4rem; z-index:6;
       background:rgba(18,18,18,.5); border:1px solid var(--bdr-ice);
       color:var(--ice-dim); font-family:var(--font); font-size:.55rem;
       font-weight:600; letter-spacing:.3em; text-transform:uppercase;
@@ -1553,14 +1545,15 @@
     })();
   </script>
 
-  <!-- HERO a livelli: VIDEO INTRO come background nativo (z1) / testo (z10) -->
+  <!-- HERO a 3 layer fusi: FOTO BASE (bg-image, z0) → TESTO UI (#hero-content, z4) → VIDEO INTRO (z5) -->
   <section class="hero hero--layered" id="hero">
-    <!-- Video intro = background dell'Hero. Una sola riproduzione, niente loop. -->
+    <!-- LAYER SUPERIORE: video intro, una sola riproduzione, crossfade in opacity -->
     <video id="cine-video" class="hero-video" muted playsinline autoplay preload="auto"
             disablepictureinpicture controlslist="nodownload noplaylist noremoteplayback"
             oncontextmenu="return false">
       <source src="intro-4ura.mp4" type="video/mp4">
     </video>
+    <!-- controlli intro temporanei, sopra al video -->
     <button id="cine-skip" type="button">Salta</button>
     <div id="cine-hint">
       <span class="ch-arrow"></span>
@@ -1569,6 +1562,7 @@
 
     <div class="hero-car"></div>
     <div class="hero-layer">
+      <!-- LAYER TESTO: Hero originale, emerge in crossfade sotto al video -->
       <div class="hero-inner" id="hero-content">
         <p class="hero-eyebrow" id="a-eyebrow">Noleggio senza compromessi</p>
         <h1 id="a-h1">Guida<em>il sogno</em></h1>
@@ -1995,16 +1989,15 @@ function startCineIntro(){
   const hero    = document.getElementById('hero');
 
   /* fallback: se manca il video, mostra subito i testi */
-  if(!video || !content){ revealContent(); return; }
+  if(!video || !content){ crossfade(); return; }
 
-  let revealed = false;   // reveal dei testi avvenuto (una sola volta)
+  let crossed = false;    // crossfade già avvenuto (una sola volta)
+  let ended   = false;    // video arrivato al frame finale
 
-  /* lo scroll resta bloccato finché l'intro non si è risolta.
-     Uso una classe sul root: con html{overflow-y:scroll} il solo body non basta. */
-  document.documentElement.classList.add('intro-lock');
-  document.body.style.overflowY='hidden';
+  /* Niente intro-lock via CSS: bloccare l'overflow all'avvio rischia di spezzare
+     la continuità del primo swipe nativo su mobile (Safari/Chrome). Lo scroll è
+     libero da subito; il crossfade scatta al primo gesto verso il basso. */
 
-  /* avvio video immediato; una sola riproduzione (nessun loop nativo) */
   function playVideo(){
     const p = video.play();
     if(p && p.catch) p.catch(()=>{});
@@ -2012,80 +2005,72 @@ function startCineIntro(){
   if(video.readyState>=2) playVideo();
   else video.addEventListener('canplay', playVideo, {once:true});
 
-  /* ════ REVEAL "INCOGNITO" ════
-     Il video resta fermo sull'ultimo frame (fari LED nel buio) e i testi
-     emergono SOPRA quel frame: nessuno stacco di sfondo, nessuno spostamento. */
-  function revealContent(){
-    if(revealed) return;
-    revealed = true;
+  /* freeze sull'ultimo fotogramma (fari LED nel buio), senza loop/black */
+  function freezeOnLastFrame(){
+    try{
+      video.pause();
+      if(isFinite(video.duration) && video.duration>0){
+        video.currentTime = Math.max(0, video.duration - 0.05);
+      }
+    }catch(e){}
+  }
+
+  /* il video FINISCE → resta bloccato sul frame finale, in attesa dello scroll.
+     L'ultimo frame coincide con l'inizio dello scroll (through-scroll). */
+  video.addEventListener('ended', ()=>{ ended=true; freezeOnLastFrame(); });
+
+  /* ════ CROSSFADE "INCOGNITO" ════
+     Al primo scroll / swipe / Skip:
+     a) sblocca lo scroll, b) il video sfuma a opacity 0 e SOTTO emerge la foto
+     base dell'Hero, c) i testi fanno fade-in: tutto continuo, nessuno stacco. */
+  function crossfade(){
+    if(crossed) return;
+    crossed = true;
     clearTimeout(hintTimer);
-    /* nascondi hint e skip in dissolvenza */
+    /* a) il video svanisce → emerge la foto base (auto su asfalto bagnato) */
+    if(video) video.classList.add('faded');
+    /* nascondi i controlli intro in dissolvenza */
     if(hint) hint.classList.add('gone');
     if(skip) skip.classList.add('gone');
-    /* sblocca lo scroll del sito */
-    document.documentElement.classList.remove('intro-lock');
-    document.body.style.overflowY='auto';
-    /* attiva la transizione iper-fluida del wrapper + lo stagger GSAP interno */
+    /* b) fade-in dei testi dell'Hero originale */
     content.classList.add('content-reveal');
     animateHero();
     cleanup();
   }
 
-  /* freeze sull'ultimo frame: ferma il video esattamente alla fine */
-  function freezeOnLastFrame(){
-    try{
-      video.pause();
-      if(isFinite(video.duration) && video.duration>0){
-        /* -0.05s per restare sull'ultimo fotogramma visibile senza loop/black */
-        video.currentTime = Math.max(0, video.duration - 0.05);
-      }
-    }catch(e){}
-  }
-
-  /* quando il video FINISCE → resta sul frame finale + reveal testi */
-  video.addEventListener('ended', ()=>{ freezeOnLastFrame(); revealContent(); });
-
-  /* rete di sicurezza: se 'ended' non scatta, forza dopo la durata nota */
+  /* rete di sicurezza: se 'ended' non scatta, congela comunque (resta in attesa scroll) */
   const FAILSAFE_MS = (isFinite(video.duration) && video.duration>0 ? video.duration*1000 : 9800) + 500;
-  setTimeout(()=>{ if(!revealed){ freezeOnLastFrame(); revealContent(); } }, FAILSAFE_MS);
+  setTimeout(()=>{ if(!ended){ ended=true; freezeOnLastFrame(); } }, FAILSAFE_MS);
 
-  /* SKIP / SWIPE / SCROLL prima della fine:
-     salta istantaneamente all'ultimo frame e attiva il reveal, zero scatti. */
-  function skipToEnd(){
-    if(revealed) return;
-    try{
-      if(isFinite(video.duration) && video.duration>0){
-        video.currentTime = Math.max(0, video.duration - 0.05);
-      }
-      video.pause();
-    }catch(e){}
-    revealContent();
+  /* SKIP: salta al frame finale e avvia subito il crossfade */
+  function skipNow(){
+    if(crossed) return;
+    freezeOnLastFrame();
+    crossfade();
   }
+  if(skip) skip.addEventListener('click', skipNow);
 
-  if(skip) skip.addEventListener('click', skipToEnd);
+  /* HINT: compare durante il video (a 3.5s) per invitare allo scroll */
+  const hintTimer = setTimeout(()=>{ if(!crossed && hint) hint.classList.add('show'); }, 3500);
 
-  /* HINT swipe-up: compare DURANTE il video (a 3.5s) */
-  const hintTimer = setTimeout(()=>{ if(!revealed && hint) hint.classList.add('show'); }, 3500);
-
-  /* input "dal basso verso l'alto" / scroll / tasti → skipToEnd */
-  function onWheel(e){ if(!revealed){ e.preventDefault(); skipToEnd(); } }
+  /* PRIMO gesto verso il basso → avvia il crossfade; lo scroll prosegue fluido
+     (listener passivi, nessun preventDefault). */
+  function onWheel(e){ if(!crossed && e.deltaY>0){ crossfade(); } }
   let touchStartY=null;
   function onTouchStart(e){ touchStartY=e.touches[0].clientY; }
   function onTouchMove(e){
-    if(revealed) return;
-    e.preventDefault();
-    if(touchStartY===null) return;
-    const dy=touchStartY-e.touches[0].clientY;   // swipe up = dy positivo
-    if(dy>40) skipToEnd();
+    if(crossed || touchStartY===null) return;
+    const deltaY = touchStartY - e.touches[0].clientY;   // swipe up (= scroll giù) → deltaY>0
+    if(deltaY > 10) crossfade();
   }
   function onKey(e){
-    if(revealed) return;
-    if(e.key==='ArrowUp'||e.key==='ArrowDown'||e.key===' '||e.key==='Enter'||e.key==='Escape') skipToEnd();
+    if(crossed) return;
+    if(e.key==='ArrowDown'||e.key==='PageDown'||e.key===' '||e.key==='Enter'){ crossfade(); }
   }
   const tgt = hero || window;
-  tgt.addEventListener('wheel', onWheel, {passive:false});
+  tgt.addEventListener('wheel', onWheel, {passive:true});
   tgt.addEventListener('touchstart', onTouchStart, {passive:true});
-  tgt.addEventListener('touchmove', onTouchMove, {passive:false});
+  tgt.addEventListener('touchmove', onTouchMove, {passive:true});
   window.addEventListener('keydown', onKey);
 
   function cleanup(){
@@ -2101,7 +2086,8 @@ function startCineIntro(){
 function toLanding(){ revealContentFallback(); }
 function revealContentFallback(){
   const content = document.getElementById('hero-content');
-  document.body.style.overflowY='auto';
+  const video   = document.getElementById('cine-video');
+  if(video) video.classList.add('faded');
   if(content) content.classList.add('content-reveal');
   animateHero();
 }
