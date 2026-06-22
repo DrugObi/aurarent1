@@ -28,6 +28,7 @@
       --r-sm:6px; --r-md:10px; --r-2xl:14px;
       --ease:cubic-bezier(0.33,1,0.68,1);
       --ease-expo:cubic-bezier(0.76,0,0.24,1);
+      --ease-cine:cubic-bezier(0.85,0,0.15,1);
     }
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
     html{scroll-behavior:smooth}
@@ -82,21 +83,32 @@
     /* ════ LANDING ════ */
     #landing{ opacity:0; pointer-events:none; transition:opacity 1.2s var(--ease-expo) }
     #landing.show{ opacity:1; pointer-events:auto }
+    /* reveal "Stealth Luxury": leggero zoom-in + fade quando l'intro scivola via */
+    #landing.cine-reveal{ transform:scale(1.04); opacity:0; }
+    #landing.cine-reveal.show{
+      transform:scale(1); opacity:1;
+      transition:transform 1.4s var(--ease-cine), opacity 1.2s ease;
+    }
 
     /* ════ CINEMATIC INTRO (4URA) — overlay full-screen + swipe-up teleport ════ */
     #cine-intro{
       position:fixed; inset:0; z-index:350; background:#000;
       display:flex; align-items:center; justify-content:center;
       overflow:hidden;
-      transition:transform 1.15s var(--ease-expo), opacity 1.15s var(--ease-expo);
-      will-change:transform;
+      /* parte invisibile: fade-in vellutato 1.5s dal buio del loader */
+      opacity:0;
+      transform:translateY(0);
+      transition:opacity 1.5s ease;
+      will-change:transform,opacity;
       touch-action:none;
     }
     #cine-intro.hidden{ display:none; }
-    /* il "teletrasporto": l'overlay scivola via verso l'alto */
+    /* fade-in: il video emerge morbido dal nero */
+    #cine-intro.visible{ opacity:1; }
+    /* il "teletrasporto": l'overlay scivola via verso l'alto, slide cinematografica */
     #cine-intro.lift{
       transform:translateY(-100%);
-      opacity:0;
+      transition:transform 1.2s var(--ease-cine);
       pointer-events:none;
     }
     #cine-video{
@@ -1509,7 +1521,7 @@
 
 <!-- ════ CINEMATIC INTRO 4URA — video + swipe-up teleport ════ -->
 <div id="cine-intro" class="hidden">
-  <video id="cine-video" muted playsinline preload="auto" disablepictureinpicture
+  <video id="cine-video" muted playsinline preload="metadata" disablepictureinpicture
           controlslist="nodownload noplaylist noremoteplayback" oncontextmenu="return false">
     <source src="intro-4ura.mp4" type="video/mp4">
   </video>
@@ -2009,40 +2021,71 @@ const progressFill  = document.getElementById('progress-fill');
 const loadingPct    = document.getElementById('loading-pct');
 const landing       = document.getElementById('landing');
 
-let minElapsed=false, loaderDone=false;
-const MIN_MS=2000;
+/* ════ LOADER — zero tempi morti ════
+   La transizione scatta NON APPENA si verifica la prima di queste condizioni:
+   - la barra raggiunge il 100%
+   - window 'load' è completato (asset pronti)
+   con un minimo brevissimo solo per non far "sfarfallare" il loader. */
+let loaderDone=false;
+const MIN_MS=600;                 // soglia minima molto bassa: niente attese inutili
+let minElapsed=false;
+let pageLoaded=(document.readyState==='complete');
 let displayPct=0, targetPct=2, rafId;
 
 function setTarget(t){ targetPct=Math.max(targetPct,t); }
+
 function loop(){
   if(displayPct<targetPct){
-    displayPct=Math.min(displayPct+Math.max(.15,(targetPct-displayPct)*.06),targetPct);
+    displayPct=Math.min(displayPct+Math.max(.6,(targetPct-displayPct)*.10),targetPct);
     const s=Math.round(displayPct);
     progressFill.style.width=displayPct+'%';
     loadingPct.innerHTML=s+'<sup>%</sup>';
   }
-  if(displayPct<100) rafId=requestAnimationFrame(loop); else dismiss();
+  if(displayPct<100){ rafId=requestAnimationFrame(loop); }
+  else { progressFill.style.width='100%'; loadingPct.innerHTML='100<sup>%</sup>'; dismiss(); }
 }
 rafId=requestAnimationFrame(loop);
 
-/* avanzamento temporizzato del loader */
-setTimeout(()=>setTarget(60),300);
-setTimeout(()=>setTarget(100),900);
-setTimeout(()=>{ minElapsed=true; dismiss(); },MIN_MS);
+/* avanzamento del loader: parte subito e, appena la pagina è pronta, vola al 100% */
+setTimeout(()=>setTarget(55),120);
+setTimeout(()=>setTarget(85),360);
+setTimeout(()=>{ minElapsed=true; tryComplete(); }, MIN_MS);
 
-function dismiss(){
-  if(loaderDone||!minElapsed||displayPct<100) return;
-  loaderDone=true;
-  setTimeout(()=>{
-    loadingScreen.classList.add('fade-out');
-    setTimeout(()=>{
-      loadingScreen.style.display='none';
-      startCineIntro();
-    },1000);
-  },250);
+/* se gli asset sono già pronti o lo diventano → completa immediatamente */
+window.addEventListener('load', ()=>{ pageLoaded=true; tryComplete(); });
+if(pageLoaded) tryComplete();
+
+/* HARD-CAP assoluto: il loader non resta MAI bloccato in attesa di asset pesanti
+   (es. il video intro in preload). Oltre questa soglia si completa comunque. */
+setTimeout(()=>{ pageLoaded=true; minElapsed=true; tryComplete(); }, 2600);
+
+/* quando pagina pronta + minimo trascorso → completa SUBITO.
+   Niente micro-stop sul 100%: snappiamo barra+contatore a pieno e facciamo
+   dismiss() nello stesso tick, senza aspettare che il loop animi fino a 100. */
+function tryComplete(){
+  if(!pageLoaded || !minElapsed || loaderDone) return;
+  cancelAnimationFrame(rafId);
+  displayPct=100; targetPct=100;
+  progressFill.style.width='100%';
+  loadingPct.innerHTML='100<sup>%</sup>';
+  dismiss();
 }
 
-/* ════ CINEMATIC INTRO (4URA) → swipe-up teleport ════ */
+/* dismiss: scatta UNA volta sola, immediatamente, appena la barra è piena.
+   Nessun doppio setTimeout annidato che generi attese percepite. */
+function dismiss(){
+  if(loaderDone) return;
+  loaderDone=true;
+  cancelAnimationFrame(rafId);
+  /* preavvia il caricamento del video intro mentre il loader sfuma */
+  const cv=document.getElementById('cine-video');
+  if(cv){ try{ cv.load(); }catch(e){} }
+  loadingScreen.classList.add('fade-out');           // fade-out loader (CSS 1s)
+  startCineIntro();                                  // l'intro parte SUBITO e fa fade-in sopra
+  setTimeout(()=>{ loadingScreen.style.display='none'; }, 1000);
+}
+
+/* ════ CINEMATIC INTRO (4URA) → slide cinematografica su onended + swipe-up ════ */
 function startCineIntro(){
   const cine  = document.getElementById('cine-intro');
   const video = document.getElementById('cine-video');
@@ -2052,67 +2095,74 @@ function startCineIntro(){
   /* fallback: se manca l'overlay, vai dritto al landing */
   if(!cine || !video){ toLanding(); return; }
 
-  let unlocked = false;   // swipe-up abilitato (a video finito)
-  let teleported = false; // transizione già avviata
+  let teleported = false; // transizione già avviata (una sola volta)
 
-  document.body.style.overflowY='hidden';   // blocca lo scroll del sito durante l'intro
+  /* prepara il landing per il reveal "Stealth Luxury" (zoom-in + fade) */
+  landing.classList.add('cine-reveal');
+
+  document.body.style.overflowY='hidden';   // scroll del sito bloccato durante l'intro
   cine.classList.remove('hidden');
 
-  const p = video.play();
-  if(p && p.catch) p.catch(()=>{ /* autoplay muto: dovrebbe sempre partire */ });
+  /* PUNTO 3 — FADE-IN VELLUTATO: opacity 0→1 in 1.5s (vedi CSS .visible) */
+  requestAnimationFrame(()=>requestAnimationFrame(()=>cine.classList.add('visible')));
 
-  function enableSwipe(){
-    if(unlocked) return;
-    unlocked = true;
-    hint.classList.add('show');
+  /* avvio video appena pronto, senza bloccare il fade-in */
+  function playVideo(){
+    const p = video.play();
+    if(p && p.catch) p.catch(()=>{});
   }
+  if(video.readyState>=2) playVideo();
+  else video.addEventListener('canplay', playVideo, {once:true});
 
-  /* il teletrasporto smooth: overlay scivola in alto e rivela il sito */
+  /* PUNTO 2 — SLIDE PERFETTA: l'intro scivola via e rivela il sito sotto.
+     Lo zoom-in del landing (scale 1.04→1) parte nello STESSO frame della slide,
+     così movimento e reveal sono perfettamente sincroni, senza scatti. */
   function teleport(){
     if(teleported) return;
     teleported = true;
     hint.classList.remove('show');
-    cine.classList.add('lift');           // anima translateY(-100%)
-    try{ video.pause(); }catch(e){}
     document.body.style.overflowY='auto';
-    toLanding();                          // fade-in landing sotto
-    setTimeout(()=>{ cine.classList.add('hidden'); cleanup(); }, 1200);
+    /* il landing è già montato (cine-reveal: scale1.04/opacity0): basta attivarlo */
+    landing.classList.add('show');           // → scale(1) + opacity1 (transition CSS)
+    requestAnimationFrame(()=>cine.classList.add('lift'));   // translateY(-100%) 1.2s, stesso frame
+    try{ video.pause(); }catch(e){}
+    setTimeout(()=>{ cine.classList.add('hidden'); cleanup(); }, 1300);
+    setTimeout(animateHero,200);             // hero GSAP, come in toLanding
   }
 
-  /* a video finito: sblocca lo swipe-up */
-  video.addEventListener('ended', enableSwipe);
-  /* sicurezza: se 'ended' non scatta, sblocca poco dopo la durata nota */
-  setTimeout(enableSwipe, 11000);
+  /* quando il video FINISCE → slide automatica immediata */
+  video.addEventListener('ended', ()=>{ teleport(); });
+  /* rete di sicurezza: se 'ended' non scatta (es. policy browser), slide dopo la durata nota */
+  const FAILSAFE_MS = (isFinite(video.duration) && video.duration>0 ? video.duration*1000 : 9800) + 400;
+  setTimeout(()=>{ if(!teleported){ teleport(); } }, FAILSAFE_MS);
 
-  /* skip: salta subito al sito */
+  /* skip: salta subito al sito in qualunque momento */
   skip.addEventListener('click', teleport);
 
-  /* — input "dal basso verso l'alto" — */
-  function onWheel(e){
-    if(!unlocked){ e.preventDefault(); return; }
-    if(e.deltaY > 4) teleport();          // rotella/trackpad verso il basso = scroll su
-    e.preventDefault();
-  }
-  let touchStartY = null;
-  function onTouchStart(e){ touchStartY = e.touches[0].clientY; }
+  /* HINT swipe-up: compare DURANTE il video (a 3.5s), così l'utente fa in tempo
+     ad usarlo per anticipare la slide. La slide a fine video resta automatica. */
+  const hintTimer = setTimeout(()=>{ if(!teleported) hint.classList.add('show'); }, 3500);
+
+  /* swipe-up / scroll per anticipare l'ingresso nel sito */
+  function onWheel(e){ e.preventDefault(); teleport(); }
+  let touchStartY=null;
+  function onTouchStart(e){ touchStartY=e.touches[0].clientY; }
   function onTouchMove(e){
-    if(touchStartY===null) return;
-    const dy = touchStartY - e.touches[0].clientY;   // swipe up = dy positivo
-    if(!unlocked){ e.preventDefault(); return; }
-    if(dy > 40) teleport();
     e.preventDefault();
+    if(touchStartY===null) return;
+    const dy=touchStartY-e.touches[0].clientY;   // swipe up = dy positivo
+    if(dy>40) teleport();
   }
   function onKey(e){
-    if(!unlocked) return;
-    if(e.key==='ArrowUp'||e.key==='ArrowDown'||e.key===' '||e.key==='Enter') teleport();
+    if(e.key==='ArrowUp'||e.key==='ArrowDown'||e.key===' '||e.key==='Enter'||e.key==='Escape') teleport();
   }
-
   cine.addEventListener('wheel', onWheel, {passive:false});
   cine.addEventListener('touchstart', onTouchStart, {passive:true});
   cine.addEventListener('touchmove', onTouchMove, {passive:false});
   window.addEventListener('keydown', onKey);
 
   function cleanup(){
+    clearTimeout(hintTimer);
     cine.removeEventListener('wheel', onWheel);
     cine.removeEventListener('touchstart', onTouchStart);
     cine.removeEventListener('touchmove', onTouchMove);
@@ -2120,7 +2170,7 @@ function startCineIntro(){
   }
 }
 
-/* ════ → LANDING (fade-in) ════ */
+/* ════ → LANDING (fallback diretto: nessun overlay intro) ════ */
 function toLanding(){
   if(landing.classList.contains('show')) return;
   document.body.style.overflowY='auto';
