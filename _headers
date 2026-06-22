@@ -7,3 +7,6 @@
   Accept-Ranges: bytes
   Content-Type: video/mp4
   Cache-Control: public, max-age=31536000
+
+/intro-lastframe.jpg
+  Cache-Control: public, max-age=31536000
