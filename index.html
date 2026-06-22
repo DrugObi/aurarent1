@@ -83,6 +83,67 @@
     #landing{ opacity:0; pointer-events:none; transition:opacity 1.2s var(--ease-expo) }
     #landing.show{ opacity:1; pointer-events:auto }
 
+    /* ════ CINEMATIC INTRO (4URA) — overlay full-screen + swipe-up teleport ════ */
+    #cine-intro{
+      position:fixed; inset:0; z-index:350; background:#000;
+      display:flex; align-items:center; justify-content:center;
+      overflow:hidden;
+      transition:transform 1.15s var(--ease-expo), opacity 1.15s var(--ease-expo);
+      will-change:transform;
+      touch-action:none;
+    }
+    #cine-intro.hidden{ display:none; }
+    /* il "teletrasporto": l'overlay scivola via verso l'alto */
+    #cine-intro.lift{
+      transform:translateY(-100%);
+      opacity:0;
+      pointer-events:none;
+    }
+    #cine-video{
+      position:absolute; inset:0; width:100%; height:100%;
+      object-fit:cover; background:#000;
+    }
+    /* leggera vignettatura + fondo nero pieno per matchare la fine del clip */
+    #cine-intro::after{
+      content:''; position:absolute; inset:0; pointer-events:none; z-index:2;
+      background:radial-gradient(ellipse 90% 70% at 50% 50%, transparent 55%, rgba(0,0,0,.45) 100%);
+    }
+    /* hint "scorri verso l'alto" — appare a video finito */
+    #cine-hint{
+      position:absolute; left:50%; bottom:clamp(2.2rem,6vh,4rem); transform:translateX(-50%);
+      z-index:3; display:flex; flex-direction:column; align-items:center; gap:.85rem;
+      opacity:0; transition:opacity .9s var(--ease-expo); pointer-events:none;
+      text-align:center;
+    }
+    #cine-hint.show{ opacity:1; }
+    #cine-hint .ch-arrow{
+      width:30px; height:30px; border-right:2px solid var(--ice);
+      border-top:2px solid var(--ice); transform:rotate(-45deg);
+      animation:chFloat 1.8s var(--ease) infinite;
+      opacity:.9;
+    }
+    #cine-hint .ch-label{
+      font-family:var(--font); font-size:.58rem; font-weight:600;
+      letter-spacing:.42em; text-transform:uppercase; color:var(--ice-dim);
+    }
+    @keyframes chFloat{
+      0%,100%{ transform:rotate(-45deg) translate(0,0); opacity:.35 }
+      50%{ transform:rotate(-45deg) translate(6px,-6px); opacity:1 }
+    }
+    /* skip discreto in alto a destra */
+    #cine-skip{
+      position:absolute; top:1.4rem; right:1.4rem; z-index:4;
+      background:rgba(18,18,18,.5); border:1px solid var(--bdr-ice);
+      color:var(--ice-dim); font-family:var(--font); font-size:.55rem;
+      font-weight:600; letter-spacing:.3em; text-transform:uppercase;
+      padding:.5rem .9rem; border-radius:var(--r-sm); cursor:pointer;
+      backdrop-filter:blur(8px); transition:color .3s, border-color .3s;
+    }
+    #cine-skip:hover{ color:var(--ice); border-color:var(--ice); }
+    @media(max-width:920px){
+      #cine-hint .ch-label{ font-size:.5rem; letter-spacing:.35em }
+    }
+
     /* ════ HERO — asimmetrico ════ */
     .hero{
       position:relative; min-height:100vh; overflow:hidden;
@@ -1446,8 +1507,18 @@
   </div>
 </div>
 
-<!-- ════ VIDEO INTRO — rimosso. Per riattivarlo: reinserisci Animazione.mp4 nella root
-     e ripristina #video-wrap + la logica startVideo() (vedi cronologia). ════ -->
+<!-- ════ CINEMATIC INTRO 4URA — video + swipe-up teleport ════ -->
+<div id="cine-intro" class="hidden">
+  <video id="cine-video" muted playsinline preload="auto" disablepictureinpicture
+          controlslist="nodownload noplaylist noremoteplayback" oncontextmenu="return false">
+    <source src="intro-4ura.mp4" type="video/mp4">
+  </video>
+  <button id="cine-skip" type="button">Salta</button>
+  <div id="cine-hint">
+    <span class="ch-arrow"></span>
+    <span class="ch-label">Scorri verso l'alto</span>
+  </div>
+</div>
 
 <!-- ════ LANDING ════ -->
 <div id="landing">
@@ -1966,9 +2037,87 @@ function dismiss(){
     loadingScreen.classList.add('fade-out');
     setTimeout(()=>{
       loadingScreen.style.display='none';
-      toLanding();
+      startCineIntro();
     },1000);
   },250);
+}
+
+/* ════ CINEMATIC INTRO (4URA) → swipe-up teleport ════ */
+function startCineIntro(){
+  const cine  = document.getElementById('cine-intro');
+  const video = document.getElementById('cine-video');
+  const hint  = document.getElementById('cine-hint');
+  const skip  = document.getElementById('cine-skip');
+
+  /* fallback: se manca l'overlay, vai dritto al landing */
+  if(!cine || !video){ toLanding(); return; }
+
+  let unlocked = false;   // swipe-up abilitato (a video finito)
+  let teleported = false; // transizione già avviata
+
+  document.body.style.overflowY='hidden';   // blocca lo scroll del sito durante l'intro
+  cine.classList.remove('hidden');
+
+  const p = video.play();
+  if(p && p.catch) p.catch(()=>{ /* autoplay muto: dovrebbe sempre partire */ });
+
+  function enableSwipe(){
+    if(unlocked) return;
+    unlocked = true;
+    hint.classList.add('show');
+  }
+
+  /* il teletrasporto smooth: overlay scivola in alto e rivela il sito */
+  function teleport(){
+    if(teleported) return;
+    teleported = true;
+    hint.classList.remove('show');
+    cine.classList.add('lift');           // anima translateY(-100%)
+    try{ video.pause(); }catch(e){}
+    document.body.style.overflowY='auto';
+    toLanding();                          // fade-in landing sotto
+    setTimeout(()=>{ cine.classList.add('hidden'); cleanup(); }, 1200);
+  }
+
+  /* a video finito: sblocca lo swipe-up */
+  video.addEventListener('ended', enableSwipe);
+  /* sicurezza: se 'ended' non scatta, sblocca poco dopo la durata nota */
+  setTimeout(enableSwipe, 11000);
+
+  /* skip: salta subito al sito */
+  skip.addEventListener('click', teleport);
+
+  /* — input "dal basso verso l'alto" — */
+  function onWheel(e){
+    if(!unlocked){ e.preventDefault(); return; }
+    if(e.deltaY > 4) teleport();          // rotella/trackpad verso il basso = scroll su
+    e.preventDefault();
+  }
+  let touchStartY = null;
+  function onTouchStart(e){ touchStartY = e.touches[0].clientY; }
+  function onTouchMove(e){
+    if(touchStartY===null) return;
+    const dy = touchStartY - e.touches[0].clientY;   // swipe up = dy positivo
+    if(!unlocked){ e.preventDefault(); return; }
+    if(dy > 40) teleport();
+    e.preventDefault();
+  }
+  function onKey(e){
+    if(!unlocked) return;
+    if(e.key==='ArrowUp'||e.key==='ArrowDown'||e.key===' '||e.key==='Enter') teleport();
+  }
+
+  cine.addEventListener('wheel', onWheel, {passive:false});
+  cine.addEventListener('touchstart', onTouchStart, {passive:true});
+  cine.addEventListener('touchmove', onTouchMove, {passive:false});
+  window.addEventListener('keydown', onKey);
+
+  function cleanup(){
+    cine.removeEventListener('wheel', onWheel);
+    cine.removeEventListener('touchstart', onTouchStart);
+    cine.removeEventListener('touchmove', onTouchMove);
+    window.removeEventListener('keydown', onKey);
+  }
 }
 
 /* ════ → LANDING (fade-in) ════ */
