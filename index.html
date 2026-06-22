@@ -574,85 +574,72 @@
       .footer-hq{ gap:1.6rem 0; flex-direction:column; align-items:center; }
       .footer-hq-item{ font-size:1rem; }
     }
-    .footer-content{
-      position:static;
+    /* ── Blocco inferiore: griglia 4 colonne luxury ── */
+    .footer-grid{
       max-width:1280px; margin:0 auto;
-      display:flex; align-items:center; justify-content:space-between;
-      flex-wrap:wrap; gap:1rem;
+      display:grid; grid-template-columns:repeat(4, 1fr); gap:40px;
+      align-items:start; text-align:left;
     }
+    .footer-col{ display:flex; flex-direction:column; gap:.9rem; min-width:0; }
+    .footer-col--brand{ gap:1.1rem; }
     .footer-logo{ display:inline-flex; align-items:center }
     .footer-logo-img{
-      height:36px; width:auto; object-fit:contain; display:block;
-      opacity:.6;                          /* integrato col tono dark dei crediti */
-      transition:opacity .3s ease;
+      height:40px; width:auto; object-fit:contain; display:block;
+      opacity:.7; transition:opacity .3s ease;
     }
     .footer-logo-img:hover{ opacity:1 }
-    footer span{ font-size:.58rem; font-weight:300; letter-spacing:.18em; color:rgba(227,236,239,.2) }
-    /* copyright perfettamente centrato sulla LARGHEZZA PIENA del footer (viewport), indipendente da logo/legal */
-    .footer-copy{
-      position:absolute; left:0; right:0; margin:0 auto;
-      top:auto; bottom:auto;
-      width:100%; text-align:center; display:block; white-space:nowrap; pointer-events:none;
+    .footer-col-title{
+      font-family:var(--font); font-size:.75rem; font-weight:700;
+      letter-spacing:.2em; text-transform:uppercase; color:rgba(255,255,255,0.5);
+      margin:0;
     }
-    .footer-legal{ display:inline-flex; align-items:center; gap:.2rem; }
-    .footer-sep{ color:rgba(227,236,239,.25); }
-    .footer-legal a{
-      color:rgba(227,236,239,.45); text-decoration:none;
-      padding:.35rem .55rem; border-radius:6px;
-      transition:color .3s ease, background .3s ease;
+    .footer-col-body{ display:flex; flex-direction:column; gap:.4rem; }
+    /* override mirato della regola globale `footer span` per i dati colonna */
+    .footer-grid .footer-brand-name{
+      font-family:var(--font); font-size:.8rem; font-weight:700;
+      letter-spacing:.14em; text-transform:uppercase; color:var(--ice);
     }
-    .footer-legal a:hover{ color:var(--ice); }
+    .footer-grid .footer-col-line{
+      font-family:var(--font); font-size:.75rem; font-weight:300;
+      letter-spacing:.04em; line-height:1.5; color:rgba(227,236,239,0.42);
+      text-transform:none;
+    }
 
-    /* ── Baseline legale: micro-tipografia editoriale, centrata, a tutta larghezza, in fondo a tutto ── */
+    /* ── Liner legale: link istituzionali + copyright, centrati ── */
     .footer-legal-baseline{
-      display:block; width:100%;
-      max-width:1280px; margin:25px auto 0;
-      font-family:var(--font);
-      font-size:0.65rem; font-weight:300;
-      text-transform:uppercase; letter-spacing:0.15em;
-      color:rgba(255,255,255,0.3);            /* grigio fumo molto tenue a riposo */
-      line-height:1.8; text-align:center;
+      display:block; width:100%; max-width:1280px; margin:48px auto 0;
+      padding-top:28px; border-top:1px solid rgba(255,255,255,0.08);
+      font-family:var(--font); font-size:.7rem; font-weight:300;
+      text-transform:uppercase; letter-spacing:.15em;
+      color:rgba(255,255,255,0.3); line-height:1.8; text-align:center;
     }
-    .footer-legal-baseline .flb-data,
-    .footer-legal-baseline .flb-links{ display:block; }
-    .footer-legal-baseline .flb-links{ margin-top:.5rem; }
-    .footer-legal-baseline .flb-sep{ color:rgba(255,255,255,0.18); margin:0 .15em; }
+    .footer-legal-baseline .flb-links,
+    .footer-legal-baseline .flb-copy{ display:block; }
+    .footer-legal-baseline .flb-copy{ margin-top:14px; color:rgba(255,255,255,0.22); font-size:.62rem; }
+    .footer-legal-baseline .flb-sep{ color:rgba(255,255,255,0.2); padding:0 8px; }
     .footer-legal-baseline a{
       color:rgba(255,255,255,0.3); text-decoration:none;
       transition:color 0.3s ease;
     }
     .footer-legal-baseline a:hover{ color:#ffffff; }   /* accensione bianco puro al passaggio */
     @media(max-width:768px){
-      /* Firma tecnica ariosa: microscopica, quasi invisibile, righe ben distanziate */
-      .footer-legal-baseline{
-        font-size:0.58rem;                        /* microscopico */
-        letter-spacing:0.18em;                    /* massima aria tra i caratteri */
-        line-height:2.2;                          /* righe nettamente distanziate, niente blocco compresso */
-        color:rgba(255,255,255,0.18);             /* fonde col nero, leggibile solo a fuoco */
-        padding:0 1rem;
+      /* griglia 4col → stack verticale leggibile */
+      .footer-grid{
+        grid-template-columns:1fr; gap:28px; text-align:center;
+        justify-items:center;
       }
-      .footer-legal-baseline a{ color:rgba(255,255,255,0.18); }
-      /* separatori col respiro laterale per evitare parole spezzate a parete */
-      .footer-legal-baseline .flb-sep{ padding:0 6px; margin:0; }
-      /* netta separazione tra dati statici e link cliccabili */
-      .footer-legal-baseline .flb-links{ margin-top:12px; }
-      .footer-legal-baseline .flb-links a{ display:inline-block; padding:2px 0; }
+      .footer-col{ align-items:center; }
+      .footer-col-body{ align-items:center; }
+      .footer-legal-baseline{
+        font-size:.6rem; letter-spacing:.14em; line-height:2; padding:24px 1rem 0;
+      }
+      .footer-legal-baseline a{ color:rgba(255,255,255,0.32); display:inline-block; padding:3px 0; }
+      .footer-legal-baseline .flb-sep{ padding:0 5px; }
     }
-    /* ── Footer mobile: colonna pulita, simmetrica, ben spaziata ── */
+    /* ── Footer mobile: padding ridotto ── */
     @media(max-width:680px){
       footer{ padding:3rem 1.5rem; }
-      .footer-content{
-        flex-direction:column; align-items:center; text-align:center; gap:24px;
-      }
       .footer-logo-img{ height:auto; max-width:56px; opacity:.7; }
-      .footer-copy{
-        position:static; transform:none; left:auto; top:auto; white-space:normal; pointer-events:auto;
-        font-size:.56rem; letter-spacing:.16em;
-        color:rgba(227,236,239,.28); order:3;
-      }
-      .footer-logo{ order:1; }
-      .footer-legal{ order:2; gap:.35rem; }
-      .footer-legal a{ padding:.45rem .7rem; font-size:.62rem; }
     }
 
     /* ════ HEADER — GLASSMORPHIC FLOATING DOCK ════ */
@@ -1894,20 +1881,48 @@
         <a href="https://www.google.com/maps/search/?api=1&query=Via+della+Moscova+13+20121+Milano+MI" target="_blank" rel="noopener noreferrer" class="footer-hq-item">Via della Moscova 13, 20121 Milano</a>
       </div>
     </div>
-    <div class="footer-content">
-      <span class="footer-logo"><img src="logo-aurarent.png" alt="Aura-rent" class="footer-logo-img"></span>
-      <span class="footer-copy">© 2026 Aura.rent — Tutti i diritti riservati</span>
+    <!-- Blocco inferiore: reti del footer in 4 colonne -->
+    <div class="footer-grid">
+      <div class="footer-col footer-col--brand">
+        <span class="footer-logo"><img src="logo-aurarent.png" alt="Aura Rent" class="footer-logo-img"></span>
+        <div class="footer-col-body">
+          <span class="footer-brand-name">Aura Rent</span>
+          <span class="footer-col-line">Aura Rent S.r.l.</span>
+          <span class="footer-col-line">Capitale Sociale: € 100.000,00 i.v.</span>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col-title">Registri</h3>
+        <div class="footer-col-body">
+          <span class="footer-col-line">REA: MI - 987654</span>
+          <span class="footer-col-line">Iscritta al Reg. Imprese di Milano</span>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col-title">Contatti &amp; PEC</h3>
+        <div class="footer-col-body">
+          <span class="footer-col-line">PEC: aurarent@legalmail.it</span>
+          <span class="footer-col-line">P.IVA e C.F. 12345678901</span>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col-title">Sede Legale</h3>
+        <div class="footer-col-body">
+          <span class="footer-col-line">Via della Moscova 13</span>
+          <span class="footer-col-line">20121 Milano (MI)</span>
+        </div>
+      </div>
     </div>
 
-    <!-- Baseline legale: dati societari obbligatori + link normati -->
+    <!-- Liner legale: link istituzionali + copyright -->
     <small class="footer-legal-baseline">
-      <span class="flb-data">Aura Rent S.r.l. <span class="flb-sep">|</span> Sede Legale: Via della Moscova 13, 20121 Milano (MI) <span class="flb-sep">|</span> P.IVA e C.F. 12345678901 <span class="flb-sep">|</span> REA: MI - 987654 <span class="flb-sep">|</span> Capitale Sociale: € 100.000,00 i.v. <span class="flb-sep">|</span> PEC: aurarent@legalmail.it <span class="flb-sep">|</span> Iscritta al Registro delle Imprese di Milano</span>
       <span class="flb-links">
-        <a href="privacy-policy.html">Privacy Policy</a> <span class="flb-sep">|</span>
-        <a href="cookie-policy.html">Cookie Policy</a> <span class="flb-sep">|</span>
-        <a href="termini-condizioni.html">Termini e Condizioni</a> <span class="flb-sep">|</span>
+        <a href="privacy-policy.html">Privacy Policy</a> <span class="flb-sep">•</span>
+        <a href="cookie-policy.html">Cookie Policy</a> <span class="flb-sep">•</span>
+        <a href="termini-condizioni.html">Termini e Condizioni</a> <span class="flb-sep">•</span>
         <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener noreferrer">Risoluzione Controversie (ODR)</a>
       </span>
+      <span class="flb-copy">© 2026 Aura Rent — Tutti i diritti riservati</span>
     </small>
   </footer>
 
