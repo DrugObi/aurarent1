@@ -21,15 +21,17 @@
       if(e.persisted){ window.scrollTo(0,0); }
     });
   </script>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
   <title>Aura.rent — Noleggio Auto di Lusso</title>
-  <meta name="description" content="Aura Rent — noleggio auto di lusso e supercar a Milano. Flotta esclusiva, consegna in due ore, zero burocrazia. Mercedes-AMG, BMW M, Audi RS e altro."/>
+  <meta name="description" content="Aura Rent — noleggio auto di lusso e supercar a Modena. Flotta esclusiva, consegna in due ore, zero burocrazia. Mercedes-AMG, BMW M, Audi RS e altro."/>
   <meta property="og:title" content="Aura.rent — Noleggio Auto di Lusso"/>
   <meta property="og:description" content="Flotta esclusiva di supercar, consegna in due ore, zero burocrazia. Il noleggio premium che fa rumore."/>
   <meta property="og:type" content="website"/>
-  <meta property="og:image" content="https://drugobi.github.io/aurarent1/intro-lastframe.jpg"/>
-  <meta property="og:url" content="https://drugobi.github.io/aurarent1/"/>
+  <meta property="og:image" content="https://aurarent.it/intro-lastframe.jpg"/>
+  <meta property="og:url" content="https://aurarent.it/"/>
   <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:image" content="https://aurarent.it/intro-lastframe.jpg"/>
+  <link rel="canonical" href="https://aurarent.it/"/>
   <link rel="icon" type="image/png" href="favicon.png"/>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -57,12 +59,15 @@
       --ease-cine:cubic-bezier(0.85,0,0.15,1);
     }
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    /* mobile: niente riquadro grigio al tap su link/bottoni (feedback più pulito) */
+    *{ -webkit-tap-highlight-color:transparent; }
     html{scroll-behavior:smooth; overflow-x:clip; width:100%; scrollbar-gutter:stable}
     #vantaggi,#flotta,#contatti{ scroll-margin-top:140px }
     body{
       background:var(--onyx); color:var(--ice); font-family:var(--font);
       font-size:16px; line-height:1.5; overflow-x:clip; width:100%;
       -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+      -webkit-text-size-adjust:100%; text-size-adjust:100%;
     }
     img,video{display:block; max-width:100%}
 
@@ -791,13 +796,14 @@
     }
     .nav-link-item a:hover,
     .nav-link-item.active a{ color:#ffffff; }
-    /* micro-trattino LED sotto la voce attiva/hover */
+    /* micro-trattino LED solo sotto la voce ATTIVA (non in hover):
+       evita che due voci risultino accese insieme — es. mouse ancora su
+       "Vantaggi" mentre lo scrollspy ha già attivato "Flotta". */
     .nav-link-item a::after{
       content:''; position:absolute; bottom:-2px; left:50%; transform:translateX(-50%);
       width:0; height:2px; background:var(--ice); box-shadow:0 0 8px var(--ice);
       transition:width .3s cubic-bezier(0.16,1,0.3,1);
     }
-    .nav-link-item:hover a::after,
     .nav-link-item.active a::after{ width:20px; }
 
     /* CTA PRENOTA */
@@ -1590,9 +1596,17 @@
             sections.forEach(function(s){ links[s].parentElement.classList.remove('active'); });
           }
         }
-        window.addEventListener('scroll', onScroll, {passive:true, capture:true});
-        document.addEventListener('scroll', onScroll, {passive:true, capture:true});
-        window.addEventListener('resize', onScroll);
+        /* throttling con requestAnimationFrame: su mobile lo scroll genera
+           molti eventi al secondo; senza rAF il ricalcolo a ogni evento causa
+           scatti. Così aggiorniamo al massimo una volta per frame. */
+        var spyTicking=false;
+        function requestSpy(){
+          if(spyTicking) return;
+          spyTicking=true;
+          requestAnimationFrame(function(){ spyTicking=false; onScroll(); });
+        }
+        window.addEventListener('scroll', requestSpy, {passive:true});
+        window.addEventListener('resize', requestSpy, {passive:true});
         onScroll();
       }
       if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', initSpy); }
@@ -1644,7 +1658,7 @@
   <div class="stats-strip reveal">
     <div class="stat-item"><div class="stat-num">44<em>+</em></div><span class="stat-desc">Vetture disponibili</span></div>
     <div class="stat-item"><div class="stat-num">24<em>/7</em></div><span class="stat-desc">Assistenza dedicata</span></div>
-    <div class="stat-item"><div class="stat-num">100<em>%</em></div><span class="stat-desc">Clienti soddisfatti</span></div>
+    <div class="stat-item"><div class="stat-num">5<em>★</em></div><span class="stat-desc">Servizio premium</span></div>
   </div>
 
   <!-- FEATURE BLOCKS -->
@@ -1737,7 +1751,7 @@
           </article>
           <article class="aura-pane" data-pane="noscore">
             <h3 class="aura-pane__title">Noleggio No Scoring</h3>
-            <p class="aura-pane__text">Accesso al noleggio senza verifica creditizia. Una soluzione semplice, flessibile e rapida, anche senza i classici requisiti bancari tradizionali.</p>
+            <p class="aura-pane__text">Una procedura snella, senza scoring creditizio bancario. Restano l&#39;identificazione del cliente, il deposito cauzionale e le verifiche previste dalla normativa: accesso semplice e rapido, in piena regola.</p>
           </article>
           <article class="aura-pane" data-pane="business">
             <h3 class="aura-pane__title">Account Business</h3>
@@ -1769,7 +1783,7 @@
         <article class="svc-tile svc-tile--feature">
           <span class="svc-tile__tag"><span class="svc-tile__num">02</span> Noleggio No Scoring</span>
           <div class="svc-tile__media"><img src="subject-noscore.png" alt="Noleggio No Scoring" loading="lazy"></div>
-          <p class="svc-tile__text">Accesso al noleggio senza verifica creditizia. Una soluzione semplice, flessibile e rapida, anche senza i classici requisiti bancari tradizionali.</p>
+          <p class="svc-tile__text">Una procedura snella, senza scoring creditizio bancario. Restano l&#39;identificazione del cliente, il deposito cauzionale e le verifiche previste dalla normativa: accesso semplice e rapido, in piena regola.</p>
         </article>
         <article class="svc-tile">
           <span class="svc-tile__tag"><span class="svc-tile__num">03</span> Account Business</span>
@@ -1803,7 +1817,7 @@
         <article class="svc-card">
           <span class="svc-card__tag"><span class="svc-card__num">02</span> Noleggio No Scoring</span>
           <div class="svc-card__media"><img src="subject-noscore.png" alt="Noleggio No Scoring" loading="lazy"></div>
-          <p class="svc-card__text">Accesso al noleggio senza verifica creditizia. Una soluzione semplice, flessibile e rapida, anche senza i classici requisiti bancari tradizionali.</p>
+          <p class="svc-card__text">Una procedura snella, senza scoring creditizio bancario. Restano l&#39;identificazione del cliente, il deposito cauzionale e le verifiche previste dalla normativa: accesso semplice e rapido, in piena regola.</p>
         </article>
         <article class="svc-card">
           <span class="svc-card__tag"><span class="svc-card__num">03</span> Account Business</span>
@@ -1978,7 +1992,7 @@
       </div>
       <div class="footer-hq-col">
         <span class="footer-hq-label">E-mail</span>
-        <a href="mailto:noleggio@carmego.it" class="footer-hq-item">noleggio@carmego.it</a>
+        <a href="mailto:info@aurarent.it" class="footer-hq-item">info@aurarent.it</a>
       </div>
       <div class="footer-hq-col">
         <span class="footer-hq-label">Sede</span>
